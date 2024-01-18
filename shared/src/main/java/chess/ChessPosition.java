@@ -31,6 +31,11 @@ public class ChessPosition {
         return ColPos;
     }
 
+    public void setPosition(int row, int col){
+        RowPos=row;
+        ColPos=col;
+    }
+
 
 }
 

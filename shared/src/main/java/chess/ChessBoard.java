@@ -14,7 +14,7 @@ public class ChessBoard {
 
     private ChessPiece[][] playBoard;
     public ChessBoard() {
-        
+        resetBoard();
     }
 
     /**
@@ -35,7 +35,16 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        int row=position.getRow();
+        int col = position.getColumn();
+        if(row>7 || col>7){
+            return null;
+        }
+        if(playBoard[row][col]!=null){
+            return playBoard[row][col];
+        }
+        else
+            return null;
     }
 
     /**

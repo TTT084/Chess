@@ -1,6 +1,9 @@
 package chess;
 
 import java.util.Collection;
+import chess.ChessBoard.*;
+
+import static chess.ChessPiece.PieceType;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -9,9 +12,10 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    public Object myBoard = new ChessBoard();
 
     public ChessGame() {
-
+        //myBoard = new ChessBoard();
     }
 
     /**
@@ -46,7 +50,52 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece;
+        PieceType type;
+        int [][] valid;
+        if(myBoard.getPiece(startPosition)==null){
+            return null;
+        }
+        else
+            piece = myBoard.getPiece(startPosition);
+        type = piece.getPieceType();
+        switch(type){
+            case KING:
+                valid =KingMoves(piece,startPosition);
+            case QUEEN:
+
+            case PAWN:
+
+            case ROOK:
+
+            case BISHOP:
+
+            case KNIGHT:
+
+            default: return null;
+        }
+    }
+
+    /**
+     * Looks at Valid King moves
+     */
+    public int[][] KingMoves(ChessPiece piece, ChessPosition startPosition){
+        int mainRow= startPosition.getRow();
+        int mainCol=startPosition.getColumn();
+        int counter =0;
+        int[][] moves = new int[8][2];
+        ChessPosition newPos = new ChessPosition(mainRow,mainCol);
+//        for(int i = 0; i<8; i++){
+//            if(myBoard.getPiece!=null){
+//
+//            }
+//        }
+        newPos.setPosition(mainRow+1,mainCol);
+        if(mainRow+1!=8 && myBoard.getPiece()!=null){
+            moves[counter][0]=mainRow+1;
+            moves[counter][1]=mainCol;
+        }
+        return moves;
     }
 
     /**
