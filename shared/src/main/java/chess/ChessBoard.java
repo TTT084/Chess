@@ -13,8 +13,10 @@ import static chess.ChessPiece.PieceType.*;
 public class ChessBoard {
 
     private ChessPiece[][] playBoard;
+
     public ChessBoard() {
-        resetBoard();
+        playBoard = new ChessPiece[9][9];
+        //resetBoard();
     }
 
     /**
@@ -24,7 +26,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        playBoard[position.getRow()][position.getColumn()]=piece;
+        playBoard[position.getRow()][position.getColumn()] = piece;
     }
 
     /**
@@ -35,16 +37,19 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        int row=position.getRow();
+        int row = position.getRow();
         int col = position.getColumn();
-        if(row>7 || col>7){
+        if (row > 7 || col > 7) {
             return null;
         }
-        if(playBoard[row][col]!=null){
+        if (playBoard[row][col] != null) {
             return playBoard[row][col];
-        }
-        else
+        } else
             return null;
+    }
+
+
+    public void doSomething() {
     }
 
     /**
@@ -52,46 +57,49 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        playBoard= new ChessPiece[8][8];
+        this.clearBoard();
         //Black team
         //first row
-        playBoard[0][0]= new ChessPiece(BLACK, ROOK);
-        playBoard[0][1]= new ChessPiece(BLACK, KNIGHT);
-        playBoard[0][2]= new ChessPiece(BLACK, BISHOP);
-        playBoard[0][3]= new ChessPiece(BLACK, QUEEN);
-        playBoard[0][4] = new ChessPiece(BLACK, KING);
-        playBoard[0][5]= new ChessPiece(BLACK,BISHOP);
-        playBoard[0][6]= new ChessPiece(BLACK,KNIGHT);
-        playBoard[0][7]= new ChessPiece(BLACK,ROOK);
+        playBoard[8][8] = new ChessPiece(BLACK, ROOK);
+        playBoard[8][7] = new ChessPiece(BLACK, KNIGHT);
+        playBoard[8][6] = new ChessPiece(BLACK, BISHOP);
+        playBoard[8][5] = new ChessPiece(BLACK, QUEEN);
+        playBoard[8][4] = new ChessPiece(BLACK, KING);
+        playBoard[8][3] = new ChessPiece(BLACK, BISHOP);
+        playBoard[8][2] = new ChessPiece(BLACK, KNIGHT);
+        playBoard[8][1] = new ChessPiece(BLACK, ROOK);
         //second row
-        playBoard[1][0]= new ChessPiece(BLACK,PAWN);
-        playBoard[1][1]= new ChessPiece(BLACK,PAWN);
-        playBoard[1][2]= new ChessPiece(BLACK,PAWN);
-        playBoard[1][3]= new ChessPiece(BLACK,PAWN);
-        playBoard[1][4]= new ChessPiece(BLACK,PAWN);
-        playBoard[1][5]= new ChessPiece(BLACK,PAWN);
-        playBoard[1][6]= new ChessPiece(BLACK,PAWN);
-        playBoard[1][7]= new ChessPiece(BLACK,PAWN);
+        playBoard[7][8] = new ChessPiece(BLACK, PAWN);
+        playBoard[7][1] = new ChessPiece(BLACK, PAWN);
+        playBoard[7][2] = new ChessPiece(BLACK, PAWN);
+        playBoard[7][3] = new ChessPiece(BLACK, PAWN);
+        playBoard[7][4] = new ChessPiece(BLACK, PAWN);
+        playBoard[7][5] = new ChessPiece(BLACK, PAWN);
+        playBoard[7][6] = new ChessPiece(BLACK, PAWN);
+        playBoard[7][7] = new ChessPiece(BLACK, PAWN);
 
         //White team
         //8th row
-        playBoard[7][0]= new ChessPiece(WHITE, ROOK);
-        playBoard[7][1]= new ChessPiece(WHITE, KNIGHT);
-        playBoard[7][2]= new ChessPiece(WHITE, BISHOP);
-        playBoard[7][3]= new ChessPiece(WHITE, QUEEN);
-        playBoard[7][4] = new ChessPiece(WHITE, KING);
-        playBoard[7][5]= new ChessPiece(WHITE,BISHOP);
-        playBoard[7][6]= new ChessPiece(WHITE,KNIGHT);
-        playBoard[7][7]= new ChessPiece(WHITE,ROOK);
+        playBoard[1][1] = new ChessPiece(WHITE, ROOK);
+        playBoard[1][2] = new ChessPiece(WHITE, KNIGHT);
+        playBoard[1][3] = new ChessPiece(WHITE, BISHOP);
+        playBoard[1][4] = new ChessPiece(WHITE, QUEEN);
+        playBoard[1][5] = new ChessPiece(WHITE, KING);
+        playBoard[1][6] = new ChessPiece(WHITE, BISHOP);
+        playBoard[1][7] = new ChessPiece(WHITE, KNIGHT);
+        playBoard[1][8] = new ChessPiece(WHITE, ROOK);
         //second row
-        playBoard[6][0]= new ChessPiece(WHITE,PAWN);
-        playBoard[6][1]= new ChessPiece(WHITE,PAWN);
-        playBoard[6][2]= new ChessPiece(WHITE,PAWN);
-        playBoard[6][3]= new ChessPiece(WHITE,PAWN);
-        playBoard[6][4]= new ChessPiece(WHITE,PAWN);
-        playBoard[6][5]= new ChessPiece(WHITE,PAWN);
-        playBoard[6][6]= new ChessPiece(WHITE,PAWN);
-        playBoard[6][7]= new ChessPiece(WHITE,PAWN);
+        playBoard[2][8] = new ChessPiece(WHITE, PAWN);
+        playBoard[2][1] = new ChessPiece(WHITE, PAWN);
+        playBoard[2][2] = new ChessPiece(WHITE, PAWN);
+        playBoard[2][3] = new ChessPiece(WHITE, PAWN);
+        playBoard[2][4] = new ChessPiece(WHITE, PAWN);
+        playBoard[2][5] = new ChessPiece(WHITE, PAWN);
+        playBoard[2][6] = new ChessPiece(WHITE, PAWN);
+        playBoard[2][7] = new ChessPiece(WHITE, PAWN);
         throw new RuntimeException("Not implemented");
+    }
+    public void clearBoard(){
+        playBoard=new ChessPiece[9][9];
     }
 }

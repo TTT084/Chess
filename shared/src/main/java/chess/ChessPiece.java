@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import chess.ChessGame.*;
 
 /**
  * Represents a single chess piece
@@ -11,11 +12,13 @@ import java.util.Collection;
 public class ChessPiece {
     PieceType chessType;
     ChessGame.TeamColor chessColor;
+    private boolean pieceBump;
 
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         chessColor=pieceColor;
         chessType=type;
+        pieceBump=false;
     }
 
     /**
@@ -34,14 +37,14 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return chessColor;
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
+        return chessType;
     }
 
     /**
@@ -52,6 +55,147 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece;
+        PieceType type;
+        int [][] valid;
+        if(board.getPiece(myPosition)==null){
+            return null;
+        }
+        else
+            piece = board.getPiece(myPosition);
+        type = piece.getPieceType();
+        switch(type){
+            case KING:
+                valid =kingMoves(piece,myPosition, board);
+            case QUEEN:
+
+            case PAWN:
+
+            case ROOK:
+
+            case BISHOP:
+                valid=bishopMoves(piece,myPosition, board);
+            case KNIGHT:
+
+            default: return null;
+        }
+    }
+    public int[][] kingMoves(ChessPiece piece, ChessPosition startPosition, ChessBoard board){
+        int mainRow= startPosition.getRow();
+        int mainCol=startPosition.getColumn();
+        int counter =0;
+        int[][] moves = new int[8][2];
+        ChessPosition newPos = new ChessPosition(mainRow,mainCol);
+//        for(int i = 0; i<8; i++){
+//            if(myBoard.getPiece!=null){
+//
+//            }
+//        }
+        //N
+        newPos.setPosition(mainRow+1,mainCol);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        //NE
+        newPos.setPosition(mainRow+1,mainCol+1);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        //E
+        newPos.setPosition(mainRow,mainCol+1);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        //SE
+        newPos.setPosition(mainRow-1,mainCol+1);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        //S
+        newPos.setPosition(mainRow-1,mainCol);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        //SW
+        newPos.setPosition(mainRow-1,mainCol-1);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        //W
+        newPos.setPosition(mainRow,mainCol-1);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        //NW
+        newPos.setPosition(mainRow+1,mainCol);
+        moves[counter]=moveCheck(newPos, board);
+        counter++;
+        return moves;
+    }
+    public int[][] bishopMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board){
+        int mainRow= startPosition.getRow();
+        int mainCol=startPosition.getColumn();
+        int counter =0;
+        int[][] moves = new int[16][2];
+        int change=0;
+        ChessPosition newPos = new ChessPosition(mainRow,mainCol);
+        //NE
+        for(int x=0;x<4;x++){
+            change=x+1;
+            newPos.setPosition(mainRow-change,mainCol+change);
+            moves[counter]=moveCheck(newPos, board);
+            counter++;
+            if(pieceBump){
+                break;
+            }
+        }
+        //SE
+        change=0;
+        for(int x=0;x<4;x++){
+            change=x+1;
+            newPos.setPosition(mainRow+change,mainCol+change);
+            moves[counter]=moveCheck(newPos, board);
+            counter++;
+            if(pieceBump){
+                break;
+            }
+        }
+        //SW
+        change=0;
+        for(int x=0;x<4;x++){
+            change=x+1;
+            newPos.setPosition(mainRow+change,mainCol-change);
+            moves[counter]=moveCheck(newPos, board);
+            counter++;
+            if(pieceBump){
+                break;
+            }
+        }
+        //NW
+        change=0;
+        for(int x=0;x<4;x++){
+            change=x+1;
+            newPos.setPosition(mainRow-change,mainCol-change);
+            moves[counter]=moveCheck(newPos, board);
+            counter++;
+            if(pieceBump){
+                break;
+            }
+        }
+        return moves;
+    }
+    public int[] moveCheck(ChessPosition pos, ChessBoard board) {
+        int row = pos.getRow();
+        int col = pos.getColumn();
+        int[] moves = new int[2];
+        if (row != 0 && col != 0) {
+            if (row != 9 && col != 9) {
+                if(board.getPiece(pos)==null){
+                    moves[0] = row;
+                    moves[1] = col;
+                } else if (board.getPiece(pos).chessColor!=chessColor) {
+                    moves[0]=row;
+                    moves[1]=row;
+                }
+                else{
+                    pieceBump=true;
+                }
+
+            }
+        }
+        return moves;
     }
 }

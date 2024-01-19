@@ -12,17 +12,21 @@ import static chess.ChessPiece.PieceType;
  * signature of the existing methods.
  */
 public class ChessGame {
-    public Object myBoard = new ChessBoard();
+    private ChessBoard myBoard;
+    private TeamColor myTeam;
 
     public ChessGame() {
-        //myBoard = new ChessBoard();
+        myBoard = new ChessBoard();
+        myTeam = TeamColor.WHITE;
+        boolean pieceBump=false;
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return myTeam;
+        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -31,7 +35,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        myTeam=team;
     }
 
     /**
@@ -50,52 +54,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece piece;
-        PieceType type;
-        int [][] valid;
-        if(myBoard.getPiece(startPosition)==null){
-            return null;
-        }
-        else
-            piece = myBoard.getPiece(startPosition);
-        type = piece.getPieceType();
-        switch(type){
-            case KING:
-                valid =KingMoves(piece,startPosition);
-            case QUEEN:
-
-            case PAWN:
-
-            case ROOK:
-
-            case BISHOP:
-
-            case KNIGHT:
-
-            default: return null;
-        }
-    }
-
-    /**
-     * Looks at Valid King moves
-     */
-    public int[][] KingMoves(ChessPiece piece, ChessPosition startPosition){
-        int mainRow= startPosition.getRow();
-        int mainCol=startPosition.getColumn();
-        int counter =0;
-        int[][] moves = new int[8][2];
-        ChessPosition newPos = new ChessPosition(mainRow,mainCol);
-//        for(int i = 0; i<8; i++){
-//            if(myBoard.getPiece!=null){
-//
-//            }
-//        }
-        newPos.setPosition(mainRow+1,mainCol);
-        if(mainRow+1!=8 && myBoard.getPiece()!=null){
-            moves[counter][0]=mainRow+1;
-            moves[counter][1]=mainCol;
-        }
-        return moves;
+            throw new RuntimeException("Not implemented");
     }
 
     /**
