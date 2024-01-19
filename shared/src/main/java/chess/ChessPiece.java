@@ -1,6 +1,10 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+
 import chess.ChessGame.*;
 
 /**
@@ -19,6 +23,18 @@ public class ChessPiece {
         chessColor=pieceColor;
         chessType=type;
         pieceBump=false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessPiece that)) return false;
+        return chessType == that.chessType && chessColor == that.chessColor;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chessType, chessColor);
     }
 
     /**
@@ -58,6 +74,11 @@ public class ChessPiece {
         ChessPiece piece;
         PieceType type;
         int [][] valid;
+        Collection<ChessMove> validMovie = new ArrayList<>();
+        Collection<ChessMove> validMoves= new HashSet<>();
+
+        validMoves.add(new ChessMove(myPosition,new ChessPosition(0,0),null));
+        //return validMoves;
         if(board.getPiece(myPosition)==null){
             return null;
         }

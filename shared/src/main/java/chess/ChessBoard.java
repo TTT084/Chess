@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Arrays;
+
 import static chess.ChessGame.TeamColor.BLACK;
 import static chess.ChessGame.TeamColor.WHITE;
 import static chess.ChessPiece.PieceType.*;
@@ -52,6 +54,25 @@ public class ChessBoard {
     public void doSomething() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessBoard that)) return false;
+        return Arrays.deepEquals(playBoard, that.playBoard);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(playBoard);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "playBoard=" + Arrays.deepToString(playBoard) +
+                '}';
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
@@ -63,8 +84,8 @@ public class ChessBoard {
         playBoard[8][8] = new ChessPiece(BLACK, ROOK);
         playBoard[8][7] = new ChessPiece(BLACK, KNIGHT);
         playBoard[8][6] = new ChessPiece(BLACK, BISHOP);
-        playBoard[8][5] = new ChessPiece(BLACK, QUEEN);
-        playBoard[8][4] = new ChessPiece(BLACK, KING);
+        playBoard[8][4] = new ChessPiece(BLACK, QUEEN);
+        playBoard[8][5] = new ChessPiece(BLACK, KING);
         playBoard[8][3] = new ChessPiece(BLACK, BISHOP);
         playBoard[8][2] = new ChessPiece(BLACK, KNIGHT);
         playBoard[8][1] = new ChessPiece(BLACK, ROOK);
@@ -97,7 +118,7 @@ public class ChessBoard {
         playBoard[2][5] = new ChessPiece(WHITE, PAWN);
         playBoard[2][6] = new ChessPiece(WHITE, PAWN);
         playBoard[2][7] = new ChessPiece(WHITE, PAWN);
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
     }
     public void clearBoard(){
         playBoard=new ChessPiece[9][9];
