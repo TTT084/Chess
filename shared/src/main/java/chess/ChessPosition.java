@@ -33,6 +33,12 @@ public class ChessPosition {
         return ColPos;
     }
 
+    /**
+     *
+     * @param row of new place
+     * @param col of new place
+     * sets the row and column
+     */
     public void setPosition(int row, int col){
         RowPos=row;
         ColPos=col;

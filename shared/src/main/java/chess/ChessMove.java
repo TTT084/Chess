@@ -24,7 +24,7 @@ public class ChessMove {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessMove chessMove)) return false;
-        return Objects.equals(location, chessMove.location) && Objects.equals(destination, chessMove.destination) && promotion == chessMove.promotion;
+        return Objects.deepEquals(location, chessMove.location) && Objects.deepEquals(destination, chessMove.destination) && promotion == chessMove.promotion;
     }
 
     @Override
