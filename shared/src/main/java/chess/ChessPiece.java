@@ -73,9 +73,8 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece;
         PieceType type;
-        int [][] valid;
-        Collection<ChessMove> validMovie = new ArrayList<>();
-        Collection<ChessMove> validMoves= new HashSet<>();
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        //Collection<ChessMove> validMoves= new HashSet<>();
 
         validMoves.add(new ChessMove(myPosition,new ChessPosition(0,0),null));
         //return validMoves;
@@ -87,25 +86,27 @@ public class ChessPiece {
         type = piece.getPieceType();
         switch(type){
             case KING:
-                valid =kingMoves(piece,myPosition, board);
+                validMoves =kingMoves(piece,myPosition, board, validMoves);
             case QUEEN:
 
             case PAWN:
 
             case ROOK:
-
+                validMoves=rookMoves(piece,myPosition,board,validMoves);
             case BISHOP:
-                valid=bishopMoves(piece,myPosition, board);
+                validMoves=bishopMoves(piece,myPosition, board, validMoves);
             case KNIGHT:
 
-            default: return null;
+            default: return validMoves;
         }
+        //return validMoves;
     }
-    public int[][] kingMoves(ChessPiece piece, ChessPosition startPosition, ChessBoard board){
+    public Collection<ChessMove> kingMoves(ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves){
         int mainRow= startPosition.getRow();
         int mainCol=startPosition.getColumn();
-        int counter =0;
-        int[][] moves = new int[8][2];
+        int counter = 0;
+        boolean checker=false;
+        Collection<ChessMove> moves=validMoves;
         ChessPosition newPos = new ChessPosition(mainRow,mainCol);
 //        for(int i = 0; i<8; i++){
 //            if(myBoard.getPiece!=null){
@@ -114,51 +115,65 @@ public class ChessPiece {
 //        }
         //N
         newPos.setPosition(mainRow+1,mainCol);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
+//        moves[counter]=moveCheck(newPos, board);
+        //counter++;
         //NE
         newPos.setPosition(mainRow+1,mainCol+1);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
         //E
         newPos.setPosition(mainRow,mainCol+1);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
         //SE
         newPos.setPosition(mainRow-1,mainCol+1);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
         //S
         newPos.setPosition(mainRow-1,mainCol);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
         //SW
         newPos.setPosition(mainRow-1,mainCol-1);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
         //W
         newPos.setPosition(mainRow,mainCol-1);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
         //NW
         newPos.setPosition(mainRow+1,mainCol);
-        moves[counter]=moveCheck(newPos, board);
-        counter++;
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+        }
         return moves;
     }
-    public int[][] bishopMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board){
+    public Collection<ChessMove> bishopMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves){
         int mainRow= startPosition.getRow();
         int mainCol=startPosition.getColumn();
         int counter =0;
-        int[][] moves = new int[16][2];
+//        int[][] moves = new int[16][2];
+        Collection<ChessMove> moves=validMoves;
         int change=0;
         ChessPosition newPos = new ChessPosition(mainRow,mainCol);
         //NE
         for(int x=0;x<4;x++){
             change=x+1;
             newPos.setPosition(mainRow-change,mainCol+change);
-            moves[counter]=moveCheck(newPos, board);
-            counter++;
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
+//            moves[counter]=moveCheck(newPos, board);
+//            counter++;
             if(pieceBump){
                 break;
             }
@@ -168,8 +183,9 @@ public class ChessPiece {
         for(int x=0;x<4;x++){
             change=x+1;
             newPos.setPosition(mainRow+change,mainCol+change);
-            moves[counter]=moveCheck(newPos, board);
-            counter++;
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
             if(pieceBump){
                 break;
             }
@@ -179,8 +195,9 @@ public class ChessPiece {
         for(int x=0;x<4;x++){
             change=x+1;
             newPos.setPosition(mainRow+change,mainCol-change);
-            moves[counter]=moveCheck(newPos, board);
-            counter++;
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
             if(pieceBump){
                 break;
             }
@@ -190,26 +207,78 @@ public class ChessPiece {
         for(int x=0;x<4;x++){
             change=x+1;
             newPos.setPosition(mainRow-change,mainCol-change);
-            moves[counter]=moveCheck(newPos, board);
-            counter++;
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
             if(pieceBump){
                 break;
             }
         }
         return moves;
     }
-    public int[] moveCheck(ChessPosition pos, ChessBoard board) {
+
+    public Collection<ChessMove> rookMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
+        int mainRow = startPosition.getRow();
+        int mainCol = startPosition.getColumn();
+        Collection<ChessMove> moves = validMoves;
+        int change = 0;
+        ChessPosition newPos = new ChessPosition(mainRow,mainCol);
+        //N
+        for(int x=0;x<8;x++){
+            change=x+1;
+            newPos.setPosition(mainRow+change,mainCol);
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
+            if(pieceBump){
+                break;
+            }
+        }
+        //E
+        for(int x=0;x<8;x++){
+            change=x+1;
+            newPos.setPosition(mainRow,mainCol+change);
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
+            if(pieceBump){
+                break;
+            }
+        }
+        //S
+        for(int x=0;x<8;x++){
+            change=x+1;
+            newPos.setPosition(mainRow-change,mainCol);
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
+            if(pieceBump){
+                break;
+            }
+        }
+        //W
+        for(int x=0;x<4;x++){
+            change=x+1;
+            newPos.setPosition(mainRow,mainCol-change);
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
+            if(pieceBump){
+                break;
+            }
+        }
+        return moves;
+    }
+    public boolean moveCheck(ChessPosition pos, ChessBoard board) {
         int row = pos.getRow();
         int col = pos.getColumn();
-        int[] moves = new int[2];
+        boolean check = false;
         if (row != 0 && col != 0) {
             if (row != 9 && col != 9) {
                 if(board.getPiece(pos)==null){
-                    moves[0] = row;
-                    moves[1] = col;
+                    check=true;
                 } else if (board.getPiece(pos).chessColor!=chessColor) {
-                    moves[0]=row;
-                    moves[1]=row;
+                    check=true;
                 }
                 else{
                     pieceBump=true;
@@ -217,6 +286,6 @@ public class ChessPiece {
 
             }
         }
-        return moves;
+        return check;
     }
 }
