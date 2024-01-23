@@ -41,7 +41,7 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         int row = position.getRow();
         int col = position.getColumn();
-        if (row > 7 || col > 7) {
+        if (row > 8 || col > 8) {
             return null;
         }
         if (playBoard[row][col] != null) {

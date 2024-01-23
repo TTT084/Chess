@@ -7,6 +7,9 @@ import java.util.Objects;
 
 import chess.ChessGame.*;
 
+import static chess.ChessGame.TeamColor.BLACK;
+import static chess.ChessGame.TeamColor.WHITE;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -87,14 +90,18 @@ public class ChessPiece {
         switch(type){
             case KING:
                 validMoves =kingMoves(piece,myPosition, board, validMoves);
+                return validMoves;
             case QUEEN:
 
             case PAWN:
-
+                validMoves=pawnMoves(piece,myPosition,board,validMoves);
+                return validMoves;
             case ROOK:
                 validMoves=rookMoves(piece,myPosition,board,validMoves);
+                return validMoves;
             case BISHOP:
                 validMoves=bishopMoves(piece,myPosition, board, validMoves);
+                return validMoves;
             case KNIGHT:
 
             default: return validMoves;
@@ -151,7 +158,32 @@ public class ChessPiece {
             moves.add(new ChessMove(startPosition,newPos,null));
         }
         //NW
-        newPos = new ChessPosition(mainRow+1,mainCol);
+        newPos = new ChessPosition(mainRow+1,mainCol-1);
+        if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,newPos,null));
+        }
+        return moves;
+    }
+    public Collection<ChessMove> pawnMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
+        int mainRow = startPosition.getRow();
+        int mainCol = startPosition.getColumn();
+        int counter = 0;
+//        int[][] moves = new int[16][2];
+        Collection<ChessMove> moves = validMoves;
+        int change = 0;
+        ChessPosition newPos = new ChessPosition(mainRow, mainCol);
+        if(mainRow==2 && WHITE == board.getPiece(newPos).getTeamColor()){
+            newPos= new ChessPosition(mainRow+2,mainCol);
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
+        }
+        if (mainRow == 7 && BLACK == board.getPiece(newPos).getTeamColor()) {
+            newPos= new ChessPosition(mainRow-2,mainCol);
+            if(moveCheck(newPos,board)){
+                moves.add(new ChessMove(startPosition,newPos,null));
+            }
+        }
         if(moveCheck(newPos,board)){
             moves.add(new ChessMove(startPosition,newPos,null));
         }
@@ -237,6 +269,7 @@ public class ChessPiece {
                 break;
             }
         }
+        pieceBump=false;
         //E
         for(int x=0;x<8;x++){
             change=x+1;
@@ -248,6 +281,7 @@ public class ChessPiece {
                 break;
             }
         }
+        pieceBump=false;
         //S
         for(int x=0;x<8;x++){
             change=x+1;
@@ -259,6 +293,7 @@ public class ChessPiece {
                 break;
             }
         }
+        pieceBump=false;
         //W
         for(int x=0;x<4;x++){
             change=x+1;
