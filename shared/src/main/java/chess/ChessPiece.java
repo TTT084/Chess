@@ -76,7 +76,7 @@ public class ChessPiece {
         Collection<ChessMove> validMoves = new ArrayList<>();
         //Collection<ChessMove> validMoves= new HashSet<>();
 
-        validMoves.add(new ChessMove(myPosition,new ChessPosition(0,0),null));
+        //validMoves.add(new ChessMove(myPosition,new ChessPosition(0,0),null));
         //return validMoves;
         if(board.getPiece(myPosition)==null){
             return null;
@@ -114,46 +114,46 @@ public class ChessPiece {
 //            }
 //        }
         //N
-        newPos.setPosition(mainRow+1,mainCol);
+        newPos = new ChessPosition(mainRow+1,mainCol);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
 //        moves[counter]=moveCheck(newPos, board);
         //counter++;
         //NE
-        newPos.setPosition(mainRow+1,mainCol+1);
+        newPos = new ChessPosition(mainRow+1,mainCol+1);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
         //E
-        newPos.setPosition(mainRow,mainCol+1);
+        newPos = new ChessPosition(mainRow,mainCol+1);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
         //SE
-        newPos.setPosition(mainRow-1,mainCol+1);
+        newPos = new ChessPosition(mainRow-1,mainCol+1);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
         //S
-        newPos.setPosition(mainRow-1,mainCol);
+        newPos = new ChessPosition(mainRow-1,mainCol);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
         //SW
-        newPos.setPosition(mainRow-1,mainCol-1);
+        newPos = new ChessPosition(mainRow-1,mainCol-1);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
         //W
-        newPos.setPosition(mainRow,mainCol-1);
+        newPos = new ChessPosition(mainRow,mainCol-1);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
         //NW
-        newPos.setPosition(mainRow+1,mainCol);
+        newPos = new ChessPosition(mainRow+1,mainCol);
         if(moveCheck(newPos,board)){
-            moves.add(new ChessMove(startPosition,new ChessPosition(0,0),null));
+            moves.add(new ChessMove(startPosition,newPos,null));
         }
         return moves;
     }
@@ -168,7 +168,7 @@ public class ChessPiece {
         //NE
         for(int x=0;x<4;x++){
             change=x+1;
-            newPos.setPosition(mainRow-change,mainCol+change);
+            newPos= new ChessPosition(mainRow-change,mainCol+change);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -178,11 +178,12 @@ public class ChessPiece {
                 break;
             }
         }
+        pieceBump=false;
         //SE
         change=0;
         for(int x=0;x<4;x++){
             change=x+1;
-            newPos.setPosition(mainRow+change,mainCol+change);
+            newPos=new ChessPosition(mainRow+change,mainCol+change);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -190,11 +191,12 @@ public class ChessPiece {
                 break;
             }
         }
+        pieceBump=false;
         //SW
         change=0;
         for(int x=0;x<4;x++){
             change=x+1;
-            newPos.setPosition(mainRow+change,mainCol-change);
+            newPos=new ChessPosition(mainRow+change,mainCol-change);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -202,11 +204,12 @@ public class ChessPiece {
                 break;
             }
         }
+        pieceBump=false;
         //NW
         change=0;
         for(int x=0;x<4;x++){
             change=x+1;
-            newPos.setPosition(mainRow-change,mainCol-change);
+            newPos=new ChessPosition(mainRow-change,mainCol-change);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -226,7 +229,7 @@ public class ChessPiece {
         //N
         for(int x=0;x<8;x++){
             change=x+1;
-            newPos.setPosition(mainRow+change,mainCol);
+            newPos = new ChessPosition(mainRow+change,mainCol);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -237,7 +240,7 @@ public class ChessPiece {
         //E
         for(int x=0;x<8;x++){
             change=x+1;
-            newPos.setPosition(mainRow,mainCol+change);
+            newPos = new ChessPosition(mainRow,mainCol+change);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -248,7 +251,7 @@ public class ChessPiece {
         //S
         for(int x=0;x<8;x++){
             change=x+1;
-            newPos.setPosition(mainRow-change,mainCol);
+            newPos = new ChessPosition(mainRow-change,mainCol);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -259,7 +262,7 @@ public class ChessPiece {
         //W
         for(int x=0;x<4;x++){
             change=x+1;
-            newPos.setPosition(mainRow,mainCol-change);
+            newPos = new ChessPosition(mainRow,mainCol-change);
             if(moveCheck(newPos,board)){
                 moves.add(new ChessMove(startPosition,newPos,null));
             }
@@ -273,12 +276,13 @@ public class ChessPiece {
         int row = pos.getRow();
         int col = pos.getColumn();
         boolean check = false;
-        if (row != 0 && col != 0) {
-            if (row != 9 && col != 9) {
+        if (row > 0 && col > 0) {
+            if (row < 9 && col < 9) {
                 if(board.getPiece(pos)==null){
                     check=true;
                 } else if (board.getPiece(pos).chessColor!=chessColor) {
                     check=true;
+                    pieceBump=true;
                 }
                 else{
                     pieceBump=true;
