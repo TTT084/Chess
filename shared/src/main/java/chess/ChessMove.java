@@ -35,7 +35,7 @@ public class ChessMove {
     @Override
     public String toString() {
         return "ChessMove{" +
-                "location=" + location +
+                //"location=" + location +
                 ", destination=" + destination +
                 ", promotion=" + promotion +
                 '}';
