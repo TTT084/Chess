@@ -76,8 +76,8 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece;
         PieceType type;
-        Collection<ChessMove> validMoves = new ArrayList<>();
-        //Collection<ChessMove> validMoves= new HashSet<>();
+        //Collection<ChessMove> validMoves = new ArrayList<>();
+        Collection<ChessMove> validMoves= new HashSet<>();
 
         //validMoves.add(new ChessMove(myPosition,new ChessPosition(0,0),null));
         //return validMoves;
@@ -381,7 +381,7 @@ public class ChessPiece {
         }
         pieceBump=false;
         //W
-        for(int x=0;x<4;x++){
+        for(int x=0;x<8;x++){
             change=x+1;
             newPos = new ChessPosition(mainRow,mainCol-change);
             if(moveCheck(newPos,board)){
