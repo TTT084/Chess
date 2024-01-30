@@ -44,6 +44,9 @@ public class ChessBoard {
         if (row > 8 || col > 8) {
             return null;
         }
+        if (row < 0 || col < 0) {
+            return null;
+        }
         if (playBoard[row][col] != null) {
             return playBoard[row][col];
         } else
