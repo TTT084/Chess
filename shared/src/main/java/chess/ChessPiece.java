@@ -112,7 +112,7 @@ public class ChessPiece {
         }
         //return validMoves;
     }
-    public Collection<ChessMove> kingMoves(ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves){
+    private Collection<ChessMove> kingMoves(ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves){
         int mainRow= startPosition.getRow();
         int mainCol=startPosition.getColumn();
         int counter = 0;
@@ -168,7 +168,7 @@ public class ChessPiece {
         }
         return moves;
     }
-    public Collection<ChessMove> pawnMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
+    private Collection<ChessMove> pawnMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
         int mainRow = startPosition.getRow();
         int mainCol = startPosition.getColumn();
         int counter = 0;
@@ -275,7 +275,7 @@ public class ChessPiece {
         }
         return moves;
     }
-    public Collection<ChessMove> bishopMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves){
+    private Collection<ChessMove> bishopMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves){
         int mainRow= startPosition.getRow();
         int mainCol=startPosition.getColumn();
         int counter =0;
@@ -338,7 +338,7 @@ public class ChessPiece {
         return moves;
     }
 
-    public Collection<ChessMove> rookMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
+    private Collection<ChessMove> rookMoves (ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
         int mainRow = startPosition.getRow();
         int mainCol = startPosition.getColumn();
         Collection<ChessMove> moves = validMoves;
@@ -393,7 +393,7 @@ public class ChessPiece {
         }
         return moves;
     }
-    public Collection<ChessMove> knightMoves(ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
+    private Collection<ChessMove> knightMoves(ChessPiece piece, ChessPosition startPosition, ChessBoard board, Collection<ChessMove> validMoves) {
         int mainRow = startPosition.getRow();
         int mainCol = startPosition.getColumn();
         int counter = 0;
