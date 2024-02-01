@@ -16,6 +16,8 @@ public class ChessGame {
     private ChessBoard myBoard;
     private TeamColor myTeam;
 
+    private ChessPiece rmvPiece;
+
     public ChessGame() {
         myBoard = new ChessBoard();
         myTeam = TeamColor.WHITE;
@@ -71,12 +73,25 @@ public class ChessGame {
         ChessPiece piece=myBoard.getPiece(start);
         if(checkMove(move)){
             myBoard.addPiece(end,piece);
+            rmvPiece=myBoard.getPiece(start);
             myBoard.removePiece(start);
         }
-        throw new RuntimeException("Not implemented");
+        else{
+            throw new RuntimeException("Not implemented");
+        }
+
     }
     private void unmakeMove(ChessMove move) throws InvalidMoveException {
-
+        ChessPosition start=move.getStartPosition();
+        ChessPosition end=move.getEndPosition();
+        ChessPiece piece=myBoard.getPiece(end);
+        if(checkMove(move)){
+            myBoard.addPiece(start,piece);
+            myBoard.addPiece(end,rmvPiece);
+        }
+        else{
+            throw new RuntimeException("Not implemented");
+        }
     }
     private boolean checkMove(ChessMove move){
         ChessPosition start=move.getStartPosition();
@@ -152,11 +167,40 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if(isInCheck(teamColor)){
-            return false;
+            if(!hasMoves(teamColor)){
+                return true;
+            }
+            else{
+
+            }
+                return false;
         }
-        throw new RuntimeException("Not implemented");
+        return false;
     }
 
+    private boolean hasMoves(TeamColor teamColor){
+        ChessPosition newPos;
+        ChessPiece newPiece;
+        Collection<ChessMove> moves;
+        ChessPosition dest;
+        PieceType type;
+        for(int i=1;i<9;i++){
+            for(int x=1;x<9;x++){
+                newPos = new ChessPosition(i,x);
+                newPiece = myBoard.getPiece(newPos);
+                if(newPiece!=null){
+                    type=newPiece.getPieceType();
+                    if(newPiece.getTeamColor()==teamColor){
+                        moves=newPiece.pieceMoves(myBoard,newPos);
+                        if(!moves.isEmpty()){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves
