@@ -1,10 +1,13 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
+
 import chess.ChessBoard.*;
 
 import static chess.ChessPiece.PieceType;
 import static chess.ChessPiece.PieceType.KING;
+import static chess.ChessPiece.PieceType.PAWN;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -57,9 +60,24 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-
-            throw new RuntimeException("Not implemented");
+        ChessPiece piece = myBoard.getPiece(startPosition);
+        Collection <ChessMove> moves = piece.pieceMoves(myBoard, startPosition);
+        Collection <ChessMove> validMoves = new HashSet<>();
+        for(ChessMove element: moves){
+            try {
+                makeMove(element);
+            } catch (InvalidMoveException e) {
+                continue;
+                //throw new RuntimeException(e);
+            }
+            if(!isInCheck(myTeam)){
+                validMoves.add(element);
+            }
+            unmakeMove(element);
+        }
+        return validMoves;
     }
+
 
     /**
      * Makes a move in a chess game
@@ -72,32 +90,36 @@ public class ChessGame {
         ChessPosition end=move.getEndPosition();
         ChessPiece piece=myBoard.getPiece(start);
         if(checkMove(move)){
+            rmvPiece=myBoard.getPiece(end);
             myBoard.addPiece(end,piece);
-            rmvPiece=myBoard.getPiece(start);
             myBoard.removePiece(start);
         }
         else{
-            throw new RuntimeException("Not implemented");
+            throw new InvalidMoveException("Invalid move");
         }
 
     }
-    private void unmakeMove(ChessMove move) throws InvalidMoveException {
+    private void unmakeMove(ChessMove move) /* throws InvalidMoveException */ {
         ChessPosition start=move.getStartPosition();
         ChessPosition end=move.getEndPosition();
         ChessPiece piece=myBoard.getPiece(end);
-        if(checkMove(move)){
-            myBoard.addPiece(start,piece);
-            myBoard.addPiece(end,rmvPiece);
-        }
-        else{
-            throw new RuntimeException("Not implemented");
-        }
+        myBoard.addPiece(start,piece);
+        myBoard.addPiece(end,rmvPiece);
+        //else{
+            //throw new InvalidMoveException("Can't unmake");
+        //}
     }
     private boolean checkMove(ChessMove move){
         ChessPosition start=move.getStartPosition();
         ChessPosition end=move.getEndPosition();
         ChessPiece piece=myBoard.getPiece(start);
-        Collection<ChessMove> validMoves=piece.pieceMoves(myBoard,start);
+        Collection<ChessMove> validMoves;
+        if(piece!=null){
+            validMoves=piece.pieceMoves(myBoard,start);
+        }
+        else{
+            return false;
+        }
         for(ChessMove element: validMoves){
             if(element.equals(move)){
                 return true;
@@ -171,9 +193,9 @@ public class ChessGame {
                 return true;
             }
             else{
-
-            }
                 return false;
+            }
+
         }
         return false;
     }
@@ -191,7 +213,7 @@ public class ChessGame {
                 if(newPiece!=null){
                     type=newPiece.getPieceType();
                     if(newPiece.getTeamColor()==teamColor){
-                        moves=newPiece.pieceMoves(myBoard,newPos);
+                        moves=validMoves(newPos);
                         if(!moves.isEmpty()){
                             return true;
                         }

@@ -284,6 +284,7 @@ public class ChessPiece {
         int change=0;
         ChessPosition newPos = new ChessPosition(mainRow,mainCol);
         //NE
+        pieceBump=false;
         for(int x=0;x<8;x++){
             change=x+1;
             newPos= new ChessPosition(mainRow-change,mainCol+change);
