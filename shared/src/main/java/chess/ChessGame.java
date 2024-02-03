@@ -66,12 +66,7 @@ public class ChessGame {
         Collection <ChessMove> moves = piece.pieceMoves(myBoard, startPosition);
         Collection <ChessMove> validMoves = new HashSet<>();
         for(ChessMove element: moves){
-            try {
-                makeMove(element);
-            } catch (InvalidMoveException e) {
-                //throw new InvalidMoveException("Invalid Move");
-                continue;
-            }
+            fakeMove(element);
             if(!isInCheck(myTeam)){
                 validMoves.add(element);
             }
@@ -105,6 +100,22 @@ public class ChessGame {
             throw new InvalidMoveException("Invalid move");
         }
 
+    }
+
+    public void fakeMove(ChessMove move) {
+        ChessPosition start=move.getStartPosition();
+        ChessPosition end=move.getEndPosition();
+        ChessPiece piece=myBoard.getPiece(start);
+        PieceType promotion = move.getPromotionPiece();
+        if(checkMove(move)){
+            if(promotion!=null){
+                piece.chessType=promotion;
+                promote=true;
+            }
+            rmvPiece=myBoard.getPiece(end);
+            myBoard.addPiece(end,piece);
+            myBoard.removePiece(start);
+        }
     }
     private void unmakeMove(ChessMove move) /* throws InvalidMoveException */ {
         ChessPosition start=move.getStartPosition();
