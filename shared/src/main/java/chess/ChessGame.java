@@ -65,9 +65,13 @@ public class ChessGame {
         ChessPiece piece = myBoard.getPiece(startPosition);
         Collection <ChessMove> moves = piece.pieceMoves(myBoard, startPosition);
         Collection <ChessMove> validMoves = new HashSet<>();
+        TeamColor color = piece.getTeamColor();
         for(ChessMove element: moves){
-            fakeMove(element);
-            if(!isInCheck(myTeam)){
+            if(!fakeMove(element)){
+                continue;
+            }
+//            if(!isInCheck(myTeam)){
+            if(!isInCheck(color)){
                 validMoves.add(element);
             }
             unmakeMove(element);
@@ -87,6 +91,10 @@ public class ChessGame {
         ChessPosition end=move.getEndPosition();
         ChessPiece piece=myBoard.getPiece(start);
         PieceType promotion = move.getPromotionPiece();
+        TeamColor color = piece.getTeamColor();
+//        if(color!=myTeam){
+//            throw new InvalidMoveException("Invalid move");
+//        }
         if(checkMove(move)){
             if(promotion!=null){
                 piece.chessType=promotion;
@@ -102,7 +110,12 @@ public class ChessGame {
 
     }
 
-    public void fakeMove(ChessMove move) {
+    /**
+     *
+     * @param move
+     * @return
+     */
+    public boolean fakeMove(ChessMove move) {
         ChessPosition start=move.getStartPosition();
         ChessPosition end=move.getEndPosition();
         ChessPiece piece=myBoard.getPiece(start);
@@ -115,7 +128,9 @@ public class ChessGame {
             rmvPiece=myBoard.getPiece(end);
             myBoard.addPiece(end,piece);
             myBoard.removePiece(start);
+            return true;
         }
+        return false;
     }
     private void unmakeMove(ChessMove move) /* throws InvalidMoveException */ {
         ChessPosition start=move.getStartPosition();
