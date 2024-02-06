@@ -21,11 +21,14 @@ public class ChessPiece {
     ChessGame.TeamColor chessColor;
     private boolean pieceBump;
 
+    private boolean hasMoved;
+
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         chessColor=pieceColor;
         chessType=type;
         pieceBump=false;
+        hasMoved=false;
     }
 
     @Override
@@ -50,6 +53,13 @@ public class ChessPiece {
         KNIGHT,
         ROOK,
         PAWN
+    }
+
+    public void traveling(){
+        hasMoved=true;
+    }
+    public boolean didItMove(){
+        return hasMoved;
     }
 
     /**
@@ -164,6 +174,13 @@ public class ChessPiece {
         //NW
         newPos = new ChessPosition(mainRow+1,mainCol-1);
         if(moveCheck(newPos,board)){
+            moves.add(new ChessMove(startPosition,newPos,null));
+        }
+        //Castling
+        if(!hasMoved){
+            newPos = new ChessPosition(mainRow,mainCol-2);
+            moves.add(new ChessMove(startPosition,newPos,null));
+            newPos = new ChessPosition(mainRow,mainCol+2);
             moves.add(new ChessMove(startPosition,newPos,null));
         }
         return moves;

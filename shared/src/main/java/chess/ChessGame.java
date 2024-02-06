@@ -22,11 +22,24 @@ public class ChessGame {
     private boolean promote;
     private boolean checkingMate;
 
+    private boolean whiteKing;
+    private boolean blackKing;
+    private boolean leftBlackRook;
+    private boolean rightBlackRook;
+    private boolean leftWhiteRook;
+    private boolean rightWhiteRook;
+
     public ChessGame() {
         myBoard = new ChessBoard();
         myTeam = TeamColor.WHITE;
         boolean pieceBump=false;
         promote=false;
+        blackKing = false;
+        whiteKing=false;
+        leftBlackRook=false;
+        rightBlackRook=false;
+        leftWhiteRook=false;
+        rightWhiteRook=false;
     }
 
     /**
@@ -62,11 +75,20 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece piece = myBoard.getPiece(startPosition);
-        Collection <ChessMove> moves = piece.pieceMoves(myBoard, startPosition);
         Collection <ChessMove> validMoves = new HashSet<>();
+        ChessPiece piece = myBoard.getPiece(startPosition);
+        if(piece==null){
+            return validMoves;
+        }
+        Collection <ChessMove> moves = piece.pieceMoves(myBoard, startPosition);
         TeamColor color = piece.getTeamColor();
         for(ChessMove element: moves){
+            if(piece.getPieceType()==KING){
+                if(castling(startPosition,element)){
+                    validMoves.add(element);
+                    continue;
+                }
+            }
             if(!fakeMove(element)){
                 continue;
             }
@@ -79,7 +101,71 @@ public class ChessGame {
         return validMoves;
     }
 
-
+    private boolean castling(ChessPosition pos, ChessMove move){
+        ChessPosition rookPos = new ChessPosition(0,0);
+        ChessMove newMove = new ChessMove(pos,move.destination,null);
+        ChessPosition dest = move.getEndPosition();
+        int row = dest.getRow();
+        int col= dest.getColumn();
+        if((pos.getColumn()+1)<move.destination.getColumn()){
+            rookPos.setPosition(pos.getRow(),8);
+            if(myBoard.getPiece(rookPos)==null){
+                return false;
+            }
+            if(!myBoard.getPiece(rookPos).didItMove()){
+                if(!isInCheck(myTeam)){
+                    dest=new ChessPosition(row,col+1);
+                    newMove=new ChessMove(pos,dest,null);
+                    if(fakeMove(newMove)){
+                        if(!isInCheck(myTeam)){
+                            unmakeMove(newMove);
+                            dest=new ChessPosition(row,col+2);
+                            newMove=new ChessMove(pos,dest,null);
+                            if(fakeMove(newMove)){
+                                if(!isInCheck(myTeam)){
+                                    unmakeMove(newMove);
+                                    return true;
+                                }
+                                unmakeMove(newMove);
+                            }
+                        }
+                        unmakeMove(newMove);
+                    }
+                }
+            }
+        }
+        if((pos.getColumn()+1)<move.destination.getColumn()){
+            rookPos.setPosition(pos.getRow(),1);
+            if(myBoard.getPiece(rookPos)==null){
+                return false;
+            }
+            if(!myBoard.getPiece(rookPos).didItMove()){
+                if(!isInCheck(myTeam)){
+                    dest=new ChessPosition(row,col-1);
+                    newMove=new ChessMove(pos,dest,null);
+                    if(fakeMove(newMove)){
+                        if(!isInCheck(myTeam)){
+                            unmakeMove(newMove);
+                            dest=new ChessPosition(row,col-2);
+                            newMove=new ChessMove(pos,dest,null);
+                            if(fakeMove(newMove)){
+                                if(!isInCheck(myTeam)){
+                                    unmakeMove(newMove);
+                                    return true;
+                                }
+                                unmakeMove(newMove);
+                            }
+                        }
+                        unmakeMove(newMove);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    private boolean kingGlide(ChessPosition pos,ChessMove move){
+        return true;
+    }
     /**
      * Makes a move in a chess game
      *
@@ -105,6 +191,7 @@ public class ChessGame {
             rmvPiece=myBoard.getPiece(end);
             myBoard.addPiece(end,piece);
             myBoard.removePiece(start);
+            piece.traveling();
             if(myTeam==TeamColor.WHITE){
                 myTeam=TeamColor.BLACK;
             }
@@ -124,6 +211,14 @@ public class ChessGame {
      * @return
      */
     public boolean fakeMove(ChessMove move) {
+        int row=move.destination.getRow();
+        int col = move.destination.getColumn();
+        if (row > 8 || col > 8) {
+            return false;
+        }
+        if (row < 0 || col < 0) {
+            return false;
+        }
         ChessPosition start=move.getStartPosition();
         ChessPosition end=move.getEndPosition();
         ChessPiece piece=myBoard.getPiece(start);
