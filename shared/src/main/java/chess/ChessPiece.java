@@ -345,6 +345,7 @@ public class ChessPiece {
         Collection<ChessMove> moves = validMoves;
         int change = 0;
         ChessPosition newPos = new ChessPosition(mainRow,mainCol);
+        pieceBump=false;
         //N
         for(int x=0;x<8;x++){
             change=x+1;
