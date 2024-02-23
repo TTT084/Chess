@@ -9,7 +9,9 @@ public class RegisterService {
     public RegisterResponse Register(String username, String pass, String email){
         UserDAO user = new UserDAO();
         if(user.getUser(username)){
-            return null;
+            RegisterResponse response = new RegisterResponse("","");
+            response.setMessage("Error: bad request");
+            return response;
         }
 
         AuthDAO auth = new AuthDAO();
