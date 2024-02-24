@@ -7,9 +7,6 @@ public class RegisterResponse extends Response {
     public String getMessage(){
         return message;
     }
-    public void setMessage(String mes){
-        message=mes;
-    }
     public RegisterResponse(String authToken, String username) {
         this.authToken = authToken;
         this.username = username;

@@ -2,17 +2,27 @@ package Services;
 
 import Response.RegisterResponse;
 import dataAccess.AuthDAO;
+import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
+import record.UserData;
 
 public class RegisterService {
 
     public RegisterResponse Register(String username, String pass, String email){
         UserDAO user = new UserDAO();
-        if(user.getUser(username)){
+        UserData data;
+        //try{
+            data = user.getUser(username);
+        //}
+//        catch (DataAccessException e){
+//            int dosomething = 1;
+//        }
+        if(data!=null){
             RegisterResponse response = new RegisterResponse("","");
             response.setMessage("Error: bad request");
             return response;
         }
+        user.createUser(username,pass,email);
 
         AuthDAO auth = new AuthDAO();
         String token = auth.createAuth(username);

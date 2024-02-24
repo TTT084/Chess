@@ -10,4 +10,9 @@ public class AuthDAO {
         FakeData.insertAuth(user,auth);
         return auth;
     }
+    public String updateAuth(String user){
+        String auth = UUID.randomUUID().toString();
+        FakeData.updateAuth(user,auth);
+        return auth;
+    }
 }

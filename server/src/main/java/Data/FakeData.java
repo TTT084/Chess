@@ -19,10 +19,10 @@ public class FakeData {
         games = new HashSet<>();
     }
 
-    public static String selectUsername(String user){
+    public static UserData selectUsername(String user){
         for(UserData data : users){
             if(Objects.equals(data.getUsername(), user)){
-                return user;
+                return data;
             }
         }
         return null;
@@ -32,5 +32,12 @@ public class FakeData {
     }
     public static void insertAuth(String name, String auth){
         authTokens.add(new AuthData(auth,name));
+    }
+    public static void updateAuth(String name, String auth){
+        for (AuthData data: authTokens){
+            if(Objects.equals(data.getUsername(), name)){
+                data.setAuthToken(auth);
+            }
+        }
     }
 }

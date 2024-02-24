@@ -2,11 +2,11 @@ package Response;
 
 public class LoginResponse extends Response{
     String username;
-    String password;
+    String authToken;
 
-    public LoginResponse(String username, String password) {
+    public LoginResponse(String username, String authToken) {
         this.username = username;
-        this.password = password;
+        this.authToken = authToken;
     }
 
     public String getUsername() {
@@ -17,11 +17,11 @@ public class LoginResponse extends Response{
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getAuthToken() {
+        return authToken;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }
