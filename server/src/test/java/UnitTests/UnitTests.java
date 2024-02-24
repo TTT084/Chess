@@ -1,11 +1,10 @@
 package UnitTests;
 
-import Response.RegisterResponse;
+import Responses.RegisterResponse;
 import Services.RegisterService;
-import Response.*;
+import Responses.*;
 import Services.*;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +15,8 @@ public class UnitTests {
     private String auth;
     @BeforeEach
     public void setUp(){
+        ClearService survy = new ClearService();
+        survy.Clear();
         user = "myUsername";
         pass = "sillyPass";
         email = "myEmail";
@@ -53,5 +54,26 @@ public class UnitTests {
         LoginResponse response1 = survy.Login(user, "wrong");
         String nameOne = response1.getUsername();
         Assertions.assertEquals(nameOne,"");
+    }
+    @Test
+    public void LoginSuccess(){
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+    }
+    @Test
+    public void LogoutUserNotFound(){
+
+    }
+    @Test
+    public void LogoutWrongAuth(){
+
+    }
+    @Test
+    public void LogoutSuccess(){
+
     }
 }

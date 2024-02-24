@@ -40,4 +40,21 @@ public class FakeData {
             }
         }
     }
+    public static AuthData selectAuth(String auth){
+        for(AuthData data : authTokens){
+            if(Objects.equals(data.getAuthToken(), auth)){
+                return data;
+            }
+        }
+        return null;
+    }
+    public static void clearUser(){
+        users.clear();
+    }
+    public static void clearAuth(){
+        authTokens.clear();
+    }
+    public static void clearGames(){
+        games.clear();
+    }
 }

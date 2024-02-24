@@ -1,4 +1,4 @@
-package Response;
+package Responses;
 
 public class Response {
     //boolean success;

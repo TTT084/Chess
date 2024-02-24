@@ -17,6 +17,10 @@ public class Server {
                 (new RegisterHandler()).handleRequest(req, res));
         Spark.post("/session", (req, res) ->
                 (new LoginHandler()).handleRequest(req, res));
+        Spark.post("/db", (req, res) ->
+                (new ClearHandler()).handleRequest(req, res));
+        Spark.post("/session", (req, res) ->
+                (new LogoutHandler()).handleRequest(req, res));
 
 
         Spark.awaitInitialization();

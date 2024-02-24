@@ -1,8 +1,7 @@
 package Services;
 
-import Response.RegisterResponse;
+import Responses.RegisterResponse;
 import dataAccess.AuthDAO;
-import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
 import record.UserData;
 

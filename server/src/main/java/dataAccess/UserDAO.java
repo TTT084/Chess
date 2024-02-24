@@ -13,4 +13,7 @@ public class UserDAO {
     public void createUser(String name, String pass, String email){
         FakeData.insertUser(name,pass,email);
     }
+    public void clear(){
+        FakeData.clearUser();
+    }
 }

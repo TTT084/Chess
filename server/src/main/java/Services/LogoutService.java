@@ -1,28 +1,25 @@
 package Services;
-
 import Responses.LoginResponse;
+import Responses.Response;
 import dataAccess.AuthDAO;
-import dataAccess.UserDAO;
-import record.UserData;
+import record.AuthData;
 
-public class LoginService {
-    public LoginResponse Login(String name, String password){
-        UserDAO userAccess = new UserDAO();
-        UserData user = userAccess.getUser(name);
+public class LogoutService {
+    public Response Logout(String auth){
+        AuthDAO authAccess = new AuthDAO();
+        AuthData user = authAccess.getAuth(auth);
         if(user==null){
             LoginResponse response = new LoginResponse("","");
             response.setMessage("Error: unauthorized");
             return response;
         }
-        if(!password.equals(user.getPassword())){
+        if(!auth.equals(user.getAuthToken())){
             LoginResponse response = new LoginResponse("","");
             response.setMessage("Error: unauthorized");
             return response;
         }
-
-        AuthDAO auth = new AuthDAO();
-        String token = auth.updateAuth(name);
-        LoginResponse response = new LoginResponse(name,token);
+        authAccess.updateAuth(user.getUsername());
+        Response response = new Response();
         return response;
     }
 }

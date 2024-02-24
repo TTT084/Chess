@@ -1,10 +1,9 @@
 package handlers;
 import Requests.RegisterRequest;
 import Services.RegisterService;
-import com.google.gson.GsonBuilder;
 import spark.*;
 import com.google.gson.Gson;
-import Response.RegisterResponse;
+import Responses.RegisterResponse;
 
 public class RegisterHandler {
 
