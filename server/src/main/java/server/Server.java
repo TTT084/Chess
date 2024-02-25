@@ -21,6 +21,10 @@ public class Server {
                 (new ClearHandler()).handleRequest(req, res));
         Spark.post("/session", (req, res) ->
                 (new LogoutHandler()).handleRequest(req, res));
+        Spark.post("/game", (req, res) ->
+                (new ListGamesHandler()).handleRequest(req, res));
+        Spark.post("/game", (req, res) ->
+                (new ListGamesHandler()).handleRequest(req, res));
 
 
         Spark.awaitInitialization();

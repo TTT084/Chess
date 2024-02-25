@@ -13,11 +13,6 @@ public class LogoutService {
             response.setMessage("Error: unauthorized");
             return response;
         }
-        if(!auth.equals(user.getAuthToken())){
-            LoginResponse response = new LoginResponse("","");
-            response.setMessage("Error: unauthorized");
-            return response;
-        }
         authAccess.updateAuth(user.getUsername());
         Response response = new Response();
         return response;

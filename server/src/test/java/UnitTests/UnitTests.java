@@ -66,14 +66,34 @@ public class UnitTests {
     }
     @Test
     public void LogoutUserNotFound(){
-
-    }
-    @Test
-    public void LogoutWrongAuth(){
-
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        LogoutService Outsurvy = new LogoutService();
+        Response response2 = Outsurvy.Logout("");
+        Assertions.assertNotEquals("",response2.getMessage());
     }
     @Test
     public void LogoutSuccess(){
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        LogoutService Outsurvy = new LogoutService();
+        Response response2 = Outsurvy.Logout(response1.getAuthToken());
+        Assertions.assertNotEquals("",response2.getMessage());
+    }
+    @Test
+    public void ListGamesWrongPassword(){
+
+    }
+    @Test
+    public void ListGamesSuccess(){
 
     }
 }

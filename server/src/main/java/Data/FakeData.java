@@ -57,4 +57,7 @@ public class FakeData {
     public static void clearGames(){
         games.clear();
     }
+    public static HashSet<GameData> getGames(){
+        return games;
+    }
 }
