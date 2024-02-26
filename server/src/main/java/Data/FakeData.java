@@ -60,4 +60,7 @@ public class FakeData {
     public static HashSet<GameData> getGames(){
         return games;
     }
+    public static void createGame(GameData game){
+        games.add(game);
+    }
 }

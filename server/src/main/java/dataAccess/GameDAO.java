@@ -11,4 +11,7 @@ public class GameDAO {
     public HashSet<GameData> getGames(){
         return FakeData.getGames();
     }
+    public void createGame(GameData game){
+        FakeData.createGame(game);
+    }
 }

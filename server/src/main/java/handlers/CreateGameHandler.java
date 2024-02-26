@@ -1,8 +1,8 @@
 package handlers;
 
-import Requests.LogoutRequest;
+import Requests.CGRequest;
 import Responses.ListGameResponse;
-import Services.ListGamesService;
+import Services.CreateGameService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
@@ -10,11 +10,12 @@ import spark.Response;
 public class CreateGameHandler {
     public Object handleRequest(Request req, Response res){
         Gson json = new Gson();
-        LogoutRequest lgRequest = json.fromJson(req.body(), LogoutRequest.class);
+        CGRequest cgRequest = json.fromJson(req.body(), CGRequest.class);
 
-        ListGamesService LGServ = new ListGamesService();
-        String auth= lgRequest.getAuthToken();
-        ListGameResponse response = LGServ.ListGames(auth);
+        CreateGameService GCServ = new CreateGameService();
+        String auth= cgRequest.getAuthToken();
+        String gameName = cgRequest.getGameName();
+        Responses.Response response = GCServ.CreateGame(auth,gameName);
         res.status();
 
         //serialize
