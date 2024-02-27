@@ -14,4 +14,5 @@ public class GameDAO {
     public void createGame(GameData game){
         FakeData.createGame(game);
     }
+    public void updateGame(String gameID, Boolean isBlack, )
 }
