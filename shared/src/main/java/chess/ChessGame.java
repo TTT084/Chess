@@ -245,9 +245,6 @@ public class ChessGame {
         }
         myBoard.addPiece(start,piece);
         myBoard.addPiece(end,rmvPiece);
-        //else{
-            //throw new InvalidMoveException("Can't unmake");
-        //}
     }
     private boolean checkMove(ChessMove move){
         ChessPosition start=move.getStartPosition();
@@ -360,9 +357,6 @@ public class ChessGame {
                     if(newPiece.getTeamColor()==teamColor){
                         //try {
                             moves=validMoves(newPos);
-                        //} catch (InvalidMoveException e) {
-                            //throw new RuntimeException(e);
-                        //}
                         if(!moves.isEmpty()){
                             return true;
                         }

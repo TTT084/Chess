@@ -9,12 +9,12 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPosition {
-    int RowPos;
-    int ColPos;
+    int rowPos;
+    int colPos;
 
     public ChessPosition(int row, int col) {
-        RowPos=row;
-        ColPos=col;
+        rowPos=row;
+        colPos=col;
     }
 
     /**
@@ -22,7 +22,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        return RowPos;
+        return rowPos;
     }
 
     /**
@@ -30,7 +30,7 @@ public class ChessPosition {
      * 1 codes for the left row
      */
     public int getColumn() {
-        return ColPos;
+        return colPos;
     }
 
     /**
@@ -40,27 +40,27 @@ public class ChessPosition {
      * sets the row and column
      */
     public void setPosition(int row, int col){
-        RowPos=row;
-        ColPos=col;
+        rowPos=row;
+        colPos=col;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessPosition that)) return false;
-        return RowPos == that.RowPos && ColPos == that.ColPos;
+        return rowPos == that.rowPos && colPos == that.colPos;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(RowPos, ColPos);
+        return Objects.hash(rowPos, colPos);
     }
 
     @Override
     public String toString() {
         return "ChessPosition{" +
-                "RowPos=" + RowPos +
-                ", ColPos=" + ColPos +
+                "RowPos=" + rowPos +
+                ", ColPos=" + colPos +
                 '}';
     }
 }
