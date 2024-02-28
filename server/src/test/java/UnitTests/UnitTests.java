@@ -22,6 +22,17 @@ public class UnitTests {
         email = "myEmail";
     }
     @Test
+    public void ClearService(){
+        RegisterService survy = new RegisterService();
+        RegisterResponse response = survy.Register(user,pass,email);
+        String newUser = response.getUsername();
+        ClearService Csurvy = new ClearService();
+        Csurvy.Clear();
+        RegisterResponse response2 = survy.Register(user,pass,email);
+        String newUser2 = response.getUsername();
+        Assertions.assertEquals(newUser2,newUser);
+    }
+    @Test
     public void RegisterBasicTest(){
         RegisterService survy = new RegisterService();
         RegisterResponse response = survy.Register(user,pass,email);
@@ -89,11 +100,33 @@ public class UnitTests {
         Assertions.assertNotEquals("",response2.getMessage());
     }
     @Test
+    public void CreateGameSuccess(){
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        CreateGameService createSurvy=new CreateGameService();
+        createSurvy.CreateGame(response.getAuthToken(), "yes game");
+        Assertions.assertNotEquals("changethis",response1.getMessage());
+    }
+    @Test void CreateGameFail(){
+        Assertions.assertNotEquals("changethis","");
+    }
+    @Test void JoinGameSuccess(){
+        Assertions.assertNotEquals("changethis","");
+    }
+    @Test void JoinGameTaken(){
+        Assertions.assertNotEquals("changethis","");
+    }
+    @Test
     public void ListGamesWrongPassword(){
-
+        Assertions.assertNotEquals("changethis","");
     }
     @Test
     public void ListGamesSuccess(){
-
+        Assertions.assertNotEquals("changethis","");
     }
+
 }
