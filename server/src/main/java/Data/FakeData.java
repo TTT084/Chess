@@ -48,6 +48,14 @@ public class FakeData {
         }
         return null;
     }
+    public static void deleteAuth(String auth){
+        for(AuthData data : authTokens){
+            if(Objects.equals(data.getAuthToken(), auth)){
+                authTokens.remove(data);
+                break;
+            }
+        }
+    }
     public static void clearUser(){
         users.clear();
     }
@@ -62,5 +70,17 @@ public class FakeData {
     }
     public static void createGame(GameData game){
         games.add(game);
+    }
+    public static void updateGame(String gameID, Boolean isBlack, String username){
+        for (GameData data: games){
+            if(Objects.equals(data.getGameID(), gameID)){
+                if(isBlack){
+                    data.setBlackUsername(username);
+                }
+                else{
+                    data.setWhiteUsername(username);
+                }
+            }
+        }
     }
 }

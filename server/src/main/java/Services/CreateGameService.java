@@ -1,20 +1,22 @@
 package Services;
 
+import Responses.CreateGameResponse;
 import Responses.LoginResponse;
 import Responses.Response;
 import chess.ChessGame;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
+import dataAccess.MemoryAuthDAO;
 import record.AuthData;
 import record.GameData;
 import java.util.Random;
 
 public class CreateGameService {
-    public Response CreateGame(String auth, String gameName){
-        AuthDAO authAccess = new AuthDAO();
+    public CreateGameResponse CreateGame(String auth, String gameName){
+        AuthDAO authAccess = new MemoryAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){
-            LoginResponse response = new LoginResponse("","");
+            CreateGameResponse response = new CreateGameResponse(null);
             response.setMessage("Error: unauthorized");
             return response;
         }
@@ -24,10 +26,10 @@ public class CreateGameService {
         int gameID = random.nextInt(1000);
         ChessGame game = new ChessGame();
         String newGamename = "game"+gameID;
-        GameData newGame = new GameData(gameID,null,null,newGamename,game);
+        GameData newGame = new GameData(gameID,null,null,gameName,game);
         gameAccess.createGame(newGame);
-        authAccess.updateAuth(user.getUsername());
-        Response response = new Response();
+        //authAccess.updateAuth(user.getUsername());
+        CreateGameResponse response = new CreateGameResponse(gameName);
         return response;
     }
 }

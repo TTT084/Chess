@@ -1,26 +1,32 @@
 package Services;
 
 import Responses.ListGameResponse;
+import Responses.Response;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
+import dataAccess.MemoryAuthDAO;
 import record.AuthData;
 import record.GameData;
 
 import java.util.HashSet;
 
 public class JoinGameService {
-    public ListGameResponse JoinGame(String auth){
-        AuthDAO authAccess = new AuthDAO();
+    public Response JoinGame(String auth, String gameID, String color){
+        AuthDAO authAccess = new MemoryAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){
             ListGameResponse response = new ListGameResponse(null);
             response.setMessage("Error: unauthorized");
             return response;
         }
+        boolean isBlack=false;
+        if(color.equals("BLACK")){
+            isBlack=true;
+        }
         GameDAO gameAccess = new GameDAO();
-        HashSet<GameData> games = gameAccess.getGames();
+        gameAccess.joinGame(gameID,isBlack,user.getUsername());
 
-        ListGameResponse response = new ListGameResponse(games);
+        Response response = new Response();
         return response;
     }
 }

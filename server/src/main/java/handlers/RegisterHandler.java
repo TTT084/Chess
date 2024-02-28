@@ -5,6 +5,8 @@ import spark.*;
 import com.google.gson.Gson;
 import Responses.RegisterResponse;
 
+import java.util.Objects;
+
 public class RegisterHandler {
 
     public Object handleRequest(Request req, Response res){
@@ -24,7 +26,13 @@ public class RegisterHandler {
 //
 //        RegisterService service = new RegisterService();
 //        LoginResult result = service.login(request);
-        res.status();
+        if(Objects.equals(response.getMessage(), "Error: bad request")){
+            res.status(400);
+        }
+        if(Objects.equals(response.getMessage(), "Error: already taken")){
+            res.status(403);
+        }
+
 
         //serialize
         return json.toJson(response);

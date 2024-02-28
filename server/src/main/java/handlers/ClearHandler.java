@@ -2,12 +2,15 @@ package handlers;
 
 import Services.ClearService;
 import Services.LoginService;
+import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
 public class ClearHandler {
     public Object handleRequest(Request req, Response res) {
         ClearService ClearServ = new ClearService();
-    return null;
+        Responses.Response response = new Responses.Response();
+        Gson json = new Gson();
+    return json.toJson(response);
     }
 }

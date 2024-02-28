@@ -1,6 +1,6 @@
 package handlers;
 
-import Requests.CGRequest;
+import Requests.JGRequest;
 import Services.JoinGameService;
 import com.google.gson.Gson;
 import spark.Request;
@@ -9,13 +9,13 @@ import spark.Response;
 public class JoinGameHandler {
     public Object handleRequest(Request req, Response res){
         Gson json = new Gson();
-        CGRequest cgRequest = json.fromJson(req.body(), CGRequest.class);
-        req.headers("authorization");
+        JGRequest jgRequest = json.fromJson(req.body(), JGRequest.class);
 
         JoinGameService JGServ = new JoinGameService();
-        String auth= cgRequest.getAuthToken();
-        String gameName = cgRequest.getGameName();
-        Responses.Response response = JGServ.JoinGame(auth,gameName);
+        String auth= req.headers("authorization");
+        String gameName = jgRequest.getGameID();
+        String color =jgRequest.getPlayerColor();
+        Responses.Response response = JGServ.JoinGame(auth,gameName, color);
         res.status();
 
         //serialize

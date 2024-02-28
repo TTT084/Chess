@@ -16,7 +16,7 @@ public class ListGamesHandler {
         LogoutRequest lgRequest = json.fromJson(req.body(), LogoutRequest.class);
 
         ListGamesService LGServ = new ListGamesService();
-        String auth= lgRequest.getAuthToken();
+        String auth= req.headers("authorization");
         ListGameResponse response = LGServ.ListGames(auth);
         res.status();
 

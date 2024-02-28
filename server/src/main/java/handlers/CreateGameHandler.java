@@ -1,6 +1,7 @@
 package handlers;
 
 import Requests.CGRequest;
+import Responses.CreateGameResponse;
 import Responses.ListGameResponse;
 import Services.CreateGameService;
 import com.google.gson.Gson;
@@ -13,9 +14,10 @@ public class CreateGameHandler {
         CGRequest cgRequest = json.fromJson(req.body(), CGRequest.class);
 
         CreateGameService GCServ = new CreateGameService();
-        String auth= cgRequest.getAuthToken();
+        //String auth= cgRequest.getAuthToken();
+        String auth = req.headers("authorization");
         String gameName = cgRequest.getGameName();
-        Responses.Response response = GCServ.CreateGame(auth,gameName);
+        CreateGameResponse response = GCServ.CreateGame(auth,gameName);
         res.status();
 
         //serialize

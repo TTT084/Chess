@@ -17,11 +17,11 @@ public class Server {
                 (new RegisterHandler()).handleRequest(req, res));
         Spark.post("/session", (req, res) ->
                 (new LoginHandler()).handleRequest(req, res));
-        Spark.post("/db", (req, res) ->
+        Spark.delete("/db", (req, res) ->
                 (new ClearHandler()).handleRequest(req, res));
-        Spark.post("/session", (req, res) ->
+        Spark.delete("/session", (req, res) ->
                 (new LogoutHandler()).handleRequest(req, res));
-        Spark.post("/game", (req, res) ->
+        Spark.get("/game", (req, res) ->
                 (new ListGamesHandler()).handleRequest(req, res));
         Spark.post("/game", (req, res) ->
                 (new CreateGameHandler()).handleRequest(req, res));

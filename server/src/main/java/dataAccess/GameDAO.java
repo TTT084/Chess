@@ -14,5 +14,7 @@ public class GameDAO {
     public void createGame(GameData game){
         FakeData.createGame(game);
     }
-    public void updateGame(String gameID, Boolean isBlack, )
+    public void joinGame(String gameID, Boolean isBlack, String username){
+        FakeData.updateGame(gameID, isBlack, username);
+    }
 }
