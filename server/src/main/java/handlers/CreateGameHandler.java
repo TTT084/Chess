@@ -26,7 +26,7 @@ public class CreateGameHandler {
         if (Objects.equals(response.getMessage(), "Error: bad request")) {
             res.status(400);
         }
-        res.status();
+        res.status(200);
 
         //serialize
         return json.toJson(response);

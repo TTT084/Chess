@@ -10,7 +10,7 @@ public class LogoutService {
         AuthDAO authAccess = new MemoryAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){
-            LoginResponse response = new LoginResponse("","");
+            LoginResponse response = new LoginResponse(null,null);
             response.setMessage("Error: unauthorized");
             return response;
         }

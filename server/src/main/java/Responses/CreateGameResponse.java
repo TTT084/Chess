@@ -1,17 +1,17 @@
 package Responses;
 
 public class CreateGameResponse extends Response{
-    String gameName;
+    String gameID;
 
     public CreateGameResponse(String gameName) {
-        this.gameName = gameName;
+        this.gameID = gameName;
     }
 
     public String getGameName() {
-        return gameName;
+        return gameID;
     }
 
     public void setGameName(String gameName) {
-        this.gameName = gameName;
+        this.gameID = gameName;
     }
 }

@@ -26,10 +26,11 @@ public class CreateGameService {
         int gameID = random.nextInt(1000);
         ChessGame game = new ChessGame();
         String newGamename = "game"+gameID;
-        GameData newGame = new GameData(gameID,null,null,gameName,game);
+        String returnGameID = String.valueOf(gameID);
+        GameData newGame = new GameData(returnGameID,null,null,gameName,game);
         gameAccess.createGame(newGame);
         //authAccess.updateAuth(user.getUsername());
-        CreateGameResponse response = new CreateGameResponse(gameName);
+        CreateGameResponse response = new CreateGameResponse(returnGameID);
         return response;
     }
 }

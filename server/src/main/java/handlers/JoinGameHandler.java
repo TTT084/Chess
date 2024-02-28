@@ -16,7 +16,7 @@ public class JoinGameHandler {
         String gameName = jgRequest.getGameID();
         String color =jgRequest.getPlayerColor();
         Responses.Response response = JGServ.JoinGame(auth,gameName, color);
-        res.status();
+        res.status(200);
 
         //serialize
         return json.toJson(response);

@@ -3,13 +3,13 @@ package record;
 import chess.ChessGame;
 
 public class GameData {
-    private int gameID;
+    private String gameID;
     private String whiteUsername;
     private String blackUsername;
     private String gameName;
     private ChessGame game;
 
-    public GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+    public GameData(String gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         this.gameID = gameID;
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
@@ -17,11 +17,11 @@ public class GameData {
         this.game = game;
     }
 
-    public int getGameID() {
+    public String getGameID() {
         return gameID;
     }
 
-    public void setGameID(int gameID) {
+    public void setGameID(String gameID) {
         this.gameID = gameID;
     }
 

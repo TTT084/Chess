@@ -24,7 +24,7 @@ public class LogoutHandler {
             //serialize
             return json.toJson(response);
         }
-        res.status();
+        res.status(200);
 
         //serialize
         return json.toJson(response);

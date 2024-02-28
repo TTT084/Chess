@@ -55,7 +55,7 @@ public class UnitTests {
         LoginService survy = new LoginService();
         LoginResponse response1 = survy.Login(user, pass);
         String nameOne = response1.getUsername();
-        Assertions.assertEquals(nameOne,"");
+        Assertions.assertEquals(nameOne,null);
     }
     @Test
     public void LoginWrongPassword(){
@@ -64,7 +64,7 @@ public class UnitTests {
         LoginService survy = new LoginService();
         LoginResponse response1 = survy.Login(user, "wrong");
         String nameOne = response1.getUsername();
-        Assertions.assertEquals(nameOne,"");
+        Assertions.assertEquals(nameOne,null);
     }
     @Test
     public void LoginSuccess(){
