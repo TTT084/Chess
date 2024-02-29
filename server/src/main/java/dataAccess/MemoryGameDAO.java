@@ -5,7 +5,7 @@ import record.GameData;
 
 import java.util.HashSet;
 
-public class MemoryGameDAO {
+public class MemoryGameDAO implements GameDAO{
     public void clear(){
         FakeData.clearGames();
     }
@@ -15,7 +15,7 @@ public class MemoryGameDAO {
     public void createGame(GameData game){
         FakeData.createGame(game);
     }
-    public void joinGame(String gameID, Boolean isBlack, String username, Boolean isWatcher) {
-        FakeData.updateGame(gameID, isBlack, username, isWatcher);
+    public GameData joinGame(String gameID, Boolean isBlack, String username, Boolean isWatcher) {
+        return FakeData.updateGame(gameID, isBlack, username, isWatcher);
     }
 }

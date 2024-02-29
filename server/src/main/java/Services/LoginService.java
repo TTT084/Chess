@@ -5,10 +5,11 @@ import dataAccess.AuthDAO;
 import dataAccess.MemoryAuthDAO;
 import dataAccess.UserDAO;
 import record.UserData;
+import dataAccess.MemoryUserDAO;
 
 public class LoginService {
     public LoginResponse Login(String name, String password){
-        UserDAO userAccess = new UserDAO();
+        UserDAO userAccess = new MemoryUserDAO();
         UserData user = userAccess.getUser(name);
         if(user==null){
             LoginResponse response = new LoginResponse(null,null);

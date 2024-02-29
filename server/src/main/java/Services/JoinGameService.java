@@ -8,6 +8,7 @@ import dataAccess.GameDAO;
 import dataAccess.MemoryAuthDAO;
 import record.AuthData;
 import record.GameData;
+import dataAccess.MemoryGameDAO;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -36,7 +37,7 @@ public class JoinGameService {
         else if(color.equals("WHITE")){
             hasColor=true;
         }
-        GameDAO gameAccess = new GameDAO();
+        GameDAO gameAccess = new MemoryGameDAO();
         GameData game =gameAccess.joinGame(gameID,isBlack,user.getUsername(),isWatcher);
 
         if(game==null){

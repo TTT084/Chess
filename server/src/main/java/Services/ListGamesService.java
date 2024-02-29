@@ -8,6 +8,7 @@ import dataAccess.GameDAO;
 import dataAccess.MemoryAuthDAO;
 import record.AuthData;
 import record.GameData;
+import dataAccess.MemoryGameDAO;
 
 import java.util.HashSet;
 
@@ -20,7 +21,7 @@ public class ListGamesService {
             response.setMessage("Error: unauthorized");
             return response;
         }
-        GameDAO gameAccess = new GameDAO();
+        GameDAO gameAccess = new MemoryGameDAO();
         HashSet<GameData> games = gameAccess.getGames();
 
         ListGameResponse response = new ListGameResponse(games);

@@ -10,6 +10,7 @@ import dataAccess.MemoryAuthDAO;
 import record.AuthData;
 import record.GameData;
 import java.util.Random;
+import dataAccess.MemoryGameDAO;
 
 public class CreateGameService {
     public CreateGameResponse CreateGame(String auth, String gameName){
@@ -21,7 +22,7 @@ public class CreateGameService {
             return response;
         }
 
-        GameDAO gameAccess = new GameDAO();
+        GameDAO gameAccess = new MemoryGameDAO();
         Random random = new Random();
         int gameID = random.nextInt(10000);
         ChessGame game = new ChessGame();

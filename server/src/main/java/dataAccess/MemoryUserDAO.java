@@ -3,7 +3,7 @@ package dataAccess;
 import Data.FakeData;
 import record.UserData;
 
-public class MemoryUserDAO {
+public class MemoryUserDAO implements UserDAO{
     public UserData getUser(String user){
         UserData response = FakeData.selectUsername(user);
 //        if (response==null){

@@ -5,6 +5,7 @@ import dataAccess.AuthDAO;
 import dataAccess.MemoryAuthDAO;
 import dataAccess.UserDAO;
 import record.UserData;
+import dataAccess.MemoryUserDAO;
 
 public class RegisterService {
 
@@ -14,7 +15,7 @@ public class RegisterService {
             response.setMessage("Error: bad request");
             return response;
         }
-        UserDAO user = new UserDAO();
+        UserDAO user = new MemoryUserDAO();
         UserData data;
         //try{
             data = user.getUser(username);
