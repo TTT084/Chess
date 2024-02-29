@@ -1,5 +1,6 @@
 package Services;
 
+import Responses.CreateGameResponse;
 import Responses.ListGameResponse;
 import Responses.Response;
 import dataAccess.AuthDAO;
@@ -9,6 +10,7 @@ import record.AuthData;
 import record.GameData;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class JoinGameService {
     public Response JoinGame(String auth, String gameID, String color){
@@ -19,14 +21,49 @@ public class JoinGameService {
             response.setMessage("Error: unauthorized");
             return response;
         }
+        CreateGameResponse response = new CreateGameResponse(null);
+        boolean isWatcher = false;
         boolean isBlack=false;
-        if(color.equals("BLACK")){
+        boolean hasColor = false;
+        if(color==null){
+            isWatcher=true;
+            //return response;
+        }
+        else if(color.equals("BLACK")){
+            hasColor=true;
             isBlack=true;
         }
+        else if(color.equals("WHITE")){
+            hasColor=true;
+        }
         GameDAO gameAccess = new GameDAO();
-        gameAccess.joinGame(gameID,isBlack,user.getUsername());
+        GameData game =gameAccess.joinGame(gameID,isBlack,user.getUsername(),isWatcher);
 
-        Response response = new Response();
+        if(game==null){
+            response = new CreateGameResponse(null);
+            response.setMessage("Error: bad request");
+            return response;
+        }
+        if(!Objects.equals(game.getGameID(), gameID)){
+            response = new CreateGameResponse(null);
+            response.setMessage("Error: bad request");
+            return response;
+        }
+        if(isBlack){
+            if(!Objects.equals(game.getBlackUsername(), user.getUsername())){
+                response = new CreateGameResponse(null);
+                response.setMessage("Error: already taken");
+                return response;
+            }
+        }
+        else if (!isWatcher&&!hasColor){
+            if(!Objects.equals(game.getWhiteUsername(), user.getUsername())){
+                response = new CreateGameResponse(null);
+                response.setMessage("Error: already taken");
+                return response;
+            }
+        }
+        response.setGameName(gameID);
         return response;
     }
 }

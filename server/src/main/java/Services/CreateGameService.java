@@ -23,7 +23,7 @@ public class CreateGameService {
 
         GameDAO gameAccess = new GameDAO();
         Random random = new Random();
-        int gameID = random.nextInt(1000);
+        int gameID = random.nextInt(10000);
         ChessGame game = new ChessGame();
         String newGamename = "game"+gameID;
         String returnGameID = String.valueOf(gameID);

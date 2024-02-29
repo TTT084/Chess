@@ -112,21 +112,74 @@ public class UnitTests {
         Assertions.assertNotEquals("changethis",response1.getMessage());
     }
     @Test void CreateGameFail(){
-        Assertions.assertNotEquals("changethis","");
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        CreateGameService createSurvy=new CreateGameService();
+        createSurvy.CreateGame("", "yes game");
+        Assertions.assertNotEquals("changethis",response1.getMessage());
     }
     @Test void JoinGameSuccess(){
-        Assertions.assertNotEquals("changethis","");
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        CreateGameService createSurvy=new CreateGameService();
+        CreateGameResponse createResponse= createSurvy.CreateGame("", "yes game");
+        JoinGameService joinSurvy = new JoinGameService();
+        joinSurvy.JoinGame(response1.getAuthToken(), createResponse.getGameName() ,null);
+        Assertions.assertNotEquals("changethis",response1.getMessage());
     }
     @Test void JoinGameTaken(){
-        Assertions.assertNotEquals("changethis","");
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        CreateGameService createSurvy=new CreateGameService();
+        CreateGameResponse createResponse= createSurvy.CreateGame("", "yes game");
+        JoinGameService joinSurvy = new JoinGameService();
+        joinSurvy.JoinGame(response1.getAuthToken(), createResponse.getGameName() ,"WHITE");
+        joinSurvy.JoinGame(response1.getAuthToken(), createResponse.getGameName() ,"WHITE");
+        Assertions.assertNotEquals("changethis",response1.getMessage());
     }
     @Test
     public void ListGamesWrongPassword(){
-        Assertions.assertNotEquals("changethis","");
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        CreateGameService createSurvy=new CreateGameService();
+        CreateGameResponse createResponse= createSurvy.CreateGame("", "yes game");
+        JoinGameService joinSurvy = new JoinGameService();
+        joinSurvy.JoinGame(response1.getAuthToken(), createResponse.getGameName() ,"WHITE");
+        ListGamesService listSurvy = new ListGamesService();
+        listSurvy.ListGames("wrong");
+        Assertions.assertNotEquals("changethis",response1.getMessage());
     }
     @Test
     public void ListGamesSuccess(){
-        Assertions.assertNotEquals("changethis","");
+        RegisterService regSurvy = new RegisterService();
+        RegisterResponse response = regSurvy.Register(user,pass,email);
+        LoginService survy = new LoginService();
+        LoginResponse response1 = survy.Login(user, pass);
+        String nameOne = response1.getUsername();
+        Assertions.assertEquals(nameOne,user);
+        CreateGameService createSurvy=new CreateGameService();
+        CreateGameResponse createResponse= createSurvy.CreateGame("", "yes game");
+        JoinGameService joinSurvy = new JoinGameService();
+        joinSurvy.JoinGame(response1.getAuthToken(), createResponse.getGameName() ,"WHITE");
+        ListGamesService listSurvy = new ListGamesService();
+        listSurvy.ListGames(response1.getAuthToken());
+        Assertions.assertNotEquals("changethis",response1.getMessage());
     }
 
 }

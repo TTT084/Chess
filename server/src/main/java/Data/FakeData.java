@@ -71,16 +71,25 @@ public class FakeData {
     public static void createGame(GameData game){
         games.add(game);
     }
-    public static void updateGame(String gameID, Boolean isBlack, String username){
+    public static GameData updateGame(String gameID, Boolean isBlack, String username, Boolean isWatcher){
         for (GameData data: games){
             if(Objects.equals(data.getGameID(), gameID)){
-                if(isBlack){
-                    data.setBlackUsername(username);
+                if(!isWatcher){
+                    if(isBlack){
+                        if(Objects.equals(data.getBlackUsername(), "")||data.getBlackUsername()==null){
+                            data.setBlackUsername(username);
+
+                        }
+                    }
+                    else{
+                        if(Objects.equals(data.getWhiteUsername(), "")||data.getWhiteUsername()==null){
+                            data.setWhiteUsername(username);
+                        }
+                    }
                 }
-                else{
-                    data.setWhiteUsername(username);
-                }
+                return data;
             }
         }
+        return null;
     }
 }

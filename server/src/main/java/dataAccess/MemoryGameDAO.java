@@ -15,7 +15,7 @@ public class MemoryGameDAO {
     public void createGame(GameData game){
         FakeData.createGame(game);
     }
-    public void joinGame(String gameID, Boolean isBlack, String username) {
-        FakeData.updateGame(gameID, isBlack, username);
+    public void joinGame(String gameID, Boolean isBlack, String username, Boolean isWatcher) {
+        FakeData.updateGame(gameID, isBlack, username, isWatcher);
     }
 }

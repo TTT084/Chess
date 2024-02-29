@@ -22,9 +22,11 @@ public class CreateGameHandler {
         CreateGameResponse response = GCServ.CreateGame(auth,gameName);
         if (Objects.equals(response.getMessage(), "Error: unauthorized")) {
             res.status(401);
+            return json.toJson(response);
         }
         if (Objects.equals(response.getMessage(), "Error: bad request")) {
             res.status(400);
+            return json.toJson(response);
         }
         res.status(200);
 
