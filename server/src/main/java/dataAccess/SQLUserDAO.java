@@ -1,5 +1,6 @@
 package dataAccess;
 
+import chess.ChessGame;
 import record.UserData;
 
 import java.sql.Connection;
@@ -34,9 +35,25 @@ public class SQLUserDAO implements UserDAO{
         var createUserTable = """
             CREATE TABLE  IF NOT EXISTS User (
                 id INT NOT NULL AUTO_INCREMENT,
-                name VARCHAR(255) NOT NULL,
-                type VARCHAR(255) NOT NULL,
-                PRIMARY KEY (id)
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL
+            )""";
+        var createAuthTable = """
+            CREATE TABLE  IF NOT EXISTS Auth (
+                id INT NOT NULL AUTO_INCREMENT,
+                username VARCHAR(255) NOT NULL,
+                authToken VARCHAR(255) NOT NULL
+                
+            )""";
+        var createGameTable = """
+            CREATE TABLE  IF NOT EXISTS Games (
+                id INT NOT NULL AUTO_INCREMENT,
+                whiteUsername VARCHAR(255),
+                blackUsername VARCHAR(255),
+                gameName VARCHAR(255) NOT NULL,
+                game NOT NULL
+                
             )""";
     }
 
