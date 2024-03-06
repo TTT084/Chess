@@ -14,13 +14,14 @@ public class SQLAuthDAO implements AuthDAO{
             DatabaseManager.createDatabase();
         }
         catch (DataAccessException e){
-            System.out.println("error");
+            System.out.println("Creating database error");
         }
         try(Connection conn = DatabaseManager.getConnection()){
             //checkDatabase(conn);
             DatabaseManager.createTables(conn);
         }
         catch (DataAccessException | SQLException e){
+            System.out.println("Creating tables error");
             return;
         }
 
@@ -41,13 +42,16 @@ public class SQLAuthDAO implements AuthDAO{
     public String createAuth(String user) {
         String auth = UUID.randomUUID().toString();
         try(Connection conn = DatabaseManager.getConnection()){
-            String insertAuth = "INSERT INTO Auth (username, authToken) VALUES(user, auth)";
+            String insertAuth = "INSERT INTO Auth (username, authToken) VALUES(?, ?)";
             try (var preparedStatement = conn.prepareStatement(insertAuth)) {
+                preparedStatement.setString(1, user);
+                preparedStatement.setString(2, auth);
+
                 preparedStatement.executeUpdate();
             }
         }
         catch (SQLException | DataAccessException e){
-
+            System.out.println("Creating auth error");
         }
         return auth;
     }
@@ -65,6 +69,7 @@ public class SQLAuthDAO implements AuthDAO{
             }
         }
         catch (DataAccessException | SQLException e){
+            System.out.println("Clear error");
             return;
         }
     }
@@ -73,7 +78,7 @@ public class SQLAuthDAO implements AuthDAO{
     public AuthData getAuth(String auth) {
         AuthData authy = null;
         try(Connection conn = DatabaseManager.getConnection()){
-            String returnAuth = "SELECT username, authToken FROM Auth WHERE authToken=auth?";
+            String returnAuth = "SELECT username, authToken FROM Auth WHERE authToken=?";
             try (var preparedStatement = conn.prepareStatement(returnAuth)) {
                 preparedStatement.setString(1, auth);
                 try (var rs = preparedStatement.executeQuery()) {
@@ -86,6 +91,7 @@ public class SQLAuthDAO implements AuthDAO{
             }
         }
         catch (DataAccessException | SQLException e){
+            System.out.println("Get auth error");
             return null;
         }
         return authy;

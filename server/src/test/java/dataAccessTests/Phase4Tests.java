@@ -6,6 +6,7 @@ import dataAccess.SQLAuthDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import record.AuthData;
 
 public class Phase4Tests {
     private String user;
@@ -36,14 +37,15 @@ public class Phase4Tests {
     public void GetAuth(){
         AuthDAO authy = new SQLAuthDAO();
         auth = authy.createAuth("usey");
-        Assertions.assertNotNull(auth);
+        AuthData data = authy.getAuth(auth);
+        Assertions.assertNotNull(data);
     }
 
     @Test
     public void GetBadAuth(){
         AuthDAO authy = new SQLAuthDAO();
-        auth = authy.createAuth("usey");
-        Assertions.assertNotNull(auth);
+        AuthData data = authy.getAuth("silly auth");
+        Assertions.assertNull(data);
     }
     @Test
     public void ClearAuth(){

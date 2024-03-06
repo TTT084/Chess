@@ -102,8 +102,10 @@ public class DatabaseManager {
                 whiteUsername VARCHAR(255),
                 blackUsername VARCHAR(255),
                 gameName VARCHAR(255) NOT NULL,
-                game NOT NULL, PRIMARY KEY (id)
-            )""";try (var createTableStatement = conn.prepareStatement(createGameTable)) {
+                game VARCHAR(255) NOT NULL, 
+                PRIMARY KEY (id)
+            )""";
+        try (var createTableStatement = conn.prepareStatement(createGameTable)) {
             createTableStatement.executeUpdate();
         }
     }
