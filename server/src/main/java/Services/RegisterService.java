@@ -1,11 +1,8 @@
 package Services;
 
 import Responses.RegisterResponse;
-import dataAccess.AuthDAO;
-import dataAccess.MemoryAuthDAO;
-import dataAccess.UserDAO;
+import dataAccess.*;
 import record.UserData;
-import dataAccess.MemoryUserDAO;
 
 public class RegisterService {
 
@@ -15,7 +12,7 @@ public class RegisterService {
             response.setMessage("Error: bad request");
             return response;
         }
-        UserDAO user = new MemoryUserDAO();
+        UserDAO user = new SQLUserDAO();
         UserData data;
         //try{
             data = user.getUser(username);

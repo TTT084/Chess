@@ -8,6 +8,27 @@ import java.sql.SQLException;
 import java.util.HashSet;
 
 public class SQLGameDAO implements GameDAO{
+    public SQLGameDAO() {
+        try(Connection conn = DatabaseManager.getConnection()){
+            checkDatabase(conn);
+        }
+        catch (DataAccessException | SQLException e){
+            return;
+        }
+
+    }
+    private void checkDatabase(Connection conn) throws SQLException, DataAccessException {
+        String databaseExist = "SELECT COUNT(*) AS count FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = chess";
+        try (var preparedStatement=conn.prepareStatement(databaseExist)){
+            try(var rs = preparedStatement.executeQuery()){
+                int count = rs.getInt(1);
+                if(count==1){
+                    DatabaseManager.createDatabase();
+                    DatabaseManager.createTables(conn);
+                }
+            }
+        }
+    }
 
     Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "monkeypie");
@@ -18,13 +39,16 @@ public class SQLGameDAO implements GameDAO{
             // Execute SQL statements on the connection here
         }
     }
-
-    SQLGameDAO() {
-        String createDatabase = "SELECT COUNT(*) AS count FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = ?";
-    }
     @Override
     public void clear() {
-
+        try(Connection conn = DatabaseManager.getConnection()){
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM games")) {
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (DataAccessException | SQLException e){
+            return;
+        }
     }
 
     @Override
