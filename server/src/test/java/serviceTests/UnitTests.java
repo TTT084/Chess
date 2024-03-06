@@ -1,4 +1,4 @@
-package UnitTests;
+package serviceTests;
 
 import Responses.RegisterResponse;
 import Services.RegisterService;

@@ -1,8 +1,5 @@
-package UnitTests;
+package dataAccessTests;
 
-import Responses.RegisterResponse;
-import Services.RegisterService;
-import Responses.*;
 import Services.*;
 import dataAccess.AuthDAO;
 import dataAccess.SQLAuthDAO;
@@ -25,6 +22,25 @@ public class Phase4Tests {
     }
     @Test
     public void InsertAuth(){
+        AuthDAO authy = new SQLAuthDAO();
+        auth = authy.createAuth("usey");
+        Assertions.assertNotNull(auth);
+    }
+    @Test
+    public void InsertBadAuth(){
+        AuthDAO authy = new SQLAuthDAO();
+        auth = authy.createAuth("usey");
+        Assertions.assertNotNull(auth);
+    }
+    @Test
+    public void GetAuth(){
+        AuthDAO authy = new SQLAuthDAO();
+        auth = authy.createAuth("usey");
+        Assertions.assertNotNull(auth);
+    }
+
+    @Test
+    public void GetBadAuth(){
         AuthDAO authy = new SQLAuthDAO();
         auth = authy.createAuth("usey");
         Assertions.assertNotNull(auth);

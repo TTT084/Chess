@@ -68,28 +68,43 @@ public class DatabaseManager {
         }
     }
     static void createTables(Connection conn) throws SQLException, DataAccessException {
+        var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS pet_store");
+        createDbStatement.executeUpdate();
+
+        conn.setCatalog("chess");
+
         var createUserTable = """
             CREATE TABLE  IF NOT EXISTS User (
                 id INT NOT NULL AUTO_INCREMENT,
                 username VARCHAR(255) NOT NULL,
                 password VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL
+                email VARCHAR(255) NOT NULL, PRIMARY KEY (id)
             )""";
+
+
+        try (var createTableStatement = conn.prepareStatement(createUserTable)) {
+            createTableStatement.executeUpdate();
+        }
+
         var createAuthTable = """
             CREATE TABLE  IF NOT EXISTS Auth (
                 id INT NOT NULL AUTO_INCREMENT,
                 username VARCHAR(255) NOT NULL,
-                authToken VARCHAR(255) NOT NULL
-                
+                authToken VARCHAR(255) NOT NULL, 
+                PRIMARY KEY (id)
             )""";
+        try (var createTableStatement = conn.prepareStatement(createAuthTable)) {
+            createTableStatement.executeUpdate();
+        }
         var createGameTable = """
             CREATE TABLE  IF NOT EXISTS Games (
                 id INT NOT NULL AUTO_INCREMENT,
                 whiteUsername VARCHAR(255),
                 blackUsername VARCHAR(255),
                 gameName VARCHAR(255) NOT NULL,
-                game NOT NULL
-                
-            )""";
+                game NOT NULL, PRIMARY KEY (id)
+            )""";try (var createTableStatement = conn.prepareStatement(createGameTable)) {
+            createTableStatement.executeUpdate();
+        }
     }
 }

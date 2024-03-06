@@ -3,14 +3,22 @@ package dataAccess;
 import Data.FakeData;
 import record.AuthData;
 
+import java.lang.module.ResolutionException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
 
 public class SQLAuthDAO implements AuthDAO{
-    public SQLAuthDAO() {
+    public SQLAuthDAO()  {
+        try{
+            DatabaseManager.createDatabase();
+        }
+        catch (DataAccessException e){
+            System.out.println("error");
+        }
         try(Connection conn = DatabaseManager.getConnection()){
-            checkDatabase(conn);
+            //checkDatabase(conn);
+            DatabaseManager.createTables(conn);
         }
         catch (DataAccessException | SQLException e){
             return;
@@ -63,17 +71,16 @@ public class SQLAuthDAO implements AuthDAO{
 
     @Override
     public AuthData getAuth(String auth) {
+        AuthData authy = null;
         try(Connection conn = DatabaseManager.getConnection()){
             String returnAuth = "SELECT username, authToken FROM Auth WHERE authToken=auth?";
             try (var preparedStatement = conn.prepareStatement(returnAuth)) {
                 preparedStatement.setString(1, auth);
                 try (var rs = preparedStatement.executeQuery()) {
                     while (rs.next()) {
-                        var id = rs.getInt("username");
-                        var name = rs.getString("authToken");
-                        //String user = id;
-                        AuthData authy = new AuthData(id,name);
-                        return authy;
+                        String name = rs.getString("username");
+                        String token = rs.getString("authToken");
+                        authy = new AuthData(token,name);
                     }
                 }
             }
@@ -81,10 +88,19 @@ public class SQLAuthDAO implements AuthDAO{
         catch (DataAccessException | SQLException e){
             return null;
         }
+        return authy;
     }
 
     @Override
     public void deleteAuth(String user, String auth) {
-
+        try(Connection conn = DatabaseManager.getConnection()){
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auth WHERE authToken=auth?")) {
+                preparedStatement.setString(1, auth);
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (DataAccessException | SQLException e){
+            return;
+        }
     }
 }
