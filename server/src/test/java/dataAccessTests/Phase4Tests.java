@@ -3,6 +3,8 @@ package dataAccessTests;
 import Services.*;
 import dataAccess.AuthDAO;
 import dataAccess.SQLAuthDAO;
+import dataAccess.SQLUserDAO;
+import dataAccess.UserDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,5 +57,11 @@ public class Phase4Tests {
         authy.clear();
 
         //Assertions.assertEquals(newUser2,newUser);
+    }
+    @Test
+    public void InsertUser(){
+        UserDAO usery = new SQLUserDAO();
+        usery.createUser("user","pass","myemail");
+        Assertions.assertNotEquals("yuh","yeh");
     }
 }

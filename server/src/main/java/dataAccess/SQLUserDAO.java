@@ -9,13 +9,20 @@ import java.sql.SQLException;
 
 public class SQLUserDAO implements UserDAO{
     public SQLUserDAO() {
+        try{
+            DatabaseManager.createDatabase();
+        }
+        catch (DataAccessException e){
+            System.out.println("Creating database error");
+        }
         try(Connection conn = DatabaseManager.getConnection()){
-            checkDatabase(conn);
+            //checkDatabase(conn);
+            DatabaseManager.createTables(conn);
         }
         catch (DataAccessException | SQLException e){
+            System.out.println("Creating tables error");
             return;
         }
-
     }
     private void checkDatabase(Connection conn) throws SQLException, DataAccessException {
         String databaseExist = "SELECT COUNT(*) AS count FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = chess";
@@ -44,10 +51,10 @@ public class SQLUserDAO implements UserDAO{
     @Override
     public void createUser(String name, String pass, String email) {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO chess (name, pass, email) VALUES(?, ?, ?)")) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO User (username, password, email) VALUES(?, ?, ?)")) {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, pass);
-                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, email);
 
                 preparedStatement.executeUpdate();
             }
