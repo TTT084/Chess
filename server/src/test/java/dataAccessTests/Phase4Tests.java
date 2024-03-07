@@ -1,14 +1,14 @@
 package dataAccessTests;
 
 import Services.*;
-import dataAccess.AuthDAO;
-import dataAccess.SQLAuthDAO;
-import dataAccess.SQLUserDAO;
-import dataAccess.UserDAO;
+import chess.ChessGame;
+import dataAccess.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import record.AuthData;
+import record.GameData;
+import record.UserData;
 
 public class Phase4Tests {
     private String user;
@@ -63,5 +63,33 @@ public class Phase4Tests {
         UserDAO usery = new SQLUserDAO();
         usery.createUser("user","pass","myemail");
         Assertions.assertNotEquals("yuh","yeh");
+    }
+    @Test
+    public void InsertBadUser(){
+        UserDAO usery = new SQLUserDAO();
+        usery.createUser("user","pass","myemail");
+        Assertions.assertNotEquals("yuh","yeh");
+    }
+    @Test
+    public void GetUser(){
+        UserDAO usery = new SQLUserDAO();
+        usery.createUser("user","pass","myemail");
+        UserData myUser = usery.getUser("user");
+        String name = myUser.getUsername();
+        Assertions.assertEquals("user",name);
+    }
+    @Test
+    public void ClearUser(){
+        UserDAO usery = new SQLUserDAO();
+        usery.createUser("usey","","");
+        Assertions.assertNotEquals("yuh","");
+        usery.clear();
+    }
+    @Test
+    public void InsertGame(){
+        GameDAO gameBoi = new SQLGameDAO();
+        GameData game = new GameData("1",null,null,"myGame",new ChessGame());
+        gameBoi.createGame(game);
+        Assertions.assertNotEquals("yuh","");
     }
 }

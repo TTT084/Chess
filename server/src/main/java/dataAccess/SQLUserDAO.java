@@ -1,6 +1,7 @@
 package dataAccess;
 
 import chess.ChessGame;
+import record.AuthData;
 import record.UserData;
 
 import java.sql.Connection;
@@ -45,7 +46,26 @@ public class SQLUserDAO implements UserDAO{
     }
     @Override
     public UserData getUser(String user) {
-        return null;
+        UserData userMan = null;
+        try(Connection conn = DatabaseManager.getConnection()){
+            String returnUser = "SELECT username, password, email FROM User WHERE username=?";
+            try (var preparedStatement = conn.prepareStatement(returnUser)) {
+                preparedStatement.setString(1, user);
+                try (var rs = preparedStatement.executeQuery()) {
+                    while (rs.next()) {
+                        String name = rs.getString("username");
+                        String pass = rs.getString("password");
+                        String email = rs.getString("email");
+                        userMan = new UserData(name,pass,email);
+                    }
+                }
+            }
+        }
+        catch (DataAccessException | SQLException e){
+            System.out.println("Get User error");
+            return null;
+        }
+        return userMan;
     }
 
     @Override

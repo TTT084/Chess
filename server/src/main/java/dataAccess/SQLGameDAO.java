@@ -9,13 +9,20 @@ import java.util.HashSet;
 
 public class SQLGameDAO implements GameDAO{
     public SQLGameDAO() {
+        try{
+            DatabaseManager.createDatabase();
+        }
+        catch (DataAccessException e){
+            System.out.println("Creating database error");
+        }
         try(Connection conn = DatabaseManager.getConnection()){
-            checkDatabase(conn);
+            //checkDatabase(conn);
+            DatabaseManager.createTables(conn);
         }
         catch (DataAccessException | SQLException e){
+            System.out.println("Creating tables error");
             return;
         }
-
     }
     private void checkDatabase(Connection conn) throws SQLException, DataAccessException {
         String databaseExist = "SELECT COUNT(*) AS count FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = chess";
@@ -58,7 +65,17 @@ public class SQLGameDAO implements GameDAO{
 
     @Override
     public void createGame(GameData game) {
+        try(Connection conn = DatabaseManager.getConnection()){
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO Games (gameName, game) VALUES(?, ?)")) {
+                preparedStatement.setString(1, game.getGameName());
+                preparedStatement.setString(2, game.getGameID());
 
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (DataAccessException | SQLException e){
+            return;
+        }
     }
 
     @Override
