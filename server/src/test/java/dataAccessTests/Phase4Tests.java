@@ -92,4 +92,10 @@ public class Phase4Tests {
         gameBoi.createGame(game);
         Assertions.assertNotEquals("yuh","");
     }
+    public void InsertGameFail(){
+        GameDAO gameBoi = new SQLGameDAO();
+        GameData game = new GameData("1",null,null,"myGame",new ChessGame());
+        gameBoi.createGame(game);
+        Assertions.assertNotEquals("yuh","");
+    }
 }
