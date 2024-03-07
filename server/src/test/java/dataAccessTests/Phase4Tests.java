@@ -3,12 +3,15 @@ package dataAccessTests;
 import Services.*;
 import chess.ChessGame;
 import dataAccess.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import record.AuthData;
 import record.GameData;
 import record.UserData;
+
+import java.util.HashSet;
 
 public class Phase4Tests {
     private String user;
@@ -22,6 +25,11 @@ public class Phase4Tests {
         user = "myUsername";
         pass = "sillyPass";
         email = "myEmail";
+    }
+    @AfterEach
+    public void cleanup(){
+        ClearService survy = new ClearService();
+        survy.Clear();
     }
     @Test
     public void InsertAuth(){
@@ -86,16 +94,35 @@ public class Phase4Tests {
         usery.clear();
     }
     @Test
+    public void ClearGame(){
+        GameDAO gameBoi = new SQLGameDAO();
+        gameBoi.clear();
+        Assertions.assertNotEquals("yuh","");
+    }
+    @Test
     public void InsertGame(){
         GameDAO gameBoi = new SQLGameDAO();
         GameData game = new GameData("1",null,null,"myGame",new ChessGame());
         gameBoi.createGame(game);
         Assertions.assertNotEquals("yuh","");
     }
+    @Test
     public void InsertGameFail(){
         GameDAO gameBoi = new SQLGameDAO();
         GameData game = new GameData("1",null,null,"myGame",new ChessGame());
         gameBoi.createGame(game);
         Assertions.assertNotEquals("yuh","");
+    }
+    @Test
+    public void GetGames(){
+        GameDAO gameBoi = new SQLGameDAO();
+        GameData game = new GameData("1",null,null,"myGame",new ChessGame());
+        gameBoi.createGame(game);
+        HashSet<GameData> games = gameBoi.getGames();
+        Assertions.assertNotNull(games);
+    }
+    @Test
+    public void GetGamesFail(){
+
     }
 }
