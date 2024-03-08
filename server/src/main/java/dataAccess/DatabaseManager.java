@@ -68,8 +68,8 @@ public class DatabaseManager {
         }
     }
     static void createTables(Connection conn) throws SQLException, DataAccessException {
-        var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS pet_store");
-        createDbStatement.executeUpdate();
+        //var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS ");
+        //createDbStatement.executeUpdate();
 
         conn.setCatalog("chess");
 
