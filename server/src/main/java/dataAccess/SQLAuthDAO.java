@@ -42,7 +42,7 @@ public class SQLAuthDAO implements AuthDAO{
     public String createAuth(String user) {
         String auth = UUID.randomUUID().toString();
         try(Connection conn = DatabaseManager.getConnection()){
-            String insertAuth = "INSERT INTO Auth (username, authToken) VALUES(?, ?)";
+            String insertAuth = "INSERT INTO auth (username, authToken) VALUES(?, ?)";
             try (var preparedStatement = conn.prepareStatement(insertAuth)) {
                 preparedStatement.setString(1, user);
                 preparedStatement.setString(2, auth);
@@ -62,7 +62,7 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public void clear() {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auth")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM auth")) {
                 preparedStatement.executeUpdate();
             }
         }
@@ -76,7 +76,7 @@ public class SQLAuthDAO implements AuthDAO{
     public AuthData getAuth(String auth) {
         AuthData authy = null;
         try(Connection conn = DatabaseManager.getConnection()){
-            String returnAuth = "SELECT username, authToken FROM Auth WHERE authToken=?";
+            String returnAuth = "SELECT username, authToken FROM auth WHERE authToken=?";
             try (var preparedStatement = conn.prepareStatement(returnAuth)) {
                 preparedStatement.setString(1, auth);
                 try (var rs = preparedStatement.executeQuery()) {
@@ -98,7 +98,7 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public void deleteAuth(String user, String auth) {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auth WHERE authToken=?")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM auth WHERE authToken=?")) {
                 preparedStatement.setString(1, auth);
                 preparedStatement.executeUpdate();
             }

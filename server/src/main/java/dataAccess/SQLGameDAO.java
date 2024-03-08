@@ -55,7 +55,7 @@ public class SQLGameDAO implements GameDAO{
     @Override
     public void clear() {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM Games")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM games")) {
                 preparedStatement.executeUpdate();
             }
         }
@@ -69,7 +69,7 @@ public class SQLGameDAO implements GameDAO{
         Gson json = new Gson();
         HashSet<GameData> games = new HashSet<>();
         try(Connection conn = DatabaseManager.getConnection()){
-            String returnUser = "SELECT id, whiteUsername, blackUsername, gameName, game FROM Games";
+            String returnUser = "SELECT id, whiteUsername, blackUsername, gameName, game FROM games";
             try (var preparedStatement = conn.prepareStatement(returnUser)) {
                 try (var rs = preparedStatement.executeQuery()) {
                     while (rs.next()) {
@@ -96,7 +96,7 @@ public class SQLGameDAO implements GameDAO{
         Gson json = new Gson();
         String gameString = json.toJson(game.getGame());
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO Games (gameName, game) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO games (gameName, game) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, game.getGameName());
                 preparedStatement.setString(2, gameString);
 
@@ -139,7 +139,7 @@ public class SQLGameDAO implements GameDAO{
         return game;
     }
     private void updateGame(String gameID, GameData game){
-        String update = "UPDATE Games SET whiteUsername=?, blackUsername=? WHERE id=?";
+        String update = "UPDATE games SET whiteUsername=?, blackUsername=? WHERE id=?";
         String black = game.getBlackUsername();
         String white = game.getWhiteUsername();
         int number = Integer.parseInt(gameID);
@@ -160,7 +160,7 @@ public class SQLGameDAO implements GameDAO{
         Gson json = new Gson();
         GameData gaming = null;
         try(Connection conn = DatabaseManager.getConnection()){
-            String returnUser = "SELECT id, whiteUsername, blackUsername, gameName, game FROM Games WHERE id=?";
+            String returnUser = "SELECT id, whiteUsername, blackUsername, gameName, game FROM games WHERE id=?";
             try (var preparedStatement = conn.prepareStatement(returnUser)) {
                 preparedStatement.setInt(1, Integer.parseInt(gameID));
                 try (var rs = preparedStatement.executeQuery()) {

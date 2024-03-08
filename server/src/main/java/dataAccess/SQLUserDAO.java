@@ -49,7 +49,7 @@ public class SQLUserDAO implements UserDAO{
     public UserData getUser(String user) {
         UserData userMan = null;
         try(Connection conn = DatabaseManager.getConnection()){
-            String returnUser = "SELECT username, password, email FROM User WHERE username=?";
+            String returnUser = "SELECT username, password, email FROM user WHERE username=?";
             try (var preparedStatement = conn.prepareStatement(returnUser)) {
                 preparedStatement.setString(1, user);
                 try (var rs = preparedStatement.executeQuery()) {
@@ -74,7 +74,7 @@ public class SQLUserDAO implements UserDAO{
         String encodedPassword= encodePassword(pass);
 
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO User (username, password, email) VALUES(?, ?, ?)")) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO user (username, password, email) VALUES(?, ?, ?)")) {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, encodedPassword);
                 preparedStatement.setString(3, email);
@@ -90,7 +90,7 @@ public class SQLUserDAO implements UserDAO{
     @Override
     public void clear() {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM User")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM user")) {
                 //preparedStatement.setInt(1);
                 preparedStatement.executeUpdate();
             }

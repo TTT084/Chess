@@ -87,7 +87,7 @@ public class DatabaseManager {
 //        }
 
         var createUserTable = """
-            CREATE TABLE  IF NOT EXISTS User (
+            CREATE TABLE  IF NOT EXISTS user (
                 id INT NOT NULL AUTO_INCREMENT,
                 username VARCHAR(255) NOT NULL,
                 password VARCHAR(255) NOT NULL,
@@ -100,7 +100,7 @@ public class DatabaseManager {
         }
 
         var createAuthTable = """
-            CREATE TABLE  IF NOT EXISTS Auth (
+            CREATE TABLE  IF NOT EXISTS auth (
                 id INT NOT NULL AUTO_INCREMENT,
                 username VARCHAR(255) NOT NULL,
                 authToken VARCHAR(255) NOT NULL, 
@@ -110,7 +110,7 @@ public class DatabaseManager {
             createTableStatement.executeUpdate();
         }
         var createGameTable = """
-            CREATE TABLE  IF NOT EXISTS Games (
+            CREATE TABLE  IF NOT EXISTS games (
                 id INT NOT NULL AUTO_INCREMENT,
                 whiteUsername VARCHAR(255),
                 blackUsername VARCHAR(255),
