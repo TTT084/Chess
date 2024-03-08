@@ -13,7 +13,7 @@ public class LoginService {
             response.setMessage("Error: unauthorized");
             return response;
         }
-        if(!password.equals(user.getPassword())){
+        if(!userAccess.verifyPassword(user.getPassword(), password)){
             LoginResponse response = new LoginResponse(null,null);
             response.setMessage("Error: unauthorized");
             return response;

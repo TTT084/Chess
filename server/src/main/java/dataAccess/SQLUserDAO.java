@@ -1,6 +1,7 @@
 package dataAccess;
 
 import chess.ChessGame;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import record.AuthData;
 import record.UserData;
 
@@ -70,10 +71,12 @@ public class SQLUserDAO implements UserDAO{
 
     @Override
     public void createUser(String name, String pass, String email) {
+        String encodedPassword= encodePassword(pass);
+
         try(Connection conn = DatabaseManager.getConnection()){
             try (var preparedStatement = conn.prepareStatement("INSERT INTO User (username, password, email) VALUES(?, ?, ?)")) {
                 preparedStatement.setString(1, name);
-                preparedStatement.setString(2, pass);
+                preparedStatement.setString(2, encodedPassword);
                 preparedStatement.setString(3, email);
 
                 preparedStatement.executeUpdate();
@@ -95,5 +98,23 @@ public class SQLUserDAO implements UserDAO{
         catch (DataAccessException | SQLException e){
             return;
         }
+    }
+
+    @Override
+    public boolean verifyPassword(String hashedPassword, String password) {
+        String pass = encodePassword(password);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(password, hashedPassword);
+//        if(hashedPassword.equals(pass)){
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+    }
+
+    private String encodePassword(String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.encode(password);
     }
 }

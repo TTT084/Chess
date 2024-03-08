@@ -12,7 +12,6 @@ public class MemoryAuthDAO implements AuthDAO{
         return auth;
     }
 
-    @Override
     public void addAuth(String user, String auth) {
         FakeData.insertAuth(user,auth);
     }

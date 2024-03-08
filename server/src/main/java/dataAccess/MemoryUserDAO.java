@@ -17,4 +17,9 @@ public class MemoryUserDAO implements UserDAO{
     public void clear(){
         FakeData.clearUser();
     }
+
+    @Override
+    public boolean verifyPassword(String hashedPassword, String password) {
+        return false;
+    }
 }

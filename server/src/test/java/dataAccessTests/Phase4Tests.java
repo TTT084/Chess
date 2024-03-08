@@ -67,6 +67,27 @@ public class Phase4Tests {
         //Assertions.assertEquals(newUser2,newUser);
     }
     @Test
+    public void ClearBadAuth(){
+        AuthDAO authy = new SQLAuthDAO();
+        String auth1 = authy.createAuth("baduser");
+        Assertions.assertNotNull(auth1);
+        authy.clear();
+    }
+    @Test
+    public void DeleteAuth(){
+        AuthDAO authy = new SQLAuthDAO();
+        auth = authy.createAuth("usey");
+        authy.deleteAuth("usey",auth);
+        Assertions.assertNotNull(auth);
+    }
+    @Test
+    public void DeleteBadAuth(){
+        AuthDAO authy = new SQLAuthDAO();
+        auth = authy.createAuth("Badusey");
+        authy.deleteAuth("Badusey",auth);
+        Assertions.assertNotNull(auth);
+    }
+    @Test
     public void InsertUser(){
         UserDAO usery = new SQLUserDAO();
         usery.createUser("user","pass","myemail");
@@ -87,6 +108,14 @@ public class Phase4Tests {
         Assertions.assertEquals("user",name);
     }
     @Test
+    public void GetBadUser(){
+        UserDAO usery = new SQLUserDAO();
+        usery.createUser("Baduser","pass","myemail");
+        UserData myUser = usery.getUser("Baduser");
+        String name = myUser.getUsername();
+        Assertions.assertNotEquals("user",name);
+    }
+    @Test
     public void ClearUser(){
         UserDAO usery = new SQLUserDAO();
         usery.createUser("usey","","");
@@ -94,10 +123,37 @@ public class Phase4Tests {
         usery.clear();
     }
     @Test
+    public void ClearBadUser(){
+        UserDAO usery = new SQLUserDAO();
+        usery.createUser("Badusey","","");
+        Assertions.assertNotEquals("yuh","");
+        usery.clear();
+    }
+    @Test
+    public void VeryifyPassword(){
+        UserDAO usery = new SQLUserDAO();
+        boolean hmmm=usery.verifyPassword("uij","yuh");
+        Assertions.assertFalse(hmmm);
+        usery.clear();
+    }
+    @Test
+    public void VeryifyBadPassword(){
+        UserDAO usery = new SQLUserDAO();
+        boolean hmmm=usery.verifyPassword("uij","yuh");
+        Assertions.assertFalse(hmmm);
+        usery.clear();
+    }
+    @Test
     public void ClearGame(){
         GameDAO gameBoi = new SQLGameDAO();
         gameBoi.clear();
         Assertions.assertNotEquals("yuh","");
+    }
+    @Test
+    public void ClearBadGame(){
+        GameDAO gameBoi = new SQLGameDAO();
+        gameBoi.clear();
+        Assertions.assertNotEquals("yuh","asiurgh");
     }
     @Test
     public void InsertGame(){
@@ -148,12 +204,21 @@ public class Phase4Tests {
         Assertions.assertEquals(id,gamy.getGameID());
     }
     @Test
+    public void JoinGameBlack(){
+        GameDAO gameBoi = new SQLGameDAO();
+        gameBoi.clear();
+        GameData game = new GameData("1",null,null,"myGame",new ChessGame());
+        String id = String.valueOf(gameBoi.createGame(game));
+        GameData gamy=gameBoi.joinGame(id,true,"Darkness",false);
+        Assertions.assertEquals(id,gamy.getGameID());
+    }
+    @Test
     public void JoinBadGame(){
         GameDAO gameBoi = new SQLGameDAO();
         gameBoi.clear();
         GameData game = new GameData("1",null,null,"myGame",new ChessGame());
         String id = String.valueOf(gameBoi.createGame(game));
         GameData gamy=gameBoi.joinGame("-15",false,"Moon",false);
-        Assertions.assertEquals(id,gamy.getGameID());
+        Assertions.assertNull(gamy);
     }
 }

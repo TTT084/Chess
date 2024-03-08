@@ -56,10 +56,8 @@ public class SQLAuthDAO implements AuthDAO{
         return auth;
     }
 
-    @Override
-    public void addAuth(String user, String auth) {
-
-    }
+//    @Override
+//    public void addAuth(String user, String auth) {}
 
     @Override
     public void clear() {
@@ -100,7 +98,7 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public void deleteAuth(String user, String auth) {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auth WHERE authToken=auth?")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auth WHERE authToken=?")) {
                 preparedStatement.setString(1, auth);
                 preparedStatement.executeUpdate();
             }
