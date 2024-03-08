@@ -27,7 +27,7 @@ public class RegisterService {
         }
         user.createUser(username,pass,email);
 
-        AuthDAO auth = new MemoryAuthDAO();
+        AuthDAO auth = new SQLAuthDAO();
         String token = auth.createAuth(username);
         RegisterResponse response = new RegisterResponse(token,username);
         return response;

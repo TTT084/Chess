@@ -123,6 +123,37 @@ public class Phase4Tests {
     }
     @Test
     public void GetGamesFail(){
-
+        GameDAO gameBoi = new SQLGameDAO();
+        gameBoi.clear();
+        HashSet<GameData> games = gameBoi.getGames();
+        HashSet<GameData> sillygames = new HashSet<>();
+        Assertions.assertEquals(sillygames,games);
+    }
+    @Test
+    public void JoinGameWatch(){
+        GameDAO gameBoi = new SQLGameDAO();
+        gameBoi.clear();
+        GameData game = new GameData("1",null,null,"myGame",new ChessGame());
+        String id = String.valueOf(gameBoi.createGame(game));
+        GameData gamy=gameBoi.joinGame(id,false,"watcher",true);
+        Assertions.assertEquals(id,gamy.getGameID());
+    }
+    @Test
+    public void JoinGameWhite(){
+        GameDAO gameBoi = new SQLGameDAO();
+        gameBoi.clear();
+        GameData game = new GameData("1",null,null,"myGame",new ChessGame());
+        String id = String.valueOf(gameBoi.createGame(game));
+        GameData gamy=gameBoi.joinGame(id,false,"Moon",false);
+        Assertions.assertEquals(id,gamy.getGameID());
+    }
+    @Test
+    public void JoinBadGame(){
+        GameDAO gameBoi = new SQLGameDAO();
+        gameBoi.clear();
+        GameData game = new GameData("1",null,null,"myGame",new ChessGame());
+        String id = String.valueOf(gameBoi.createGame(game));
+        GameData gamy=gameBoi.joinGame("-15",false,"Moon",false);
+        Assertions.assertEquals(id,gamy.getGameID());
     }
 }

@@ -1,13 +1,12 @@
 package Services;
 import Responses.LoginResponse;
 import Responses.Response;
-import dataAccess.AuthDAO;
-import dataAccess.MemoryAuthDAO;
+import dataAccess.*;
 import record.AuthData;
 
 public class LogoutService {
     public Response Logout(String auth){
-        AuthDAO authAccess = new MemoryAuthDAO();
+        AuthDAO authAccess = new SQLAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){
             LoginResponse response = new LoginResponse(null,null);

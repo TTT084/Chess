@@ -3,19 +3,16 @@ package Services;
 import Responses.CreateGameResponse;
 import Responses.ListGameResponse;
 import Responses.Response;
-import dataAccess.AuthDAO;
-import dataAccess.GameDAO;
-import dataAccess.MemoryAuthDAO;
+import dataAccess.*;
 import record.AuthData;
 import record.GameData;
-import dataAccess.MemoryGameDAO;
 
 import java.util.HashSet;
 import java.util.Objects;
 
 public class JoinGameService {
     public Response JoinGame(String auth, String gameID, String color){
-        AuthDAO authAccess = new MemoryAuthDAO();
+        AuthDAO authAccess = new SQLAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){
             ListGameResponse response = new ListGameResponse(null);
@@ -37,7 +34,7 @@ public class JoinGameService {
         else if(color.equals("WHITE")){
             hasColor=true;
         }
-        GameDAO gameAccess = new MemoryGameDAO();
+        GameDAO gameAccess = new SQLGameDAO();
         GameData game =gameAccess.joinGame(gameID,isBlack,user.getUsername(),isWatcher);
 
         if(game==null){

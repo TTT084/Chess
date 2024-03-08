@@ -101,12 +101,17 @@ public class DatabaseManager {
                 id INT NOT NULL AUTO_INCREMENT,
                 whiteUsername VARCHAR(255),
                 blackUsername VARCHAR(255),
-                gameName VARCHAR(255) NOT NULL,
+                gameName VARCHAR(500) NOT NULL,
                 game TEXT NOT NULL, 
                 PRIMARY KEY (id)
             )""";
+
         try (var createTableStatement = conn.prepareStatement(createGameTable)) {
             createTableStatement.executeUpdate();
+        }
+        var updateTables ="ALTER TABLE Games MODIFY COLUMN game TEXT";
+        try (var updateTableStatement = conn.prepareStatement(updateTables)) {
+            updateTableStatement.executeUpdate();
         }
     }
 }
