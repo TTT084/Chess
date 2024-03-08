@@ -67,6 +67,7 @@ public class DatabaseManager {
             throw new DataAccessException(e.getMessage());
         }
     }
+
     static void createTables(Connection conn) throws SQLException, DataAccessException {
         //var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS ");
         //createDbStatement.executeUpdate();
