@@ -90,7 +90,7 @@ public class SQLUserDAO implements UserDAO{
     @Override
     public void clear() {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM user")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM User")) {
                 //preparedStatement.setInt(1);
                 preparedStatement.executeUpdate();
             }

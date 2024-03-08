@@ -73,6 +73,19 @@ public class DatabaseManager {
 
         conn.setCatalog("chess");
 
+//        var dropUserTables ="DROP TABLE User";
+//        try (var updateTableStatement = conn.prepareStatement(dropUserTables)) {
+//            updateTableStatement.executeUpdate();
+//        }
+//        var dropAuthTables ="DROP TABLE Auth";
+//        try (var updateTableStatement = conn.prepareStatement(dropAuthTables)) {
+//            updateTableStatement.executeUpdate();
+//        }
+//        var dropGamesTables ="DROP TABLE Games";
+//        try (var updateTableStatement = conn.prepareStatement(dropGamesTables)) {
+//            updateTableStatement.executeUpdate();
+//        }
+
         var createUserTable = """
             CREATE TABLE  IF NOT EXISTS User (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -109,9 +122,9 @@ public class DatabaseManager {
         try (var createTableStatement = conn.prepareStatement(createGameTable)) {
             createTableStatement.executeUpdate();
         }
-        var updateTables ="ALTER TABLE Games MODIFY COLUMN game TEXT";
-        try (var updateTableStatement = conn.prepareStatement(updateTables)) {
-            updateTableStatement.executeUpdate();
-        }
+//        var updateTables ="ALTER TABLE Games MODIFY COLUMN game TEXT";
+//        try (var updateTableStatement = conn.prepareStatement(updateTables)) {
+//            updateTableStatement.executeUpdate();
+//        }
     }
 }

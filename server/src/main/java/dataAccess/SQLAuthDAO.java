@@ -62,7 +62,7 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public void clear() {
         try(Connection conn = DatabaseManager.getConnection()){
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM auth")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auth")) {
                 preparedStatement.executeUpdate();
             }
         }
