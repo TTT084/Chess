@@ -26,18 +26,6 @@ public class SQLAuthDAO implements AuthDAO{
         }
 
     }
-    private void checkDatabase(Connection conn) throws SQLException, DataAccessException {
-        String databaseExist = "SELECT COUNT(*) AS count FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = chess";
-        try (var preparedStatement=conn.prepareStatement(databaseExist)){
-            try(var rs = preparedStatement.executeQuery()){
-                int count = rs.getInt(1);
-                if(count==1){
-                    DatabaseManager.createDatabase();
-                    DatabaseManager.createTables(conn);
-                }
-            }
-        }
-    }
     @Override
     public String createAuth(String user) {
         String auth = UUID.randomUUID().toString();

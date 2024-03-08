@@ -71,8 +71,6 @@ public class DatabaseManager {
         //var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS ");
         //createDbStatement.executeUpdate();
 
-        conn.setCatalog("chess");
-
 //        var dropUserTables ="DROP TABLE User";
 //        try (var updateTableStatement = conn.prepareStatement(dropUserTables)) {
 //            updateTableStatement.executeUpdate();
