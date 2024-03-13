@@ -76,7 +76,7 @@ public class DrawBoard {
             out.print(SET_TEXT_COLOR_BLACK);
             out.print(SET_BG_COLOR_LIGHT_GREY);
             out.print(x);
-            for (int i = 1; i < 9; i++) {
+            for (int i = 8; i > 0; i--) {
                 if (x % 2 == 0 && i %2==0) {
                     out.print(SET_BG_COLOR_BLACK);
                 } else if(x % 2 != 0 && i %2!=0){
