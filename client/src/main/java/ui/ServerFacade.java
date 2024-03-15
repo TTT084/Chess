@@ -7,7 +7,7 @@ public class ServerFacade {
     ServerFacade(){
 
     }
-    public static String Register(){
+    public static String Register(String username, String password, String email){
         return null;
     }
     public static String Login(){

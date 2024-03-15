@@ -8,34 +8,51 @@ import java.util.Scanner;
 
 public class UserInterface {
     static String authToken;
+    static boolean help = false;
+    static boolean pursue = true;
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
 
-        PreLogin(out, scanner);
-        PostLogin(out, scanner);
+        //PreLogin(out, scanner);
+        //PostLogin(out, scanner);
+        UI();
     }
     public static void UI(){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
-        if(authToken==null){
-            PreLogin(out, scanner);
-        }
-        else{
-            PostLogin(out, scanner);
-        }
-    }
-    public static void PreLogin(PrintStream out, Scanner scanner){
         out.println("Welcome to chess!");
         out.println();
+        while(pursue){
+            if(authToken==null){
+                if(help){
+                    PreHelp(out, scanner);
+                    help = false;
+                }
+                else {
+                    PreLogin(out, scanner);
+                }
+            }
+            else{
+                if(help){
+                    PostLogin(out,scanner);
+                    help = false;
+                }
+                else {
+                    PostLogin(out, scanner);
+                }
+            }
+        }
+
+    }
+    public static void PreLogin(PrintStream out, Scanner scanner){
         out.println("1. Register <USERNAME> <PASSWORD> <EMAIL>");
         out.println("2. Login <USERNAME> <PASSWORD>");
         out.println("3. Quit");
         out.println("4. Help");
-        String input = scanner.next();
-        String name = scanner.next();
-        String pass = scanner.next();
-        String email = scanner.next();
+        String input = scanner.nextLine();
+        String[] words = input.split(" ");
+        PreInput(out,words);
     }
 
     private static void PreHelp(PrintStream out, Scanner scanner){
@@ -45,6 +62,9 @@ public class UserInterface {
         out.println("2. Login <USERNAME> <PASSWORD> - to play chess");
         out.println("3. Quit -exits program");
         out.println("4. Help -with possible commands");
+        String input = scanner.nextLine();
+        String[] words = input.split(" ");
+        PreInput(out,words);
     }
     public static void PostLogin(PrintStream out, Scanner scanner){
         out.println();
@@ -55,9 +75,9 @@ public class UserInterface {
         out.println("5. Logout");
         out.println("6. Quit");
         out.println("7. Help");
-        String input = scanner.next();
-        String name = scanner.next();
-        String player = scanner.next();
+        String input = scanner.nextLine();
+        String[] words = input.split(" ");
+        PostInput(out,words);
     }
 
 
@@ -71,8 +91,16 @@ public class UserInterface {
         out.println("5. Logout");
         out.println("6. Quit -exits program");
         out.println("7. Help -with possible commands");
+        String input = scanner.nextLine();
+        String[] words = input.split(" ");
+        PostInput(out,words);
     }
-    private static void PreInput(PrintStream out, String input, String name, String pass, String email){
+    private static void PreInput(PrintStream out, String[] words){
+        if(words.length==0){
+            out.println("Bad request. Please try again");
+            return;
+        }
+        String input = words[0];
         input = input.toLowerCase();
         if(input.equals("register")){
             input = "1";
@@ -85,22 +113,33 @@ public class UserInterface {
         }
         switch (input){
             case "1":
-                authToken=ServerFacade.Register();
-                 break;
+                if(words.length<4){
+                    out.println("Bad request. Please try again");
+                    return;
+                }
+                authToken=ServerFacade.Register(words[1],words[2],words[3]);
+                break;
             case "2":
                 authToken=ServerFacade.Login();
                 break;
             case "3":
                 ServerFacade.Quit();
+                pursue=false;
                 break;
             case "4":
-                PreHelp();
+                //PreHelp();
+                help = true;
                 break;
             default:
                 out.println("Bad request. Please try again");
         }
     }
-    private static void PostInput(PrintStream out, String input, String name, String pass, String email){
+    private static void PostInput(PrintStream out, String[] words){
+        if(words.length==0){
+            out.println("Bad request. Please try again");
+            return;
+        }
+        String input = words[0];
         input = input.toLowerCase();
         if(input.equals("create game") || input.equals("create")){
             input = "1";
@@ -135,8 +174,10 @@ public class UserInterface {
                 break;
             case "6":
                 ServerFacade.Quit();
+                pursue=false;
             case "7":
-                PostHelp();
+                //PostHelp();
+                help = true;
             default:
                 out.println("Bad request. Please try again");
         }
