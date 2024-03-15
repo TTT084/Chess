@@ -6,7 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ClientCommunicator {
-    public void doPost(String urlString) throws IOException {
+    public void doPost(String urlString, Object request) throws IOException {
         URL url = new URL(urlString);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -22,6 +22,7 @@ public class ClientCommunicator {
 
         try(OutputStream requestBody = connection.getOutputStream();) {
             // Write request body to OutputStream ...
+            requestBody.write();
         }
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {

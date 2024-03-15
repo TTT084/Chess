@@ -1,5 +1,8 @@
 package ui;
 
+import java.io.IOException;
+import Requests.RegisterRequest;
+
 public class ServerFacade {
     //doesnt have HTTP stuff
     //7 methods with 2-3 lines of code
@@ -8,6 +11,17 @@ public class ServerFacade {
 
     }
     public static String Register(String username, String password, String email){
+        String path = "/user";
+        String host = "http://localhost:8080";
+        String url = host + path;
+        ClientCommunicator communicator = new ClientCommunicator();
+        RegisterRequest reg = new RegisterRequest(username,password,email);
+        try{
+            communicator.doPost(url,reg);
+        }
+        catch (IOException e){
+
+        }
         return null;
     }
     public static String Login(){
