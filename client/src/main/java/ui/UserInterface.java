@@ -120,7 +120,7 @@ public class UserInterface {
                 authToken=ServerFacade.Register(words[1],words[2],words[3]);
                 break;
             case "2":
-                authToken=ServerFacade.Login();
+                authToken=ServerFacade.Login(words[1],words[2]);
                 break;
             case "3":
                 ServerFacade.Quit();
@@ -158,13 +158,13 @@ public class UserInterface {
         }
         switch (input){
             case "1":
-                ServerFacade.CreateGame();
+                ServerFacade.CreateGame(authToken,words[1]);
                 break;
             case "2":
-                ServerFacade.ListGames();
+                ServerFacade.ListGames(authToken);
                 break;
             case "3":
-                ServerFacade.JoinGames();
+                ServerFacade.JoinGame();
                 break;
             case "4":
                 ServerFacade.OvserveGame();

@@ -8,9 +8,11 @@ import ui.ClientCommunicator;
 import ui.ServerFacade;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 
 public class ServerFacadeTests {
@@ -35,6 +37,13 @@ public class ServerFacadeTests {
                 connection.setRequestMethod("DELETE");
 
                 connection.connect();
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    System.out.println("DELETE request successful");
+                } else {
+                    // Handle error response
+                    System.out.println("DELETE request failed with response code: " + responseCode);
+                }
             }
             catch (IOException e){
 
@@ -57,7 +66,64 @@ public class ServerFacadeTests {
     }
     @Test
     public void RegisterSuccess(){
-        ServerFacade.Register("newUser","hehe","silly@email");
+        //String user = UUID.randomUUID().toString();
+        String auth = ServerFacade.Register("user","hehe","silly@email");
+        Assertions.assertNotNull(auth);
+    }
+    @Test
+    public void RegisterFail(){
+        //String user = UUID.randomUUID().toString();
+        ServerFacade.Register("user","hehe","silly@email");
+        String auth = ServerFacade.Register("user","hehe","silly@email");
+        Assertions.assertNull(auth);
+    }
+    @Test
+    public void Login(){
+
+    }
+    @Test
+    public void LoginFail(){
+
+    }
+    @Test
+    public void CreateGame(){
+
+    }
+    @Test
+    public void CreateGameFail(){
+
+    }
+    @Test
+    public void ListGames(){
+        ServerFacade.ListGames("");
+    }
+    @Test
+    public void ListGamesFail(){
+        ServerFacade.ListGames("");
+    }
+    @Test
+    public void JoinGame(){
+
+    }
+    @Test
+    public void JoinGameFail(){
+
+    }
+    @Test
+    public void ObserveGame(){
+
+    }
+    @Test
+    public void ObserveGameFail(){
+
+    }
+    @Test
+    public void Logout(){
+
+    }
+    @Test
+    public void LogoutFail(){
+
     }
 
 }
