@@ -1,17 +1,15 @@
 package ui;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 
 
 import Requests.CGRequest;
 import Requests.LoginRequest;
 import Requests.LogoutRequest;
 import Requests.RegisterRequest;
-
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import javax.xml.transform.SourceLocator;
+import Responses.CreateGameResponse;
+import Responses.LoginResponse;
+import Responses.RegisterResponse;
 
 public class ServerFacade {
     //doesnt have HTTP stuff
@@ -27,7 +25,9 @@ public class ServerFacade {
         ClientCommunicator communicator = new ClientCommunicator();
         RegisterRequest reg = new RegisterRequest(username,email,password);
         try{
-            communicator.doPost(url,reg);
+            RegisterResponse rep = communicator.doPost(url,reg,RegisterResponse.class);
+            //RegisterResponse rep= new Gson().fromJson(input, RegisterResponse.class);
+            return rep.getAuthToken();
         }
         catch (IOException e){
             System.out.println("error");
@@ -41,7 +41,8 @@ public class ServerFacade {
         ClientCommunicator communicator = new ClientCommunicator();
         LoginRequest reg = new LoginRequest(username,password);
         try{
-            communicator.doPost(url,reg);
+            LoginResponse rep = communicator.doPost(url,reg, LoginResponse.class);
+            return rep.getAuthToken();
         }
         catch (IOException e){
             System.out.println("error");
@@ -51,18 +52,20 @@ public class ServerFacade {
     public static void Quit(){
 
     }
-    public static void CreateGame(String auth, String name){
+    public static String CreateGame(String auth, String name){
         String path = "/game";
         String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         CGRequest reg = new CGRequest(auth,name);
         try{
-            communicator.doPost(url,reg);
+            CreateGameResponse game = communicator.doPost(url,reg, CreateGameResponse.class);
+            return game.getGameName();
         }
         catch (IOException e){
             System.out.println("error");
         }
+        return path;
     }
     public static void ListGames(String auth){
         String path = "/game";

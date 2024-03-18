@@ -134,10 +134,10 @@ public class UserInterface {
                 out.println("Bad request. Please try again");
         }
     }
-    private static void PostInput(PrintStream out, String[] words){
+    private static String PostInput(PrintStream out, String[] words){
         if(words.length==0){
             out.println("Bad request. Please try again");
-            return;
+            return null;
         }
         String input = words[0];
         input = input.toLowerCase();
@@ -158,7 +158,9 @@ public class UserInterface {
         }
         switch (input){
             case "1":
-                ServerFacade.CreateGame(authToken,words[1]);
+                String id = ServerFacade.CreateGame(authToken,words[1]);
+                out.print("Game ID: ");
+                out.println(id);
                 break;
             case "2":
                 ServerFacade.ListGames(authToken);
@@ -181,5 +183,6 @@ public class UserInterface {
             default:
                 out.println("Bad request. Please try again");
         }
+        return null;
     }
 }
