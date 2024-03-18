@@ -1,9 +1,12 @@
 package ui;
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class ClientCommunicator {
     public void doPost(String urlString, Object request) throws IOException {
@@ -14,15 +17,21 @@ public class ClientCommunicator {
         connection.setReadTimeout(5000);
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
+        String reqData = "";
+        if(request!=null){
+            //connection.addRequestProperty("Content-Type", "application/json");
+            reqData = new Gson().toJson(request);
+        }
 
         // Set HTTP request headers, if necessary
         // connection.addRequestProperty("Accept", "text/html");
 
         connection.connect();
 
+
         try(OutputStream requestBody = connection.getOutputStream();) {
             // Write request body to OutputStream ...
-            requestBody.write();
+            requestBody.write(reqData.getBytes());
         }
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -31,7 +40,7 @@ public class ClientCommunicator {
 
             // OR
 
-            //connection.getHeaderField("Content-Length");
+            String auth = connection.getHeaderField("authorization");
 
             InputStream responseBody = connection.getInputStream();
             // Read response body from InputStream ...

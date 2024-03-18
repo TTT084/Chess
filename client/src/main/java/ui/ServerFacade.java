@@ -1,7 +1,14 @@
 package ui;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+
+
 import Requests.RegisterRequest;
+
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+import javax.xml.transform.SourceLocator;
 
 public class ServerFacade {
     //doesnt have HTTP stuff
@@ -20,7 +27,7 @@ public class ServerFacade {
             communicator.doPost(url,reg);
         }
         catch (IOException e){
-
+            System.out.println("error");
         }
         return null;
     }
