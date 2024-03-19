@@ -1,15 +1,15 @@
 package ui;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 
-import Requests.CGRequest;
-import Requests.LoginRequest;
-import Requests.LogoutRequest;
-import Requests.RegisterRequest;
+import Requests.*;
 import Responses.CreateGameResponse;
+import Responses.ListGameResponse;
 import Responses.LoginResponse;
 import Responses.RegisterResponse;
+import record.GameData;
 
 public class ServerFacade {
     //doesnt have HTTP stuff
@@ -27,6 +27,9 @@ public class ServerFacade {
         try{
             RegisterResponse rep = communicator.doPost(url,reg,RegisterResponse.class);
             //RegisterResponse rep= new Gson().fromJson(input, RegisterResponse.class);
+            if(rep==null){
+                return null;
+            }
             return rep.getAuthToken();
         }
         catch (IOException e){
@@ -42,6 +45,9 @@ public class ServerFacade {
         LoginRequest reg = new LoginRequest(username,password);
         try{
             LoginResponse rep = communicator.doPost(url,reg, LoginResponse.class);
+            if(rep==null){
+                return null;
+            }
             return rep.getAuthToken();
         }
         catch (IOException e){
@@ -60,6 +66,9 @@ public class ServerFacade {
         CGRequest reg = new CGRequest(auth,name);
         try{
             CreateGameResponse game = communicator.doPost(url,reg, CreateGameResponse.class);
+            if(game==null){
+                return null;
+            }
             return game.getGameName();
         }
         catch (IOException e){
@@ -67,21 +76,37 @@ public class ServerFacade {
         }
         return path;
     }
-    public static void ListGames(String auth){
+    public static HashSet<GameData> ListGames(String auth){
         String path = "/game";
         String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         LogoutRequest reg = new LogoutRequest(auth);
         try{
-            communicator.doGet(url);
+            ListGameResponse rep = communicator.doGet(url,reg, ListGameResponse.class);
+            if(rep==null){
+                return null;
+            }
+            return rep.getGames();
         }
         catch (IOException e){
             System.out.println("error");
         }
+        return null;
     }
-    public static void JoinGame(){
-
+    public static void JoinGame(String color, String ID){
+        String path = "/game";
+        String host = "http://localhost:8080";
+        String url = host + path;
+        ClientCommunicator communicator = new ClientCommunicator();
+        JGRequest reg = new JGRequest(color,ID);
+        try{
+            communicator.doPut(url,reg);
+        }
+        catch (IOException e){
+            System.out.println("error");
+        }
+        return;
     }
     public static void OvserveGame(){
 

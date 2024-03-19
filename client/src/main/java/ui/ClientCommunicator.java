@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 
 public class ClientCommunicator {
@@ -23,7 +22,11 @@ public class ClientCommunicator {
             connection.addRequestProperty("authorization", "application/json");
             reqData = new Gson().toJson(request);
         }
-
+        String[] split = reqData.split(":");
+        if(split[0].contains("authToken")){
+            String[] auth = split[1].split(",");
+            connection.addRequestProperty("authorization",auth[0]);
+        }
         // Set HTTP request headers, if necessary
         // connection.addRequestProperty("Accept", "text/html");
 
@@ -60,7 +63,7 @@ public class ClientCommunicator {
         }
         return null;
     }
-    public void doGet(String urlString) throws IOException {
+    public <T> T doGet(String urlString,Object request, Class<T> responseClass) throws IOException {
         URL url = new URL(urlString);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -82,14 +85,19 @@ public class ClientCommunicator {
 
             //connection.getHeaderField("Content-Length");
 
-            InputStream responseBody = connection.getInputStream();
-            // Read and process response body from InputStream ...
+            try (InputStream respBody = connection.getInputStream()) {
+                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                //System.out.println(new Gson().fromJson(inputStreamReader,));
+                T response = new Gson().fromJson(inputStreamReader,responseClass);
+                return response;
+            }
         } else {
             // SERVER RETURNED AN HTTP ERROR
 
             InputStream responseBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
         }
+        return null;
     }
     public void doPut(String urlString, Object request /*,Class<T> */) throws IOException {
         URL url = new URL(urlString);

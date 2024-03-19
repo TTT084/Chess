@@ -79,15 +79,20 @@ public class ServerFacadeTests {
     }
     @Test
     public void Login(){
-
+        ServerFacade.Register("user","hehe","silly@email");
+        String auth = ServerFacade.Login("user","hehe");
+        Assertions.assertNotNull(auth);
     }
     @Test
     public void LoginFail(){
-
+        String auth = ServerFacade.Login("user","hehe");
+        Assertions.assertNull(auth);
     }
     @Test
     public void CreateGame(){
-
+        String auth = ServerFacade.Register("user","hehe","silly@email");
+        String name = ServerFacade.CreateGame(auth,"myGame");
+        Assertions.assertNotNull(name);
     }
     @Test
     public void CreateGameFail(){

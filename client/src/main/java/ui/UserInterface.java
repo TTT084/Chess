@@ -166,7 +166,7 @@ public class UserInterface {
                 ServerFacade.ListGames(authToken);
                 break;
             case "3":
-                ServerFacade.JoinGame();
+                ServerFacade.JoinGame(words[2],words[1]);
                 break;
             case "4":
                 ServerFacade.OvserveGame();
