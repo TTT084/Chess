@@ -9,7 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ClientCommunicator {
-    public <T> T doPost(String urlString, Object request, Class<T> responseClass) throws IOException {
+    public <T> T doPost(String urlString, Object request, Class<T> responseClass, String authToken) throws IOException {
         URL url = new URL(urlString);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -25,7 +25,10 @@ public class ClientCommunicator {
         String[] split = reqData.split(":");
         if(split[0].contains("authToken")){
             String[] auth = split[1].split(",");
-            connection.addRequestProperty("authorization",auth[0]);
+            connection.setRequestProperty("authorization",auth[0]);
+        }
+        if(authToken!=null){
+            connection.setRequestProperty("authorization",authToken);
         }
         // Set HTTP request headers, if necessary
         // connection.addRequestProperty("Accept", "text/html");
@@ -63,7 +66,7 @@ public class ClientCommunicator {
         }
         return null;
     }
-    public <T> T doGet(String urlString,Object request, Class<T> responseClass) throws IOException {
+    public <T> T doGet(String urlString,Object request, Class<T> responseClass,String authToken) throws IOException {
         URL url = new URL(urlString);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -74,6 +77,9 @@ public class ClientCommunicator {
         // Set HTTP request headers, if necessary
         // connection.addRequestProperty("Accept", "text/html");
         // connection.addRequestProperty("Authorization", "fjaklc8sdfjklakl");
+        if(authToken!=null){
+            connection.setRequestProperty("authorization",authToken);
+        }
 
         connection.connect();
 
@@ -99,7 +105,7 @@ public class ClientCommunicator {
         }
         return null;
     }
-    public void doPut(String urlString, Object request /*,Class<T> */) throws IOException {
+    public void doPut(String urlString, Object request /*,Class<T> */,String authToken) throws IOException {
         URL url = new URL(urlString);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -112,7 +118,9 @@ public class ClientCommunicator {
             connection.addRequestProperty("authorization", "application/json");
             reqData = new Gson().toJson(request);
         }
-
+        if(authToken!=null){
+            connection.setRequestProperty("authorization",authToken);
+        }
         // Set HTTP request headers, if necessary
         // connection.addRequestProperty("Accept", "text/html");
 

@@ -3,6 +3,7 @@ package clientTests;
 import Requests.RegisterRequest;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
+import record.GameData;
 import server.Server;
 import ui.ClientCommunicator;
 import ui.ServerFacade;
@@ -12,6 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.UUID;
 
 
@@ -96,31 +98,46 @@ public class ServerFacadeTests {
     }
     @Test
     public void CreateGameFail(){
-
+        String auth = ServerFacade.Register("user","hehe","silly@email");
+        String name = ServerFacade.CreateGame(null,"myGame");
+        Assertions.assertNull(name);
     }
     @Test
     public void ListGames(){
-        ServerFacade.ListGames("");
+        String auth = ServerFacade.Register("user","hehe","silly@email");
+        String name = ServerFacade.CreateGame(auth,"myGame");
+        ServerFacade.CreateGame(auth,"myGame2");
+        HashSet<GameData> games= ServerFacade.ListGames(auth);
+        Assertions.assertNotNull(games);
     }
     @Test
     public void ListGamesFail(){
-        ServerFacade.ListGames("");
+        HashSet<GameData> games=ServerFacade.ListGames("");
+        Assertions.assertNull(games);
     }
     @Test
     public void JoinGame(){
-
+        String auth = ServerFacade.Register("user","hehe","silly@email");
+        String name = ServerFacade.CreateGame(auth,"myGame");
+        ServerFacade.JoinGame("WHITE",name,auth);
+        Assertions.assertNotNull(name);
     }
     @Test
     public void JoinGameFail(){
-
+        ServerFacade.JoinGame("WHITE","","");
+        Assertions.assertNotNull("");
     }
     @Test
     public void ObserveGame(){
-
+        String auth = ServerFacade.Register("user","hehe","silly@email");
+        String name = ServerFacade.CreateGame(auth,"myGame");
+        ServerFacade.JoinGame(null,name,auth);
+        Assertions.assertNotNull(name);
     }
     @Test
     public void ObserveGameFail(){
-
+        ServerFacade.JoinGame(null,"","");
+        Assertions.assertNotNull("");
     }
     @Test
     public void Logout(){

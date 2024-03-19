@@ -166,13 +166,13 @@ public class UserInterface {
                 ServerFacade.ListGames(authToken);
                 break;
             case "3":
-                ServerFacade.JoinGame(words[2],words[1]);
+                ServerFacade.JoinGame(words[2],words[1],authToken);
                 break;
             case "4":
-                ServerFacade.OvserveGame();
+                ServerFacade.JoinGame(null,words[1],authToken);
                 break;
             case "5":
-                ServerFacade.Logout();
+                ServerFacade.Logout(authToken);
                 break;
             case "6":
                 ServerFacade.Quit();

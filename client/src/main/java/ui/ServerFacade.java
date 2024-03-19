@@ -25,7 +25,7 @@ public class ServerFacade {
         ClientCommunicator communicator = new ClientCommunicator();
         RegisterRequest reg = new RegisterRequest(username,email,password);
         try{
-            RegisterResponse rep = communicator.doPost(url,reg,RegisterResponse.class);
+            RegisterResponse rep = communicator.doPost(url,reg,RegisterResponse.class,null);
             //RegisterResponse rep= new Gson().fromJson(input, RegisterResponse.class);
             if(rep==null){
                 return null;
@@ -44,7 +44,7 @@ public class ServerFacade {
         ClientCommunicator communicator = new ClientCommunicator();
         LoginRequest reg = new LoginRequest(username,password);
         try{
-            LoginResponse rep = communicator.doPost(url,reg, LoginResponse.class);
+            LoginResponse rep = communicator.doPost(url,reg, LoginResponse.class,null);
             if(rep==null){
                 return null;
             }
@@ -65,7 +65,7 @@ public class ServerFacade {
         ClientCommunicator communicator = new ClientCommunicator();
         CGRequest reg = new CGRequest(auth,name);
         try{
-            CreateGameResponse game = communicator.doPost(url,reg, CreateGameResponse.class);
+            CreateGameResponse game = communicator.doPost(url,reg, CreateGameResponse.class,auth);
             if(game==null){
                 return null;
             }
@@ -83,7 +83,7 @@ public class ServerFacade {
         ClientCommunicator communicator = new ClientCommunicator();
         LogoutRequest reg = new LogoutRequest(auth);
         try{
-            ListGameResponse rep = communicator.doGet(url,reg, ListGameResponse.class);
+            ListGameResponse rep = communicator.doGet(url,reg, ListGameResponse.class,auth);
             if(rep==null){
                 return null;
             }
@@ -94,23 +94,35 @@ public class ServerFacade {
         }
         return null;
     }
-    public static void JoinGame(String color, String ID){
+    public static void JoinGame(String color, String ID, String auth){
         String path = "/game";
         String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         JGRequest reg = new JGRequest(color,ID);
         try{
-            communicator.doPut(url,reg);
+            communicator.doPut(url,reg,auth);
         }
         catch (IOException e){
             System.out.println("error");
         }
         return;
     }
-    public static void OvserveGame(){
-
+    public static void OvserveGame(String ID, String auth){
+        JoinGame(null,ID,auth);
     }
-    public static void Logout(){
+    public static void Logout(String auth){
+        String path = "/session";
+        String host = "http://localhost:8080";
+        String url = host + path;
+        ClientCommunicator communicator = new ClientCommunicator();
+        LogoutRequest reg = new LogoutRequest(auth);
+        try{
+            communicator.doPut(url,reg,auth);
+        }
+        catch (IOException e){
+            System.out.println("error");
+        }
+        return;
     }
 }
