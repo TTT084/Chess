@@ -1,7 +1,10 @@
 package ui;
 
+import record.GameData;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -118,9 +121,19 @@ public class UserInterface {
                     return;
                 }
                 authToken=ServerFacade.Register(words[1],words[2],words[3]);
+                if(authToken==null){
+                    out.println("Register failed. Please try again");
+                }
                 break;
             case "2":
+                if(words.length<3){
+                    out.println("Bad request. Please try again");
+                    return;
+                }
                 authToken=ServerFacade.Login(words[1],words[2]);
+                if(authToken==null){
+                    out.println("Login failed. Please try again");
+                }
                 break;
             case "3":
                 ServerFacade.Quit();
@@ -158,21 +171,58 @@ public class UserInterface {
         }
         switch (input){
             case "1":
+                if(words.length<2){
+                    out.println("Bad request. Please try again");
+                    break;
+                }
                 String id = ServerFacade.CreateGame(authToken,words[1]);
+                if(id==null){
+                    out.println("Create Game failed. Please try again");
+                    break;
+                }
                 out.print("Game ID: ");
                 out.println(id);
                 break;
             case "2":
-                ServerFacade.ListGames(authToken);
+                HashSet<GameData> games = ServerFacade.ListGames(authToken);
+                if(games==null){
+                    out.println("List Game failed. Please try again");
+                    break;
+                }
+                out.println("Games:");
+                for(GameData game : games){
+                    out.println(game.getGameName());
+                }
                 break;
             case "3":
-                ServerFacade.JoinGame(words[2],words[1],authToken);
+                if(words.length<3){
+                    out.println("Bad request. Please try again");
+                    break;
+                }
+                boolean join = ServerFacade.JoinGame(words[2],words[1],authToken);
+                if(join){
+                    out.println("Joined game");
+                }
+                else {
+                    out.println("Join Game failed. Please try again");
+                }
                 break;
             case "4":
-                ServerFacade.JoinGame(null,words[1],authToken);
+                if(words.length<2){
+                    out.println("Bad request. Please try again");
+                    break;
+                }
+                boolean observe = ServerFacade.JoinGame(null,words[1],authToken);
+                if(observe){
+                    out.println("Observing game");
+                }
+                else {
+                    out.println("Observe Game failed. Please try again");
+                }
                 break;
             case "5":
                 ServerFacade.Logout(authToken);
+                authToken=null;
                 break;
             case "6":
                 ServerFacade.Quit();

@@ -141,11 +141,17 @@ public class ServerFacadeTests {
     }
     @Test
     public void Logout(){
-
+        ServerFacade.Register("user","hehe","silly@email");
+        String auth = ServerFacade.Login("user","hehe");
+        ServerFacade.Logout(auth);
+        Assertions.assertNotNull(auth);
     }
     @Test
     public void LogoutFail(){
-
+        ServerFacade.Register("user","hehe","silly@email");
+        String auth = ServerFacade.Login("user","hehe");
+        ServerFacade.Logout("");
+        Assertions.assertNotNull(auth);
     }
 
 }

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ClientCommunicator {
@@ -151,10 +152,34 @@ public class ClientCommunicator {
         }
         else {
             // SERVER RETURNED AN HTTP ERROR
-
+            throw new IOException();
             //InputStream responseBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
         }
         //return null;
+    }
+    public void doDelete(String urlString, Object request /*,Class<T> */,String authToken) throws IOException {
+        ClientCommunicator communicator = new ClientCommunicator();
+            URL url = new URL(urlString);
+            try {
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setReadTimeout(5000);
+                connection.setRequestMethod("DELETE");
+
+                if(authToken!=null){
+                    connection.setRequestProperty("authorization",authToken);
+                }
+                connection.connect();
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    System.out.println("DELETE request successful");
+                } else {
+                    // Handle error response
+                    System.out.println("DELETE request failed with response code: " + responseCode);
+                }
+        } catch (IOException e) {
+                System.out.println("DELETE request failed");
+
+            }
     }
 }

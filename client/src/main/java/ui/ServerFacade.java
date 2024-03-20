@@ -94,7 +94,7 @@ public class ServerFacade {
         }
         return null;
     }
-    public static void JoinGame(String color, String ID, String auth){
+    public static boolean JoinGame(String color, String ID, String auth){
         String path = "/game";
         String host = "http://localhost:8080";
         String url = host + path;
@@ -105,12 +105,12 @@ public class ServerFacade {
         }
         catch (IOException e){
             System.out.println("error");
+            return false;
         }
-        return;
+        return true;
     }
-    public static void OvserveGame(String ID, String auth){
-        JoinGame(null,ID,auth);
-    }
+//    public static void OvserveGame(String ID, String auth){JoinGame(null,ID,auth);
+//    }
     public static void Logout(String auth){
         String path = "/session";
         String host = "http://localhost:8080";
@@ -118,7 +118,7 @@ public class ServerFacade {
         ClientCommunicator communicator = new ClientCommunicator();
         LogoutRequest reg = new LogoutRequest(auth);
         try{
-            communicator.doPut(url,reg,auth);
+            communicator.doDelete(url,reg,auth);
         }
         catch (IOException e){
             System.out.println("error");
