@@ -32,6 +32,9 @@ public class DrawBoard {
         drawWhiteHeader(out);
         drawWhiteRows(out, board);
         drawWhiteHeader(out);
+
+        out.print(SET_BG_COLOR_BLACK);
+        out.println(EMPTY);
     }
     private static void drawBlackHeader(PrintStream out){
         out.print(SET_BG_COLOR_LIGHT_GREY);

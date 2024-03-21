@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import record.GameData;
 
 import java.io.PrintStream;
@@ -76,7 +77,7 @@ public class UserInterface {
         out.println();
         out.println("1. Create Game <NAME>");
         out.println("2. List Games");
-        out.println("3. Join Game <ID> [W]hite[B]lack[]<empty>");
+        out.println("3. Join Game <ID> [W]hite[B]lack[]");
         out.println("4. Observe Game <ID>");
         out.println("5. Logout");
         out.println("6. Quit");
@@ -92,7 +93,7 @@ public class UserInterface {
         out.println();
         out.println("1. Create Game <NAME> -creates a new game");
         out.println("2. List Games -lists all games");
-        out.println("3. Join Game <ID> [W]hite[B]lack[]<empty> -join a game as the white or black player or as an observer");
+        out.println("3. Join Game <ID> [W]hite[B]lack -join a game as the white or black player");
         out.println("4. Observe Game <ID> -joins game as an observer");
         out.println("5. Logout");
         out.println("6. Quit -exits program");
@@ -149,6 +150,9 @@ public class UserInterface {
             default:
                 out.println("Bad request. Please try again");
         }
+        Scanner scanner = new Scanner(System.in);
+        out.println("Press Enter to continue");
+        String enter = scanner.nextLine();
     }
     private static String PostInput(PrintStream out, String[] words){
         int num = 0;
@@ -185,8 +189,8 @@ public class UserInterface {
                     out.println("Create Game failed. Please try again");
                     break;
                 }
-                out.print("Game ID: ");
-                out.println(id);
+                //out.print("Game ID: ");
+                //out.println(id);
                 break;
             case "2":
                 HashSet<GameData> games = ServerFacade.ListGames(authToken);
@@ -196,15 +200,16 @@ public class UserInterface {
                 }
                 out.println("Games:");
                 int x=1;
+                allGames.clear();
                 for(GameData game : games){
-                    allGames.clear();
                     allGames.add(game.getGameID());
                     out.print(x);
                     x++;
+                    out.print(" ");
                     out.print(game.getGameName());
-                    out.print(" ");
+                    out.print(" Blackplayer: ");
                     out.print(game.getBlackUsername());
-                    out.print(" ");
+                    out.print(" Whiteplayer: ");
                     out.println(game.getWhiteUsername());
                 }
                 break;
@@ -234,6 +239,9 @@ public class UserInterface {
                 boolean observe = ServerFacade.JoinGame(null,insert,authToken);
                 if(observe){
                     out.println("Observing game");
+                    ChessGame game = new ChessGame();
+                    game.getBoard().resetBoard();
+                    DrawBoard.drawGameBoard(game);
                 }
                 else {
                     out.println("Observe Game failed. Please try again");
@@ -252,9 +260,19 @@ public class UserInterface {
             default:
                 out.println("Bad request. Please try again");
         }
+        Scanner scanner = new Scanner(System.in);
+        out.println("Press Enter to continue");
+        String enter = scanner.nextLine();
         return null;
     }
     public static void joinGame(PrintStream out, String[] words){
+        String input = words[2];
+        input = input.toLowerCase();
+        if(input.equals("w") || input.equals("white")){
+            input = "White";
+        } else if (input.equals("b")|| input.equals("black")) {
+            input = "Black";
+        }
         int num = 0;
         try {
             num = Integer.parseInt(words[1]);
@@ -264,11 +282,15 @@ public class UserInterface {
         }
         String insert = "";
         if(num<=allGames.size()){
-            insert = allGames.get(num);
+            insert = allGames.get(num-1);
         }
-        boolean join = ServerFacade.JoinGame(words[2],words[1],authToken);
+        boolean join = ServerFacade.JoinGame(input,insert,authToken);
         if(join){
             out.println("Joined game");
+            ChessGame game = new ChessGame();
+            game.getBoard().resetBoard();
+            DrawBoard.drawGameBoard(game);
+
         }
         else {
             out.println("Join Game failed. Please try again");
