@@ -15,12 +15,13 @@ public class ServerFacade {
     //doesnt have HTTP stuff
     //7 methods with 2-3 lines of code
     // calls client communicator
+    public static String host = "http://localhost:8080";
     ServerFacade(){
 
     }
     public static String Register(String username, String password, String email){
         String path = "/user";
-        String host = "http://localhost:8080";
+        //String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         RegisterRequest reg = new RegisterRequest(username,email,password);
@@ -39,7 +40,7 @@ public class ServerFacade {
     }
     public static String Login(String username,String password){
         String path = "/session";
-        String host = "http://localhost:8080";
+        //String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         LoginRequest reg = new LoginRequest(username,password);
@@ -60,7 +61,7 @@ public class ServerFacade {
     }
     public static String CreateGame(String auth, String name){
         String path = "/game";
-        String host = "http://localhost:8080";
+        //String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         CGRequest reg = new CGRequest(auth,name);
@@ -78,7 +79,7 @@ public class ServerFacade {
     }
     public static HashSet<GameData> ListGames(String auth){
         String path = "/game";
-        String host = "http://localhost:8080";
+        //String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         LogoutRequest reg = new LogoutRequest(auth);
@@ -96,7 +97,7 @@ public class ServerFacade {
     }
     public static boolean JoinGame(String color, String ID, String auth){
         String path = "/game";
-        String host = "http://localhost:8080";
+        //String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         JGRequest reg = new JGRequest(color,ID);
@@ -113,7 +114,7 @@ public class ServerFacade {
 //    }
     public static void Logout(String auth){
         String path = "/session";
-        String host = "http://localhost:8080";
+        //String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
         LogoutRequest reg = new LogoutRequest(auth);

@@ -24,12 +24,14 @@ public class ServerFacadeTests {
     @BeforeAll
     public static void init() {
         server = new Server();
-        var port = server.run(8080);
+        var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
+        ServerFacade.host = "http://localhost:" + port;
     }
     @BeforeEach
     public void setup(){
-        String urlString = "http://localhost:8080/db";
+        //String urlString = "http://localhost:0/db";
+        String urlString = ServerFacade.host + "/db";
         ClientCommunicator communicator = new ClientCommunicator();
         try {
             URL url = new URL(urlString);
