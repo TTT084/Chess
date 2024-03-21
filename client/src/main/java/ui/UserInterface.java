@@ -4,6 +4,7 @@ import record.GameData;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Scanner;
@@ -13,6 +14,8 @@ public class UserInterface {
     static String authToken;
     static boolean help = false;
     static boolean pursue = true;
+    private static ArrayList<String> allGames = new ArrayList<>();
+
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
@@ -148,6 +151,8 @@ public class UserInterface {
         }
     }
     private static String PostInput(PrintStream out, String[] words){
+        int num = 0;
+        String insert = "";
         if(words.length==0){
             out.println("Bad request. Please try again");
             return null;
@@ -190,8 +195,17 @@ public class UserInterface {
                     break;
                 }
                 out.println("Games:");
+                int x=1;
                 for(GameData game : games){
-                    out.println(game.getGameName());
+                    allGames.clear();
+                    allGames.add(game.getGameID());
+                    out.print(x);
+                    x++;
+                    out.print(game.getGameName());
+                    out.print(" ");
+                    out.print(game.getBlackUsername());
+                    out.print(" ");
+                    out.println(game.getWhiteUsername());
                 }
                 break;
             case "3":
@@ -199,20 +213,25 @@ public class UserInterface {
                     out.println("Bad request. Please try again");
                     break;
                 }
-                boolean join = ServerFacade.JoinGame(words[2],words[1],authToken);
-                if(join){
-                    out.println("Joined game");
-                }
-                else {
-                    out.println("Join Game failed. Please try again");
-                }
+                joinGame(out,words);
                 break;
             case "4":
                 if(words.length<2){
                     out.println("Bad request. Please try again");
                     break;
                 }
-                boolean observe = ServerFacade.JoinGame(null,words[1],authToken);
+                num = 0;
+                try {
+                    num = Integer.parseInt(words[1]);
+                } catch (NumberFormatException e) {
+                    out.println("Bad request. Please try again");
+                    break;
+                }
+                insert = "";
+                if(num<=allGames.size()){
+                    insert = allGames.get(num);
+                }
+                boolean observe = ServerFacade.JoinGame(null,insert,authToken);
                 if(observe){
                     out.println("Observing game");
                 }
@@ -234,5 +253,25 @@ public class UserInterface {
                 out.println("Bad request. Please try again");
         }
         return null;
+    }
+    public static void joinGame(PrintStream out, String[] words){
+        int num = 0;
+        try {
+            num = Integer.parseInt(words[1]);
+        } catch (NumberFormatException e) {
+            out.println("Bad request. Please try again");
+            return;
+        }
+        String insert = "";
+        if(num<=allGames.size()){
+            insert = allGames.get(num);
+        }
+        boolean join = ServerFacade.JoinGame(words[2],words[1],authToken);
+        if(join){
+            out.println("Joined game");
+        }
+        else {
+            out.println("Join Game failed. Please try again");
+        }
     }
 }
