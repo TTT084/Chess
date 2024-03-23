@@ -42,7 +42,7 @@ public class UserInterface {
             }
             else{
                 if(help){
-                    PostLogin(out,scanner);
+                    PostHelp(out,scanner);
                     help = false;
                 }
                 else {
@@ -146,7 +146,8 @@ public class UserInterface {
             case "4":
                 //PreHelp();
                 help = true;
-                break;
+                return;
+                //break;
             default:
                 out.println("Bad request. Please try again");
         }
@@ -234,7 +235,7 @@ public class UserInterface {
                 }
                 insert = "";
                 if(num<=allGames.size()){
-                    insert = allGames.get(num);
+                    insert = allGames.get(num-1);
                 }
                 boolean observe = ServerFacade.JoinGame(null,insert,authToken);
                 if(observe){
@@ -257,6 +258,7 @@ public class UserInterface {
             case "7":
                 //PostHelp();
                 help = true;
+                return null;
             default:
                 out.println("Bad request. Please try again");
         }

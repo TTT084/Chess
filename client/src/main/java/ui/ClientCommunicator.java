@@ -172,7 +172,7 @@ public class ClientCommunicator {
                 connection.connect();
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    System.out.println("DELETE request successful");
+                    System.out.println("Logout request successful");
                 } else {
                     // Handle error response
                     System.out.println("DELETE request failed with response code: " + responseCode);
