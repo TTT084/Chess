@@ -2,6 +2,7 @@ package ui;
 
 import chess.ChessGame;
 import record.GameData;
+import webSocketMessages.serverMessages.ServerMessage;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -11,7 +12,7 @@ import java.util.Locale;
 import java.util.Scanner;
 
 
-public class UserInterface {
+public class UserInterface implements ServerMessageObserver {
     static String authToken;
     static boolean help = false;
     static boolean pursue = true;
@@ -297,5 +298,15 @@ public class UserInterface {
         else {
             out.println("Join Game failed. Please try again");
         }
+    }
+
+    @Override
+    public void notify(ServerMessage message) {
+        switch (message.getServerMessageType()) {
+            //case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
+            //case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
+            //case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
+        }
+
     }
 }
