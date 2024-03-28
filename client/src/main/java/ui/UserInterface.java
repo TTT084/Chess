@@ -299,6 +299,103 @@ public class UserInterface implements ServerMessageObserver {
             out.println("Join Game failed. Please try again");
         }
     }
+    public void gameplay(PrintStream out, Scanner scanner){
+        out.println("1. Redraw Chess Board");
+        out.println("2. Leave");
+        out.println("3. Make Move<start> <end>");
+        out.println("4. Resign");
+        out.println("5. Highlight Legal Moves<square>");
+        out.println("6. Help");
+        String input = scanner.nextLine();
+        String[] words = input.split(" ");
+        gameInput(out,words);
+    }
+    public void gameHelp(PrintStream out, Scanner scanner){
+        out.println("1. Redraw Chess Board -redraws the chess board");
+        out.println("2. Leave -leaves the game");
+        out.println("3. Make Move<start> <end> -makes a move");
+        out.println("4. Resign -resigns from game");
+        out.println("5. Highlight Legal Moves<square> -highlights all legal moves");
+        out.println("6. Help -with possible commands");
+        String input = scanner.nextLine();
+        String[] words = input.split(" ");
+        PreInput(out,words);
+    }
+    public void gameInput(PrintStream out,String[] words){
+        Scanner scanner = new Scanner(System.in);
+        int num = 0;
+        String insert = "";
+        if(words.length==0){
+            out.println("Bad request. Please try again");
+            return;
+        }
+        String input = words[0];
+        input = input.toLowerCase();
+        if(input.equals("redraw chess board") || input.equals("redraw")){
+            input = "1";
+        } else if (input.equals("leave")) {
+            input = "2";
+        }
+        else if (input.equals("make move") || input.equals("move")) {
+            input = "3";
+        }
+        else if (input.equals("resign")) {
+            input = "4";
+        }
+        else if (input.equals("highlight legal moves") || input.equals("highlight")) {
+            input = "5";
+        }
+        else if (input.equals("help")) {
+            input = "6";
+        }
+        switch (input) {
+            case "1":
+                //redraw
+                break;
+            case "2":
+                if (words.length < 2) {
+                    out.println("Bad request. Please try again");
+                    break;
+                }
+                String id = ServerFacade.CreateGame(authToken, words[1]);
+                if (id == null) {
+                    out.println("Create Game failed. Please try again");
+                    break;
+                }
+                break;
+            case "3":
+                if (words.length < 2) {
+                    out.println("Bad request. Please try again");
+                    break;
+                }
+                String deleteThis = ServerFacade.CreateGame(authToken, words[1]);
+                if (deleteThis == null) {
+                    out.println("Create Game failed. Please try again");
+                    break;
+                }
+
+                break;
+            case "4":
+                out.println("Are you sure you want to resign?");
+                out.println("Y or N");
+                String reInput = scanner.nextLine();
+                reInput = reInput.toLowerCase();
+                if(reInput.equals("y") || reInput.equals("yes")){
+
+                }
+                break;
+            case "5":
+                if (words.length < 1) {
+                    out.println("Bad request. Please try again");
+                    break;
+                }
+                break;
+            case "6":
+                gameHelp(out,scanner);
+            default:
+                break;
+        }
+    }
 
     @Override
     public void notify(ServerMessage message) {
