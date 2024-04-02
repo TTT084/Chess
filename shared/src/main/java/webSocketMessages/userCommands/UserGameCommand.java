@@ -1,5 +1,8 @@
 package webSocketMessages.userCommands;
 
+import chess.ChessGame;
+import chess.ChessMove;
+
 import java.util.Objects;
 
 /**
