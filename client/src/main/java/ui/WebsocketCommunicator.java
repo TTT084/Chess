@@ -15,6 +15,19 @@ public class WebsocketCommunicator extends Endpoint {
         URI uri = new URI("ws://localhost:8080/connect");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
+        //add message handler
+        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(String input) {
+                Gson gson = new Gson();
+                try {
+                    ServerMessage message = gson.fromJson(input, ServerMessage.class);
+                    myObserver.notify(message);
+                } catch(Exception ex) {
+                    //myObserver.notify(new ErrorMessage(ex.getMessage()));
+                }
+            }
+        });
     }
     public void onMessage(String input) {
         Gson gson = new Gson();

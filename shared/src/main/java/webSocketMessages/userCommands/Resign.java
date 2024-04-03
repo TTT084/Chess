@@ -4,5 +4,5 @@ public class Resign extends UserGameCommand{
     public Resign(String authToken) {
         super(authToken);
     }
-    public int gameID;
+    public String gameID;
 }

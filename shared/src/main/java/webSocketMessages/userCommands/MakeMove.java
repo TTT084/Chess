@@ -6,6 +6,6 @@ public class MakeMove extends UserGameCommand{
     public MakeMove(String authToken) {
         super(authToken);
     }
-    public int gameID;
+    public String gameID;
     public ChessMove move;
 }

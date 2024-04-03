@@ -4,5 +4,5 @@ public class JoinObserver extends UserGameCommand{
     public JoinObserver(String authToken) {
         super(authToken);
     }
-    public int gameID;
+    public String gameID;
 }

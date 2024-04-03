@@ -4,5 +4,5 @@ public class Leave extends UserGameCommand{
     public Leave(String authToken) {
         super(authToken);
     }
-    public int gameID;
+    public String gameID;
 }
