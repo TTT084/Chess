@@ -16,6 +16,7 @@ public class ServerFacade {
     //7 methods with 2-3 lines of code
     // calls client communicator
     public static String host = "http://localhost:8080";
+    private static WebsocketCommunicator ws;
     ServerFacade(){
 
     }
@@ -125,5 +126,8 @@ public class ServerFacade {
             System.out.println("error");
         }
         return;
+    }
+    public static void Leave(){
+
     }
 }

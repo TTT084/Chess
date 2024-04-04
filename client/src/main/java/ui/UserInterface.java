@@ -20,6 +20,9 @@ public class UserInterface implements ServerMessageObserver {
     static boolean pursue = true;
     private static ArrayList<String> allGames = new ArrayList<>();
 
+    private static ChessGame myGame = new ChessGame();
+
+
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
@@ -352,18 +355,10 @@ public class UserInterface implements ServerMessageObserver {
         }
         switch (input) {
             case "1":
-                //redraw
+                DrawBoard.drawGameBoard(myGame);
                 break;
             case "2":
-                if (words.length < 2) {
-                    out.println("Bad request. Please try again");
-                    break;
-                }
-                String id = ServerFacade.CreateGame(authToken, words[1]);
-                if (id == null) {
-                    out.println("Create Game failed. Please try again");
-                    break;
-                }
+               ServerFacade.Leave();
                 break;
             case "3":
                 if (words.length < 2) {
@@ -415,9 +410,11 @@ public class UserInterface implements ServerMessageObserver {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(SET_TEXT_COLOR_RED);
         out.println(message);
+        out.print(RESET_TEXT_COLOR);
     }
     private void loadGame(ChessGame game){
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        myGame = game;
+        //var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         DrawBoard.drawGameBoard(game);
     }
 }

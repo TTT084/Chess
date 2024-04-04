@@ -1,10 +1,15 @@
 package ui;
+import chess.ChessGame;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import javax.websocket.*;
 
 import com.google.gson.Gson;
+import webSocketMessages.userCommands.JoinPlayer;
+import webSocketMessages.userCommands.Leave;
+import webSocketMessages.userCommands.UserGameCommand;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class WebsocketCommunicator extends Endpoint {
@@ -38,9 +43,28 @@ public class WebsocketCommunicator extends Endpoint {
             //myObserver.notify(new ErrorMessage(ex.getMessage()));
         }
     }
-
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+    }
+    public void joinGame(String auth, ChessGame.TeamColor color, String id){
+        JoinPlayer action = new JoinPlayer(auth);
+        action.playerColor=color;
+        action.gameId=id;
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        }
+        catch (IOException e){
 
+        }
+    }
+    public void leave(String auth, String gameID){
+        Leave action = new Leave(auth);
+        action.gameID=gameID;
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        }
+        catch (IOException e){
+
+        }
     }
 }
