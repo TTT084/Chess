@@ -2,7 +2,8 @@ package ui;
 
 import chess.ChessGame;
 import record.GameData;
-import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.serverMessages.*;
+import webSocketMessages.serverMessages.Error;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Scanner;
+import static ui.EscapeSequences.*;
 
 
 public class UserInterface implements ServerMessageObserver {
@@ -400,10 +402,22 @@ public class UserInterface implements ServerMessageObserver {
     @Override
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
-            //case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
-            //case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
-            //case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
+            case NOTIFICATION -> displayNotification(((Notification) message).message);
+            case ERROR -> displayError(((Error) message).message);
+            case LOAD_GAME -> loadGame(((LoadGame) message).game);
         }
-
+    }
+    private void displayNotification(String message){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.println(message);
+    }
+    private void displayError(String message){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(SET_TEXT_COLOR_RED);
+        out.println(message);
+    }
+    private void loadGame(ChessGame game){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        DrawBoard.drawGameBoard(game);
     }
 }

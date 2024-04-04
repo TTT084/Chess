@@ -8,8 +8,11 @@ import dataAccess.SQLAuthDAO;
 import dataAccess.SQLGameDAO;
 
 import record.AuthData;
+import record.GameData;
 import spark.Spark;
+import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
+import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.UserGameCommand;
 
@@ -57,7 +60,9 @@ public class WebSocketServer {
         return null;
     }
     private void join(Connection conn, String msg, Session session) throws IOException {
+        Gson json = new Gson();
         JoinPlayer command = new Gson().fromJson(msg, JoinPlayer.class);
+        String sending;
         sessionMap.put(command.getAuthString(),session);
         AuthDAO authy = new SQLAuthDAO();
         AuthData data = authy.getAuth(command.getAuthString());
@@ -76,8 +81,10 @@ public class WebSocketServer {
             if(!players.isEmpty()) {
                 for (String user : players) {
                     Session userSession = sessionMap.get(user);
-                    //Notification notif = new Notification();
-                    userSession.getRemote().sendString(" ");
+                    Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+                    notif.message=output;
+                    sending = json.toJson(notif);
+                    userSession.getRemote().sendString(sending);
                 }
             }
             players.add(command.getAuthString());
@@ -87,6 +94,11 @@ public class WebSocketServer {
             hashy.add(command.getAuthString());
             gameMap.put(command.gameId, hashy);
         }
+        LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
+        GameDAO gamy = new SQLGameDAO();
+        GameData thisData = gamy.getGame(command.gameId);
+        game.game=thisData.getGame();
+        sending = json.toJson(game);
+        session.getRemote().sendString(sending);
     }
-
 }

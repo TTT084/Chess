@@ -143,7 +143,7 @@ public class SQLGameDAO implements GameDAO{
             System.out.println("Creating tables error");
         }
     }
-    private GameData getGame(String gameID){
+    public GameData getGame(String gameID){
         Gson json = new Gson();
         GameData gaming = null;
         try(Connection conn = DatabaseManager.getConnection()){

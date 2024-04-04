@@ -19,4 +19,9 @@ public class MemoryGameDAO implements GameDAO{
     public GameData joinGame(String gameID, Boolean isBlack, String username, Boolean isWatcher) {
         return FakeData.updateGame(gameID, isBlack, username, isWatcher);
     }
+
+    @Override
+    public GameData getGame(String gameID) {
+        return null;
+    }
 }
