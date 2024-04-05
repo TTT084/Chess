@@ -14,6 +14,7 @@ import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayer;
+import webSocketMessages.userCommands.Leave;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import org.eclipse.jetty.websocket.api.*;
@@ -46,17 +47,17 @@ public class WebSocketServer {
         //Connection conn = null;
         if (conn != null) {
             switch (command.getCommandType()) {
-                //case JOIN_PLAYER -> join(conn, msg);
+                case JOIN_PLAYER -> join(conn, msg, session);
                 //case JOIN_OBSERVER -> observe(conn, msg);
                 //case MAKE_MOVE -> move(conn, msg));
-                //case LEAVE -> leave(conn, msg);
+                case LEAVE -> leave(conn, msg);
                 //case RESIGN -> resign(conn, msg);
             }
         } else {
             //Connection.sendError(session.getRemote(), "unknown user");
         }
     }
-    private String getConnection(String auth, Session session){
+    private Connection getConnection(String auth, Session session){
         return null;
     }
     private void join(Connection conn, String msg, Session session) throws IOException {
@@ -100,5 +101,31 @@ public class WebSocketServer {
         game.game=thisData.getGame();
         sending = json.toJson(game);
         session.getRemote().sendString(sending);
+    }
+    private void leave(Connection conn, String msg){
+        GameDAO gamy = new SQLGameDAO();
+        AuthDAO authy = new SQLAuthDAO();
+        Gson json = new Gson();
+        Leave command = new Gson().fromJson(msg, Leave.class);
+        AuthData user = authy.getAuth(command.getAuthString());
+        gamy.leaveGame(command.gameID,user.getUsername());
+    }
+    private void sendMessage(ServerMessage.ServerMessageType type, String gameId, String auth, String output, String sending){
+        Gson json = new Gson();
+        HashSet<String> players = gameMap.get(gameId);
+        if(!players.isEmpty()) {
+            for (String user : players) {
+                Session userSession = sessionMap.get(user);
+                Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+                notif.message=output;
+                sending = json.toJson(notif);
+                try {
+                    userSession.getRemote().sendString(sending);
+                }
+                catch (IOException e) {
+                    //throw new RuntimeException(e);
+                }
+            }
+        }
     }
 }

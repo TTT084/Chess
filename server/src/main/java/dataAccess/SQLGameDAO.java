@@ -176,4 +176,30 @@ public class SQLGameDAO implements GameDAO{
         }
         return gaming;
     }
+
+    @Override
+    public void leaveGame(String gameID, String username) {
+        GameData game = getGame(gameID);
+        String update = "UPDATE games SET whiteUsername=?, blackUsername=? WHERE id=?";
+        String black = game.getBlackUsername();
+        String white = game.getWhiteUsername();
+        if(Objects.equals(black, username)){
+            black = null;
+        } else if (Objects.equals(white, username)) {
+            white = null;
+        }
+        int number = Integer.parseInt(gameID);
+        try(Connection conn = DatabaseManager.getConnection()){
+            try (var preparedStatement = conn.prepareStatement(update)) {
+                preparedStatement.setString(1, white);
+                preparedStatement.setString(2, black);
+                preparedStatement.setInt(3, number);
+
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (DataAccessException | SQLException e){
+            System.out.println("Creating tables error");
+        }
+    }
 }

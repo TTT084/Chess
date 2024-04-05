@@ -10,4 +10,5 @@ public interface GameDAO {
     public int createGame(GameData game);
     public GameData joinGame(String gameID, Boolean isBlack, String username, Boolean isWatcher);
     public GameData getGame(String gameID);
+    public void leaveGame(String gameID, String username);
 }

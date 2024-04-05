@@ -19,8 +19,8 @@ public class UserInterface implements ServerMessageObserver {
     static boolean help = false;
     static boolean pursue = true;
     private static ArrayList<String> allGames = new ArrayList<>();
-
     private static ChessGame myGame = new ChessGame();
+    private static String gameID = "";
 
 
     public static void main(String[] args) {
@@ -32,6 +32,7 @@ public class UserInterface implements ServerMessageObserver {
         UI();
     }
     public static void UI(){
+        //ServerFacade();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
         out.println("Welcome to chess!");
@@ -291,6 +292,7 @@ public class UserInterface implements ServerMessageObserver {
         String insert = "";
         if(num<=allGames.size()){
             insert = allGames.get(num-1);
+            gameID = insert;
         }
         boolean join = ServerFacade.JoinGame(input,insert,authToken);
         if(join){
@@ -358,7 +360,7 @@ public class UserInterface implements ServerMessageObserver {
                 DrawBoard.drawGameBoard(myGame);
                 break;
             case "2":
-               ServerFacade.Leave();
+               ServerFacade.Leave(authToken,gameID);
                 break;
             case "3":
                 if (words.length < 2) {

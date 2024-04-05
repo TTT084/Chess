@@ -9,6 +9,7 @@ import Responses.CreateGameResponse;
 import Responses.ListGameResponse;
 import Responses.LoginResponse;
 import Responses.RegisterResponse;
+import chess.ChessGame;
 import record.GameData;
 
 public class ServerFacade {
@@ -18,7 +19,13 @@ public class ServerFacade {
     public static String host = "http://localhost:8080";
     private static WebsocketCommunicator ws;
     ServerFacade(){
+        ServerMessageObserver observer;
+        try{
+           ws = new WebsocketCommunicator(observer);
+        }
+        catch (Exception e){
 
+        }
     }
     public static String Register(String username, String password, String email){
         String path = "/user";
@@ -97,6 +104,13 @@ public class ServerFacade {
         return null;
     }
     public static boolean JoinGame(String color, String ID, String auth){
+        ChessGame.TeamColor team;
+        if(color == "White"){
+            team = ChessGame.TeamColor.WHITE;
+        }
+        else{
+            team = ChessGame.TeamColor.BLACK;
+        }
         String path = "/game";
         //String host = "http://localhost:8080";
         String url = host + path;
@@ -104,6 +118,7 @@ public class ServerFacade {
         JGRequest reg = new JGRequest(color,ID);
         try{
             communicator.doPut(url,reg,auth);
+            ws.joinGame(auth,team,ID);
         }
         catch (IOException e){
             System.out.println("error");
@@ -127,7 +142,7 @@ public class ServerFacade {
         }
         return;
     }
-    public static void Leave(){
-
+    public static void Leave(String auth, String ID){
+        ws.leave(auth, ID);
     }
 }

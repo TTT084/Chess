@@ -24,4 +24,9 @@ public class MemoryGameDAO implements GameDAO{
     public GameData getGame(String gameID) {
         return null;
     }
+
+    @Override
+    public void leaveGame(String gameID, String username) {
+
+    }
 }
