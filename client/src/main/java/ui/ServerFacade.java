@@ -18,8 +18,7 @@ public class ServerFacade {
     // calls client communicator
     public static String host = "http://localhost:8080";
     private static WebsocketCommunicator ws;
-    ServerFacade(){
-        ServerMessageObserver observer;
+    ServerFacade(ServerMessageObserver observer){
         try{
            ws = new WebsocketCommunicator(observer);
         }
@@ -126,8 +125,14 @@ public class ServerFacade {
         }
         return true;
     }
-//    public static void OvserveGame(String ID, String auth){JoinGame(null,ID,auth);
-//    }
+    public static boolean OvserveGame(String ID, String auth){
+        boolean output = JoinGame(null,ID,auth);
+        if(output){
+            ws.observeGame(auth,ID);
+            return true;
+        }
+        return false;
+    }
     public static void Logout(String auth){
         String path = "/session";
         //String host = "http://localhost:8080";

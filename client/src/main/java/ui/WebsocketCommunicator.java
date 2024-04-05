@@ -5,6 +5,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import javax.websocket.*;
 
 import com.google.gson.Gson;
+import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.Leave;
 import webSocketMessages.userCommands.UserGameCommand;
@@ -65,6 +66,15 @@ public class WebsocketCommunicator extends Endpoint {
         }
         catch (IOException e){
 
+        }
+    }
+    public void observeGame(String auth, String gameId){
+        JoinObserver action = new JoinObserver(auth);
+        action.gameID = gameId;
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        }
+        catch (IOException e){
         }
     }
 }

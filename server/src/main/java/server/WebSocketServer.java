@@ -48,7 +48,7 @@ public class WebSocketServer {
         if (conn != null) {
             switch (command.getCommandType()) {
                 case JOIN_PLAYER -> join(conn, msg, session);
-                //case JOIN_OBSERVER -> observe(conn, msg);
+                case JOIN_OBSERVER -> observe(conn, msg, session);
                 //case MAKE_MOVE -> move(conn, msg));
                 case LEAVE -> leave(conn, msg);
                 //case RESIGN -> resign(conn, msg);
@@ -109,6 +109,53 @@ public class WebSocketServer {
         Leave command = new Gson().fromJson(msg, Leave.class);
         AuthData user = authy.getAuth(command.getAuthString());
         gamy.leaveGame(command.gameID,user.getUsername());
+        String output = user.getUsername() + "has left the game";
+        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
+    }
+    private void observe(Connection conn, String msg, Session session){
+        Gson json = new Gson();
+        JoinPlayer command = new Gson().fromJson(msg, JoinPlayer.class);
+        String sending;
+        sessionMap.put(command.getAuthString(),session);
+        AuthDAO authy = new SQLAuthDAO();
+        AuthData data = authy.getAuth(command.getAuthString());
+        String username = data.getUsername();
+
+        String output = username + " is observing";
+        if(gameMap.containsKey(command.gameId)){
+            HashSet<String> players = gameMap.get(command.gameId);
+            command.getAuthString();
+            if(!players.isEmpty()) {
+                for (String user : players) {
+                    Session userSession = sessionMap.get(user);
+                    Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+                    notif.message=output;
+                    sending = json.toJson(notif);
+                    try {
+                        userSession.getRemote().sendString(sending);
+                    }
+                    catch (IOException e){
+
+                    }
+                }
+            }
+            players.add(command.getAuthString());
+        }
+        else{
+            HashSet<String> hashy = new HashSet<>();
+            hashy.add(command.getAuthString());
+            gameMap.put(command.gameId, hashy);
+        }
+        LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
+        GameDAO gamy = new SQLGameDAO();
+        GameData thisData = gamy.getGame(command.gameId);
+        game.game=thisData.getGame();
+        sending = json.toJson(game);
+        try {
+            session.getRemote().sendString(sending);
+        }
+        catch (IOException e){
+        }
     }
     private void sendMessage(ServerMessage.ServerMessageType type, String gameId, String auth, String output, String sending){
         Gson json = new Gson();

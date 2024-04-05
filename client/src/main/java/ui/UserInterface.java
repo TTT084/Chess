@@ -23,7 +23,7 @@ public class UserInterface implements ServerMessageObserver {
     private static String gameID = "";
 
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
 
@@ -31,8 +31,8 @@ public class UserInterface implements ServerMessageObserver {
         //PostLogin(out, scanner);
         UI();
     }
-    public static void UI(){
-        //ServerFacade();
+    public void UI(){
+        new ServerFacade(this);
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
         out.println("Welcome to chess!");
@@ -244,7 +244,8 @@ public class UserInterface implements ServerMessageObserver {
                 if(num<=allGames.size()){
                     insert = allGames.get(num-1);
                 }
-                boolean observe = ServerFacade.JoinGame(null,insert,authToken);
+                //boolean observe = ServerFacade.JoinGame(null,insert,authToken);
+                boolean observe = ServerFacade.OvserveGame(insert,authToken);
                 if(observe){
                     out.println("Observing game");
                     ChessGame game = new ChessGame();
@@ -388,12 +389,22 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Bad request. Please try again");
                     break;
                 }
+                highlight(out,words);
+
                 break;
             case "6":
                 gameHelp(out,scanner);
             default:
                 break;
         }
+    }
+    public void highlight(PrintStream out, String[] words){
+        char[] letters = words[0].toCharArray();
+        switch (letters[0]){
+            case 'a':
+
+        }
+        DrawBoard.highlightMoves(myGame,null);
     }
 
     @Override

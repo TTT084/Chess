@@ -126,4 +126,7 @@ public class DrawBoard {
             default -> out.print(EMPTY);
         }
     }
+    public static void highlightMoves(ChessGame game, ChessPosition position){
+
+    }
 }
