@@ -250,7 +250,7 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Observing game");
                     ChessGame game = new ChessGame();
                     game.getBoard().resetBoard();
-                    DrawBoard.drawGameBoard(game);
+                    DrawBoard.drawGameBoard(game, null,null);
                 }
                 else {
                     out.println("Observe Game failed. Please try again");
@@ -300,7 +300,7 @@ public class UserInterface implements ServerMessageObserver {
             out.println("Joined game");
             ChessGame game = new ChessGame();
             game.getBoard().resetBoard();
-            DrawBoard.drawGameBoard(game);
+            DrawBoard.drawGameBoard(game, null,null);
 
         }
         else {
@@ -358,7 +358,7 @@ public class UserInterface implements ServerMessageObserver {
         }
         switch (input) {
             case "1":
-                DrawBoard.drawGameBoard(myGame);
+                DrawBoard.drawGameBoard(myGame, null,null);
                 break;
             case "2":
                ServerFacade.Leave(authToken,gameID);
@@ -428,6 +428,6 @@ public class UserInterface implements ServerMessageObserver {
     private void loadGame(ChessGame game){
         myGame = game;
         //var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        DrawBoard.drawGameBoard(game);
+        DrawBoard.drawGameBoard(game, null,null);
     }
 }

@@ -1,12 +1,10 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static chess.ChessGame.TeamColor.WHITE;
 import static ui.EscapeSequences.*;
@@ -16,21 +14,22 @@ public class DrawBoard {
         ChessGame game = new ChessGame();
         ChessBoard board = game.getBoard();
         board.resetBoard();;
-        drawGameBoard(game);
+        //drawGameBoard(game, null);
+        highlightMoves(game, new ChessPosition(2,2));
     }
-    public static void drawGameBoard(ChessGame game){
+    public static void drawGameBoard(ChessGame game, Collection<ChessMove> moves, ChessPosition start){
         ChessBoard board = game.getBoard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         drawBlackHeader(out);
-        drawBlackRows(out, board);
+        drawBlackRows(out, board, moves,start);
         drawBlackHeader(out);
 
         out.print(SET_BG_COLOR_BLACK);
         out.println(EMPTY);
 
         drawWhiteHeader(out);
-        drawWhiteRows(out, board);
+        drawWhiteRows(out, board, moves, start);
         drawWhiteHeader(out);
 
         //out.print(SET_BG_COLOR_BLACK);
@@ -54,21 +53,46 @@ public class DrawBoard {
         out.print(" h  g  f  e  d  c  b  a ");
         out.println(EMPTY);
     }
-    private static void drawBlackRows(PrintStream out, ChessBoard board) {
+    private static void drawBlackRows(PrintStream out, ChessBoard board, Collection<ChessMove> moves, ChessPosition start) {
         for (int x = 8; x > 0; x--) {
             out.print(SET_TEXT_COLOR_BLACK);
             out.print(SET_BG_COLOR_LIGHT_GREY);
             out.print(x);
             for (int i = 1; i < 9; i++) {
+                ChessPosition myPos = new ChessPosition(x,i);
+                ChessPosition end = null;
+                if(moves!=null) {
+                    for (ChessMove move : moves) {
+                        ChessPosition destination = move.getEndPosition();
+                        if (destination.equals(myPos)) {
+                            end = myPos;
+                        }
+                    }
+                }
                 if (x % 2 == 0 && i %2==0) {
                     out.print(SET_BG_COLOR_BLACK);
+                    if(end!=null){
+                        if(end.getRow()==x && end.getColumn()==i){
+                            out.print(SET_BG_COLOR_DARK_GREEN);
+                        }
+                    }
                 } else if(x % 2 != 0 && i %2!=0){
                     out.print(SET_BG_COLOR_BLACK);
+                    if(end!=null){
+                        if(end.getRow()==x && end.getColumn()==i){
+                            out.print(SET_BG_COLOR_DARK_GREEN);
+                        }
+                    }
                 }
                 else{
                     out.print(SET_BG_COLOR_WHITE);
+                    if(end!=null){
+                        if(end.getRow()==x && end.getColumn()==i){
+                            out.print(SET_BG_COLOR_GREEN);
+                        }
+                    }
                 }
-                drawSquare(out, board, x,i);
+                drawSquare(out, board, x,i, start,end);
             }
             out.print(SET_TEXT_COLOR_BLACK);
             out.print(SET_BG_COLOR_LIGHT_GREY);
@@ -78,21 +102,47 @@ public class DrawBoard {
             out.println(EMPTY);
         }
     }
-    private static void drawWhiteRows(PrintStream out, ChessBoard board) {
+    private static void drawWhiteRows(PrintStream out, ChessBoard board, Collection<ChessMove> moves, ChessPosition start) {
         for (int x = 1; x < 9; x++) {
             out.print(SET_TEXT_COLOR_BLACK);
             out.print(SET_BG_COLOR_LIGHT_GREY);
             out.print(x);
             for (int i = 8; i > 0; i--) {
+                ChessPosition myPos = new ChessPosition(x,i);
+                ChessPosition end = null;
+                if(moves!=null) {
+                    for (ChessMove move : moves) {
+                        ChessPosition destination = move.getEndPosition();
+                        if (destination.equals(myPos)) {
+                            end = myPos;
+                        }
+                    }
+                }
                 if (x % 2 == 0 && i %2==0) {
                     out.print(SET_BG_COLOR_BLACK);
+
+                    if(end!=null){
+                        if(end.getRow()==x && end.getColumn()==i){
+                            out.print(SET_BG_COLOR_DARK_GREEN);
+                        }
+                    }
                 } else if(x % 2 != 0 && i %2!=0){
                     out.print(SET_BG_COLOR_BLACK);
+                    if(end!=null){
+                        if(end.getRow()==x && end.getColumn()==i){
+                            out.print(SET_BG_COLOR_DARK_GREEN);
+                        }
+                    }
                 }
                 else{
                     out.print(SET_BG_COLOR_WHITE);
+                    if(end!=null){
+                        if(end.getRow()==x && end.getColumn()==i){
+                            out.print(SET_BG_COLOR_GREEN);
+                        }
+                    }
                 }
-                drawSquare(out, board, x,i);
+                drawSquare(out, board, x,i,start,end);
             }
             out.print(SET_TEXT_COLOR_BLACK);
             out.print(SET_BG_COLOR_LIGHT_GREY);
@@ -102,9 +152,15 @@ public class DrawBoard {
             out.println(EMPTY);
         }
     }
-    private static void drawSquare(PrintStream out, ChessBoard board, int row, int col){
+    private static void drawSquare(PrintStream out, ChessBoard board, int row, int col, ChessPosition start, ChessPosition end){
         ChessPosition pos = new ChessPosition(row,col);
         ChessPiece piece = board.getPiece(pos);
+        if(start!=null){
+            if(start.getRow()==row && start.getColumn()==col){
+                out.print(SET_BG_COLOR_YELLOW);
+            }
+        }
+
         if(piece==null){
             out.print("   ");
             return;
@@ -127,6 +183,7 @@ public class DrawBoard {
         }
     }
     public static void highlightMoves(ChessGame game, ChessPosition position){
-
+        Collection<ChessMove> moves= game.validMoves(position);
+        drawGameBoard(game,moves, position);
     }
 }
