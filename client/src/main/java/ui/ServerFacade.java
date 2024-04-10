@@ -23,7 +23,15 @@ public class ServerFacade {
            ws = new WebsocketCommunicator(observer);
         }
         catch (Exception e){
-
+            System.out.println("error"+e);
+        }
+    }
+    public void MessageObserver(ServerMessageObserver observer){
+        try{
+            ws = new WebsocketCommunicator(observer);
+        }
+        catch (Exception e){
+            System.out.println("error"+e);
         }
     }
     public static String Register(String username, String password, String email){
@@ -120,7 +128,7 @@ public class ServerFacade {
             ws.joinGame(auth,team,ID);
         }
         catch (IOException e){
-            System.out.println("error");
+            System.out.println("error" + e);
             return false;
         }
         return true;

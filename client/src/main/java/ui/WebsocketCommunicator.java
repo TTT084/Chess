@@ -55,7 +55,7 @@ public class WebsocketCommunicator extends Endpoint {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         }
         catch (IOException e){
-
+            System.out.println("error" + e);
         }
     }
     public void leave(String auth, String gameID){
@@ -75,6 +75,7 @@ public class WebsocketCommunicator extends Endpoint {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         }
         catch (IOException e){
+
         }
     }
 }

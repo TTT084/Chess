@@ -33,8 +33,6 @@ public class WebSocketServer {
     //authtoken, session
     Map<String, Session> sessionMap = new HashMap<>();
     public static void main(String[] args) {
-        Spark.port(8080);
-        Spark.webSocket("/connect", WebSocketServer.class);
         Spark.get("/echo/:msg", (req, res) -> "HTTP response: " + req.params(":msg"));
     }
 
@@ -163,6 +161,10 @@ public class WebSocketServer {
         if(!players.isEmpty()) {
             for (String user : players) {
                 Session userSession = sessionMap.get(user);
+                if(!userSession.isOpen()){
+                    //remove from maps
+                    continue;
+                }
                 Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
                 notif.message=output;
                 sending = json.toJson(notif);

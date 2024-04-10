@@ -20,10 +20,12 @@ import java.util.UUID;
 public class ServerFacadeTests {
 
     private static Server server;
+    private ServerFacade facade;
 
     @BeforeAll
     public static void init() {
         server = new Server();
+
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
         ServerFacade.host = "http://localhost:" + port;
@@ -71,7 +73,7 @@ public class ServerFacadeTests {
     @Test
     public void RegisterSuccess(){
         //String user = UUID.randomUUID().toString();
-        String auth = ServerFacade.Register("user","hehe","silly@email");
+        String auth = facade.Register("user","hehe","silly@email");
         Assertions.assertNotNull(auth);
     }
     @Test

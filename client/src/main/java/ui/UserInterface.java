@@ -1,16 +1,16 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import record.GameData;
 import webSocketMessages.serverMessages.*;
 import webSocketMessages.serverMessages.Error;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
+
 import static ui.EscapeSequences.*;
 
 
@@ -19,8 +19,9 @@ public class UserInterface implements ServerMessageObserver {
     static boolean help = false;
     static boolean pursue = true;
     private static ArrayList<String> allGames = new ArrayList<>();
-    private static ChessGame myGame = new ChessGame();
+    private static ChessGame myGame = null;
     private static String gameID = "";
+    private ServerFacade facade;
 
 
     public void main(String[] args) {
@@ -29,10 +30,12 @@ public class UserInterface implements ServerMessageObserver {
 
         //PreLogin(out, scanner);
         //PostLogin(out, scanner);
+        //ServerFacade facade = new ServerFacade();
         UI();
     }
     public void UI(){
-        new ServerFacade(this);
+        facade = new ServerFacade(this);
+        facade.MessageObserver(this);
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
         out.println("Welcome to chess!");
@@ -59,7 +62,7 @@ public class UserInterface implements ServerMessageObserver {
         }
 
     }
-    public static void PreLogin(PrintStream out, Scanner scanner){
+    public void PreLogin(PrintStream out, Scanner scanner){
         out.println("1. Register <USERNAME> <PASSWORD> <EMAIL>");
         out.println("2. Login <USERNAME> <PASSWORD>");
         out.println("3. Quit");
@@ -69,7 +72,7 @@ public class UserInterface implements ServerMessageObserver {
         PreInput(out,words);
     }
 
-    private static void PreHelp(PrintStream out, Scanner scanner){
+    private void PreHelp(PrintStream out, Scanner scanner){
         out.println("HELP");
         out.println();
         out.println("1. Register <USERNAME> <PASSWORD> <EMAIL> -creates an account" );
@@ -80,7 +83,7 @@ public class UserInterface implements ServerMessageObserver {
         String[] words = input.split(" ");
         PreInput(out,words);
     }
-    public static void PostLogin(PrintStream out, Scanner scanner){
+    public void PostLogin(PrintStream out, Scanner scanner){
         out.println();
         out.println("1. Create Game <NAME>");
         out.println("2. List Games");
@@ -95,7 +98,7 @@ public class UserInterface implements ServerMessageObserver {
     }
 
 
-    private static void PostHelp(PrintStream out, Scanner scanner){
+    private void PostHelp(PrintStream out, Scanner scanner){
         out.println("HELP");
         out.println();
         out.println("1. Create Game <NAME> -creates a new game");
@@ -109,7 +112,7 @@ public class UserInterface implements ServerMessageObserver {
         String[] words = input.split(" ");
         PostInput(out,words);
     }
-    private static void PreInput(PrintStream out, String[] words){
+    private void PreInput(PrintStream out, String[] words){
         if(words.length==0){
             out.println("Bad request. Please try again");
             return;
@@ -131,7 +134,7 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Bad request. Please try again");
                     return;
                 }
-                authToken=ServerFacade.Register(words[1],words[2],words[3]);
+                authToken=facade.Register(words[1],words[2],words[3]);
                 if(authToken==null){
                     out.println("Register failed. Please try again");
                 }
@@ -141,13 +144,13 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Bad request. Please try again");
                     return;
                 }
-                authToken=ServerFacade.Login(words[1],words[2]);
+                authToken=facade.Login(words[1],words[2]);
                 if(authToken==null){
                     out.println("Login failed. Please try again");
                 }
                 break;
             case "3":
-                ServerFacade.Quit();
+                facade.Quit();
                 pursue=false;
                 break;
             case "4":
@@ -162,7 +165,7 @@ public class UserInterface implements ServerMessageObserver {
         out.println("Press Enter to continue");
         String enter = scanner.nextLine();
     }
-    private static String PostInput(PrintStream out, String[] words){
+    private String PostInput(PrintStream out, String[] words){
         int num = 0;
         String insert = "";
         if(words.length==0){
@@ -192,7 +195,7 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Bad request. Please try again");
                     break;
                 }
-                String id = ServerFacade.CreateGame(authToken,words[1]);
+                String id = facade.CreateGame(authToken,words[1]);
                 if(id==null){
                     out.println("Create Game failed. Please try again");
                     break;
@@ -201,7 +204,7 @@ public class UserInterface implements ServerMessageObserver {
                 //out.println(id);
                 break;
             case "2":
-                HashSet<GameData> games = ServerFacade.ListGames(authToken);
+                HashSet<GameData> games = facade.ListGames(authToken);
                 if(games==null){
                     out.println("List Game failed. Please try again");
                     break;
@@ -245,7 +248,7 @@ public class UserInterface implements ServerMessageObserver {
                     insert = allGames.get(num-1);
                 }
                 //boolean observe = ServerFacade.JoinGame(null,insert,authToken);
-                boolean observe = ServerFacade.OvserveGame(insert,authToken);
+                boolean observe = facade.OvserveGame(insert,authToken);
                 if(observe){
                     out.println("Observing game");
                     ChessGame game = new ChessGame();
@@ -257,11 +260,11 @@ public class UserInterface implements ServerMessageObserver {
                 }
                 break;
             case "5":
-                ServerFacade.Logout(authToken);
+                facade.Logout(authToken);
                 authToken=null;
                 break;
             case "6":
-                ServerFacade.Quit();
+                facade.Quit();
                 pursue=false;
             case "7":
                 //PostHelp();
@@ -275,7 +278,7 @@ public class UserInterface implements ServerMessageObserver {
         String enter = scanner.nextLine();
         return null;
     }
-    public static void joinGame(PrintStream out, String[] words){
+    public void joinGame(PrintStream out, String[] words){
         String input = words[2];
         input = input.toLowerCase();
         if(input.equals("w") || input.equals("white")){
@@ -295,13 +298,13 @@ public class UserInterface implements ServerMessageObserver {
             insert = allGames.get(num-1);
             gameID = insert;
         }
-        boolean join = ServerFacade.JoinGame(input,insert,authToken);
+        boolean join = facade.JoinGame(input,insert,authToken);
         if(join){
             out.println("Joined game");
             ChessGame game = new ChessGame();
             game.getBoard().resetBoard();
             DrawBoard.drawGameBoard(game, null,null);
-
+            gameplay(out,new Scanner(System.in));
         }
         else {
             out.println("Join Game failed. Please try again");
@@ -327,7 +330,7 @@ public class UserInterface implements ServerMessageObserver {
         out.println("6. Help -with possible commands");
         String input = scanner.nextLine();
         String[] words = input.split(" ");
-        PreInput(out,words);
+        gameInput(out,words);
     }
     public void gameInput(PrintStream out,String[] words){
         Scanner scanner = new Scanner(System.in);
@@ -357,54 +360,95 @@ public class UserInterface implements ServerMessageObserver {
             input = "6";
         }
         switch (input) {
-            case "1":
+            case "1": //redraw
                 DrawBoard.drawGameBoard(myGame, null,null);
                 break;
-            case "2":
-               ServerFacade.Leave(authToken,gameID);
-                break;
-            case "3":
+            case "2": //leave
+               facade.Leave(authToken,gameID);
+                return;
+            case "3": // make move
                 if (words.length < 2) {
                     out.println("Bad request. Please try again");
                     break;
                 }
-                String deleteThis = ServerFacade.CreateGame(authToken, words[1]);
-                if (deleteThis == null) {
-                    out.println("Create Game failed. Please try again");
+                boolean moveMade = makeMove(words);
+                if (!moveMade) {
+                    out.println("Invalid move. Please try again");
                     break;
                 }
 
                 break;
-            case "4":
+            case "4": //resign
                 out.println("Are you sure you want to resign?");
                 out.println("Y or N");
                 String reInput = scanner.nextLine();
                 reInput = reInput.toLowerCase();
                 if(reInput.equals("y") || reInput.equals("yes")){
 
+                    return;
                 }
                 break;
-            case "5":
+            case "5": // highlight
                 if (words.length < 1) {
                     out.println("Bad request. Please try again");
                     break;
                 }
                 highlight(out,words);
-
                 break;
-            case "6":
+            case "6": //help
                 gameHelp(out,scanner);
             default:
                 break;
         }
+        gameplay(out,scanner);
     }
     public void highlight(PrintStream out, String[] words){
-        char[] letters = words[0].toCharArray();
+        DrawBoard.highlightMoves(myGame,letter2Number(words, 0));
+    }
+    public boolean makeMove(String[] words){
+        ChessPosition start = letter2Number(words,0);
+        ChessPosition end = letter2Number(words,1);
+        Collection <ChessMove> moves = myGame.validMoves(start);
+        for (ChessMove move : moves) {
+            ChessPosition destination = move.getEndPosition();
+            if (destination.equals(end)) {
+                //makemove
+                return true;
+            }
+        }
+        return false;
+    }
+    public ChessPosition letter2Number(String[] words, int a){
+        char[] letters = words[a].toCharArray();
+        int row = Character.getNumericValue(letters[1]);
+        int col = Character.getNumericValue(letters[0]);
         switch (letters[0]){
             case 'a':
-
+                col = 1;
+                break;
+            case 'b':
+                col = 2;
+                break;
+            case 'c':
+                col = 3;
+                break;
+            case 'd':
+                col=4;
+                break;
+            case 'e':
+                col = 5;
+                break;
+            case 'f':
+                col = 6;
+                break;
+            case 'g':
+                col =7;
+                break;
+            case 'h':
+                col = 8;
+                break;
         }
-        DrawBoard.highlightMoves(myGame,null);
+        return new ChessPosition(row,col);
     }
 
     @Override
