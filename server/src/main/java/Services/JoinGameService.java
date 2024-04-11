@@ -27,11 +27,11 @@ public class JoinGameService {
             isWatcher=true;
             //return response;
         }
-        else if(color.equals("BLACK")){
+        else if(color.equals("BLACK")||color.equals("Black")){
             hasColor=true;
             isBlack=true;
         }
-        else if(color.equals("WHITE")){
+        else if(color.equals("WHITE")||color.equals("White")){
             hasColor=true;
         }
         GameDAO gameAccess = new SQLGameDAO();

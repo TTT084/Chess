@@ -22,6 +22,7 @@ public class UserInterface implements ServerMessageObserver {
     private static ChessGame myGame = null;
     private static String gameID = "";
     private ServerFacade facade;
+    private String team;
 
 
     public void main(String[] args) {
@@ -253,7 +254,7 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Observing game");
                     ChessGame game = new ChessGame();
                     game.getBoard().resetBoard();
-                    DrawBoard.drawGameBoard(game, null,null);
+                    DrawBoard.drawGameBoard(game, null,null,team);
                 }
                 else {
                     out.println("Observe Game failed. Please try again");
@@ -303,8 +304,9 @@ public class UserInterface implements ServerMessageObserver {
             out.println("Joined game");
             ChessGame game = new ChessGame();
             game.getBoard().resetBoard();
-            DrawBoard.drawGameBoard(game, null,null);
+            DrawBoard.drawGameBoard(game, null,null,input);
             gameplay(out,new Scanner(System.in));
+            team = input;
         }
         else {
             out.println("Join Game failed. Please try again");
@@ -361,11 +363,12 @@ public class UserInterface implements ServerMessageObserver {
         }
         switch (input) {
             case "1": //redraw
-                DrawBoard.drawGameBoard(myGame, null,null);
+                DrawBoard.drawGameBoard(myGame, null,null,team);
                 break;
             case "2": //leave
                facade.Leave(authToken,gameID);
-                return;
+               team=null;
+               return;
             case "3": // make move
                 if (words.length < 2) {
                     out.println("Bad request. Please try again");
@@ -385,6 +388,7 @@ public class UserInterface implements ServerMessageObserver {
                 reInput = reInput.toLowerCase();
                 if(reInput.equals("y") || reInput.equals("yes")){
 
+                    team=null;
                     return;
                 }
                 break;
@@ -393,7 +397,7 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Bad request. Please try again");
                     break;
                 }
-                highlight(out,words);
+                highlight(out,words,team);
                 break;
             case "6": //help
                 gameHelp(out,scanner);
@@ -402,8 +406,8 @@ public class UserInterface implements ServerMessageObserver {
         }
         gameplay(out,scanner);
     }
-    public void highlight(PrintStream out, String[] words){
-        DrawBoard.highlightMoves(myGame,letter2Number(words, 0));
+    public void highlight(PrintStream out, String[] words, String color){
+        DrawBoard.highlightMoves(myGame,letter2Number(words, 0),color);
     }
     public boolean makeMove(String[] words){
         ChessPosition start = letter2Number(words,0);
@@ -412,7 +416,7 @@ public class UserInterface implements ServerMessageObserver {
         for (ChessMove move : moves) {
             ChessPosition destination = move.getEndPosition();
             if (destination.equals(end)) {
-                //makemove
+                facade.MakeMove(authToken,gameID,new ChessMove(start,end,null));
                 return true;
             }
         }
@@ -472,6 +476,6 @@ public class UserInterface implements ServerMessageObserver {
     private void loadGame(ChessGame game){
         myGame = game;
         //var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        DrawBoard.drawGameBoard(game, null,null);
+        DrawBoard.drawGameBoard(game, null,null,team);
     }
 }

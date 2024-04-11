@@ -1,9 +1,11 @@
 package serviceTests;
 
+import Requests.JGRequest;
 import Responses.RegisterResponse;
 import Services.RegisterService;
 import Responses.*;
 import Services.*;
+import handlers.JoinGameHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -132,7 +134,10 @@ public class UnitTests {
         CreateGameService createSurvy=new CreateGameService();
         CreateGameResponse createResponse= createSurvy.CreateGame("", "yes game");
         JoinGameService joinSurvy = new JoinGameService();
-        //joinSurvy.JoinGame(response1.getAuthToken(), createResponse.getGameName() ,null);
+        JoinGameHandler handle = new JoinGameHandler();
+
+        //handle.handleRequest();
+        //joinSurvy.JoinGame(response1.getAuthToken(), createResponse.getGameName() ,"Black");
         Assertions.assertNotEquals("changethis",response1.getMessage());
     }
     @Test void JoinGameTaken(){

@@ -152,7 +152,8 @@ public class ClientCommunicator {
         }
         else {
             // SERVER RETURNED AN HTTP ERROR
-            throw new IOException();
+            String msg = String.valueOf(connection.getResponseCode());
+            throw new IOException(msg);
             //InputStream responseBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
         }

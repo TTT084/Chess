@@ -43,22 +43,18 @@ public class WebSocketServer {
         sessionMap.put(command.getAuthString(), session);
         var conn = getConnection(command.getAuthString(), session);
         //Connection conn = null;
-        if (conn != null) {
-            switch (command.getCommandType()) {
-                case JOIN_PLAYER -> join(conn, msg, session);
-                case JOIN_OBSERVER -> observe(conn, msg, session);
-                //case MAKE_MOVE -> move(conn, msg));
-                case LEAVE -> leave(conn, msg);
-                //case RESIGN -> resign(conn, msg);
-            }
-        } else {
-            //Connection.sendError(session.getRemote(), "unknown user");
+        switch (command.getCommandType()) {
+            case JOIN_PLAYER -> join(msg, session);
+            case JOIN_OBSERVER -> observe(msg, session);
+            //case MAKE_MOVE -> move(msg));
+            case LEAVE -> leave(msg);
+            //case RESIGN -> resign(msg);
         }
     }
-    private Connection getConnection(String auth, Session session){
-        return null;
+    private int getConnection(String auth, Session session){
+        return 1;
     }
-    private void join(Connection conn, String msg, Session session) throws IOException {
+    private void join(String msg, Session session) throws IOException {
         Gson json = new Gson();
         JoinPlayer command = new Gson().fromJson(msg, JoinPlayer.class);
         String sending;
@@ -100,7 +96,7 @@ public class WebSocketServer {
         sending = json.toJson(game);
         session.getRemote().sendString(sending);
     }
-    private void leave(Connection conn, String msg){
+    private void leave(String msg){
         GameDAO gamy = new SQLGameDAO();
         AuthDAO authy = new SQLAuthDAO();
         Gson json = new Gson();
@@ -110,7 +106,7 @@ public class WebSocketServer {
         String output = user.getUsername() + "has left the game";
         sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
     }
-    private void observe(Connection conn, String msg, Session session){
+    private void observe(String msg, Session session){
         Gson json = new Gson();
         JoinPlayer command = new Gson().fromJson(msg, JoinPlayer.class);
         String sending;

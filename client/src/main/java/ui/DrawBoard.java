@@ -15,29 +15,30 @@ public class DrawBoard {
         ChessBoard board = game.getBoard();
         board.resetBoard();;
         //drawGameBoard(game, null);
-        highlightMoves(game, new ChessPosition(2,2));
+        highlightMoves(game, new ChessPosition(2,2),"Black");
     }
-    public static void drawGameBoard(ChessGame game, Collection<ChessMove> moves, ChessPosition start){
+    public static void drawGameBoard(ChessGame game, Collection<ChessMove> moves, ChessPosition start, String color){
         ChessBoard board = game.getBoard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-
-        drawBlackHeader(out);
-        drawBlackRows(out, board, moves,start);
-        drawBlackHeader(out);
-
-        out.print(SET_BG_COLOR_BLACK);
-        out.println(EMPTY);
-
-        drawWhiteHeader(out);
-        drawWhiteRows(out, board, moves, start);
-        drawWhiteHeader(out);
-
+        if(color==null){
+            drawBlackHeader(out);
+            drawBlackRows(out, board, moves,start);
+            drawBlackHeader(out);
+        } else if (color=="White") {
+            drawBlackHeader(out);
+            drawBlackRows(out, board, moves,start);
+            drawBlackHeader(out);
+        } else if (color=="Black") {
+            drawWhiteHeader(out);
+            drawWhiteRows(out, board, moves, start);
+            drawWhiteHeader(out);
+        }
         //out.print(SET_BG_COLOR_BLACK);
         //out.print(SET_TEXT_COLOR_WHITE);
        out.print(RESET_TEXT_COLOR);
         out.print(RESET_BG_COLOR);
         out.println(EMPTY);
-        out.println("test");
+        //out.println("test");
     }
     private static void drawBlackHeader(PrintStream out){
         out.print(SET_BG_COLOR_LIGHT_GREY);
@@ -182,8 +183,8 @@ public class DrawBoard {
             default -> out.print(EMPTY);
         }
     }
-    public static void highlightMoves(ChessGame game, ChessPosition position){
+    public static void highlightMoves(ChessGame game, ChessPosition position, String color){
         Collection<ChessMove> moves= game.validMoves(position);
-        drawGameBoard(game,moves, position);
+        drawGameBoard(game,moves, position, color);
     }
 }

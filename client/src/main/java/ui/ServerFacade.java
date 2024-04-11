@@ -10,6 +10,7 @@ import Responses.ListGameResponse;
 import Responses.LoginResponse;
 import Responses.RegisterResponse;
 import chess.ChessGame;
+import chess.ChessMove;
 import record.GameData;
 
 public class ServerFacade {
@@ -23,7 +24,7 @@ public class ServerFacade {
            ws = new WebsocketCommunicator(observer);
         }
         catch (Exception e){
-            System.out.println("error"+e);
+            System.out.println("Websocket error "+e);
         }
     }
     public void MessageObserver(ServerMessageObserver observer){
@@ -31,7 +32,7 @@ public class ServerFacade {
             ws = new WebsocketCommunicator(observer);
         }
         catch (Exception e){
-            System.out.println("error"+e);
+            System.out.println("Websocket error"+e);
         }
     }
     public static String Register(String username, String password, String email){
@@ -49,7 +50,7 @@ public class ServerFacade {
             return rep.getAuthToken();
         }
         catch (IOException e){
-            System.out.println("error");
+            System.out.println("Register error" +e);
         }
         return null;
     }
@@ -67,7 +68,7 @@ public class ServerFacade {
             return rep.getAuthToken();
         }
         catch (IOException e){
-            System.out.println("error");
+            System.out.println("Login error "+e);
         }
         return null;
     }
@@ -88,7 +89,7 @@ public class ServerFacade {
             return game.getGameName();
         }
         catch (IOException e){
-            System.out.println("error");
+            System.out.println("CreateGame error" +e);
         }
         return path;
     }
@@ -106,7 +107,7 @@ public class ServerFacade {
             return rep.getGames();
         }
         catch (IOException e){
-            System.out.println("error");
+            System.out.println("ListGame error" +e);
         }
         return null;
     }
@@ -128,7 +129,7 @@ public class ServerFacade {
             ws.joinGame(auth,team,ID);
         }
         catch (IOException e){
-            System.out.println("error" + e);
+            System.out.println("Join game error" + e);
             return false;
         }
         return true;
@@ -151,11 +152,14 @@ public class ServerFacade {
             communicator.doDelete(url,reg,auth);
         }
         catch (IOException e){
-            System.out.println("error");
+            System.out.println("Logout error" +e);
         }
         return;
     }
     public static void Leave(String auth, String ID){
         ws.leave(auth, ID);
+    }
+    public static void MakeMove(String auth, String ID, ChessMove move){
+
     }
 }

@@ -1,5 +1,6 @@
 package ui;
 import chess.ChessGame;
+import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import javax.websocket.*;
@@ -30,7 +31,9 @@ public class WebsocketCommunicator extends Endpoint {
                     ServerMessage message = gson.fromJson(input, ServerMessage.class);
                     myObserver.notify(message);
                 } catch(Exception ex) {
-                    //myObserver.notify(new ErrorMessage(ex.getMessage()));
+                    Error error = new Error(ServerMessage.ServerMessageType.ERROR);
+                    error.message= ex.getMessage();
+                    myObserver.notify(error);
                 }
             }
         });
@@ -55,7 +58,7 @@ public class WebsocketCommunicator extends Endpoint {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         }
         catch (IOException e){
-            System.out.println("error" + e);
+            System.out.println("Join game WS error " + e.getMessage());
         }
     }
     public void leave(String auth, String gameID){
@@ -65,7 +68,7 @@ public class WebsocketCommunicator extends Endpoint {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         }
         catch (IOException e){
-
+            System.out.println("Leave game WS error " + e.getMessage());
         }
     }
     public void observeGame(String auth, String gameId){
@@ -75,7 +78,7 @@ public class WebsocketCommunicator extends Endpoint {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         }
         catch (IOException e){
-
+            System.out.println("Observe game WS error " + e.getMessage());
         }
     }
 }
