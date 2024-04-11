@@ -458,11 +458,45 @@ public class UserInterface implements ServerMessageObserver {
     @Override
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
-            case NOTIFICATION -> displayNotification(((Notification) message).message);
-            case ERROR -> displayError(((Error) message).message);
-            case LOAD_GAME -> loadGame(((LoadGame) message).game);
+            case NOTIFICATION:
+                if (message instanceof Notification) {
+                    displayNotification(((Notification) message).message);
+                } else {
+                    // Handle error or unexpected case when message is not a Notification
+                }
+                break;
+            case ERROR:
+                if (message instanceof Error) {
+                    displayError(((Error) message).message);
+                } else {
+                    // Handle error or unexpected case when message is not an Error
+                }
+                break;
+            case LOAD_GAME:
+                if (message instanceof LoadGame) {
+                    loadGame(((LoadGame) message).game);
+                } else {
+                    // Handle error or unexpected case when message is not a LoadGame
+                }
+                break;
+            default:
+                // Handle default case
+                break;
         }
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.println("I got a message!");
     }
+    //class webSocketMessages.serverMessages.ServerMessage cannot be cast to
+    // class webSocketMessages.serverMessages.Notification (webSocketMessages.serverMessages.ServerMessage
+    // and webSocketMessages.serverMessages.Notification are in unnamed module of loader 'app')
+
+//    public void notify(ServerMessage message) {
+//        switch (message.getServerMessageType()) {
+//            case NOTIFICATION -> displayNotification(((Notification) message).message);
+//            case ERROR -> displayError(((Error) message).message);
+//            case LOAD_GAME -> loadGame(((LoadGame) message).game);
+//        }
+//    }
     private void displayNotification(String message){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.println(message);

@@ -202,4 +202,23 @@ public class SQLGameDAO implements GameDAO{
             System.out.println("Creating tables error");
         }
     }
+
+    @Override
+    public void makeMove(String gameID, GameData game) {
+        String update = "UPDATE games SET game=? WHERE id=?";
+        Gson json = new Gson();
+        String gameString = json.toJson(game.getGame());
+        int number = Integer.parseInt(gameID);
+        try(Connection conn = DatabaseManager.getConnection()){
+            try (var preparedStatement = conn.prepareStatement(update)) {
+                preparedStatement.setString(1, gameString);
+                preparedStatement.setInt(2, number);
+
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (DataAccessException | SQLException e){
+            System.out.println("Creating tables error");
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package server;
 
 import chess.ChessGame;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
@@ -15,6 +16,7 @@ import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.Leave;
+import webSocketMessages.userCommands.MakeMove;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import org.eclipse.jetty.websocket.api.*;
@@ -43,12 +45,25 @@ public class WebSocketServer {
         sessionMap.put(command.getAuthString(), session);
         var conn = getConnection(command.getAuthString(), session);
         //Connection conn = null;
+        Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+        notif.message="this works";
+        Gson json = new Gson();
+        String sending = json.toJson(notif);
+        try {
+            session.getRemote().sendString(sending);
+        }
+        catch (IOException e){
+
+        }
+        if(command.getCommandType()==null){
+            return;
+        }
         switch (command.getCommandType()) {
             case JOIN_PLAYER -> join(msg, session);
             case JOIN_OBSERVER -> observe(msg, session);
-            //case MAKE_MOVE -> move(msg));
+            case MAKE_MOVE -> move(msg, session);
             case LEAVE -> leave(msg);
-            //case RESIGN -> resign(msg);
+            case RESIGN -> resign(msg,session);
         }
     }
     private int getConnection(String auth, Session session){
@@ -151,6 +166,29 @@ public class WebSocketServer {
         catch (IOException e){
         }
     }
+    private void move(String msg, Session session){
+        Gson json = new Gson();
+        MakeMove command = new Gson().fromJson(msg, MakeMove.class);
+        String sending;
+        sessionMap.put(command.getAuthString(),session);
+        AuthDAO authy = new SQLAuthDAO();
+        AuthData data = authy.getAuth(command.getAuthString());
+        String username = data.getUsername();
+        GameDAO gamy = new SQLGameDAO();
+        GameData myData = gamy.getGame(command.gameID);
+        ChessGame myChess = myData.getGame();
+        try {
+            myChess.makeMove(command.move);
+        }catch (InvalidMoveException e){
+            System.out.println("Make move WS server error " + e.getMessage());
+        }
+        myData.setGame(myChess);
+        gamy.makeMove(command.gameID,myData);
+        loadGame(myChess, command.gameID);
+    }
+    private void resign(String msg, Session session){
+
+    }
     private void sendMessage(ServerMessage.ServerMessageType type, String gameId, String auth, String output, String sending){
         Gson json = new Gson();
         HashSet<String> players = gameMap.get(gameId);
@@ -158,7 +196,7 @@ public class WebSocketServer {
             for (String user : players) {
                 Session userSession = sessionMap.get(user);
                 if(!userSession.isOpen()){
-                    //remove from maps
+                    sessionMap.remove(user);
                     continue;
                 }
                 Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
@@ -173,4 +211,29 @@ public class WebSocketServer {
             }
         }
     }
+    private void loadGame(ChessGame game, String gameId){
+        String sending;
+        Gson json = new Gson();
+        HashSet<String> players = gameMap.get(gameId);
+        if(!players.isEmpty()) {
+            for (String user : players) {
+                Session userSession = sessionMap.get(user);
+                if(!userSession.isOpen()){
+                    sessionMap.remove(user);
+                    continue;
+                }
+                LoadGame notif = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
+                notif.game=game;
+                sending = json.toJson(notif);
+                try {
+                    userSession.getRemote().sendString(sending);
+                }
+                catch (IOException e) {
+                    System.out.println("Load Game WS server error " + e.getMessage());
+                    //throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
 }

@@ -1,15 +1,13 @@
 package ui;
 import chess.ChessGame;
+import chess.ChessMove;
 import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import javax.websocket.*;
 
 import com.google.gson.Gson;
-import webSocketMessages.userCommands.JoinObserver;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.Leave;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -79,6 +77,27 @@ public class WebsocketCommunicator extends Endpoint {
         }
         catch (IOException e){
             System.out.println("Observe game WS error " + e.getMessage());
+        }
+    }
+    public void makeMove(String auth, String ID, ChessMove move){
+        MakeMove action = new MakeMove(auth);
+        action.gameID = ID;
+        action.move=move;
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        }
+        catch (IOException e){
+            System.out.println("Make move WS error " + e.getMessage());
+        }
+    }
+    public void resign(String auth, String gameId){
+        Resign action = new Resign(auth);
+        action.gameID = gameId;
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        }
+        catch (IOException e){
+            System.out.println("Resign WS error " + e.getMessage());
         }
     }
 }
