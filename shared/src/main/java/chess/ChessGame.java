@@ -40,6 +40,7 @@ public class ChessGame {
         rightBlackRook=false;
         leftWhiteRook=false;
         rightWhiteRook=false;
+        checkingMate=false;
     }
 
     /**
@@ -75,6 +76,9 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        if(checkingMate){
+            return null;
+        }
         Collection <ChessMove> validMoves = new HashSet<>();
         ChessPiece piece = myBoard.getPiece(startPosition);
         if(piece==null){
@@ -84,10 +88,11 @@ public class ChessGame {
         TeamColor color = piece.getTeamColor();
         for(ChessMove element: moves){
             if(piece.getPieceType()==KING){
-                if(castling(startPosition,element)){
-                    validMoves.add(element);
-                    continue;
-                }
+                //if(castling(startPosition,element)){
+                //    validMoves.add(element);
+                int yuh=0;
+                    //continue;
+                //}
             }
             if(!fakeMove(element)){
                 continue;
@@ -398,5 +403,8 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return myBoard;
+    }
+    public void resign(){
+        checkingMate=true;
     }
 }

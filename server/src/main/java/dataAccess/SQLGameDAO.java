@@ -144,6 +144,9 @@ public class SQLGameDAO implements GameDAO{
         }
     }
     public GameData getGame(String gameID){
+        if(gameID==null){
+            return null;
+        }
         Gson json = new Gson();
         GameData gaming = null;
         try(Connection conn = DatabaseManager.getConnection()){

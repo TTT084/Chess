@@ -14,10 +14,7 @@ import spark.Spark;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.Leave;
-import webSocketMessages.userCommands.MakeMove;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 import org.eclipse.jetty.websocket.api.*;
 import org.eclipse.jetty.websocket.api.annotations.*;
@@ -49,12 +46,12 @@ public class WebSocketServer {
         notif.message="this works";
         Gson json = new Gson();
         String sending = json.toJson(notif);
-        try {
-            session.getRemote().sendString(sending);
-        }
-        catch (IOException e){
-
-        }
+//        try {
+//            session.getRemote().sendString(sending);
+//        }
+//        catch (IOException e){
+//
+//        }
         if(command.getCommandType()==null){
             return;
         }
@@ -107,7 +104,9 @@ public class WebSocketServer {
         LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
         GameDAO gamy = new SQLGameDAO();
         GameData thisData = gamy.getGame(command.gameId);
-        game.game=thisData.getGame();
+        if(thisData!=null){
+            game.game=thisData.getGame();
+        }
         sending = json.toJson(game);
         session.getRemote().sendString(sending);
     }
@@ -118,7 +117,7 @@ public class WebSocketServer {
         Leave command = new Gson().fromJson(msg, Leave.class);
         AuthData user = authy.getAuth(command.getAuthString());
         gamy.leaveGame(command.gameID,user.getUsername());
-        String output = user.getUsername() + "has left the game";
+        String output = user.getUsername() + " has left the game";
         sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
     }
     private void observe(String msg, Session session){
@@ -187,7 +186,19 @@ public class WebSocketServer {
         loadGame(myChess, command.gameID);
     }
     private void resign(String msg, Session session){
-
+        GameDAO gamy = new SQLGameDAO();
+        AuthDAO authy = new SQLAuthDAO();
+        Gson json = new Gson();
+        Resign command = new Gson().fromJson(msg, Resign.class);
+        AuthData user = authy.getAuth(command.getAuthString());
+        gamy.leaveGame(command.gameID,user.getUsername());
+        GameData myData = gamy.getGame(command.gameID);
+        ChessGame myChess = myData.getGame();
+        myChess.resign();
+        myData.setGame(myChess);
+        gamy.makeMove(command.gameID,myData);
+        String output = user.getUsername() + " has resigned";
+        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
     }
     private void sendMessage(ServerMessage.ServerMessageType type, String gameId, String auth, String output, String sending){
         Gson json = new Gson();

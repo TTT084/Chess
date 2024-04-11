@@ -160,6 +160,6 @@ public class ServerFacade {
         ws.leave(auth, ID);
     }
     public static void MakeMove(String auth, String ID, ChessMove move){
-
+        ws.makeMove(auth,ID,move);
     }
 }

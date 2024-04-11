@@ -27,11 +27,12 @@ public class WebsocketCommunicator extends Endpoint {
                 Gson gson = new Gson();
                 try {
                     ServerMessage message = gson.fromJson(input, ServerMessage.class);
-                    myObserver.notify(message);
+                    //myObserver.notify(message);
+                    myObserver.notify(input);
                 } catch(Exception ex) {
                     Error error = new Error(ServerMessage.ServerMessageType.ERROR);
                     error.message= ex.getMessage();
-                    myObserver.notify(error);
+                    myObserver.notify(new Gson().toJson(error));
                 }
             }
         });
@@ -40,7 +41,7 @@ public class WebsocketCommunicator extends Endpoint {
         Gson gson = new Gson();
         try {
             ServerMessage message = gson.fromJson(input, ServerMessage.class);
-            myObserver.notify(message);
+            myObserver.notify(input);
         } catch(Exception ex) {
             //myObserver.notify(new ErrorMessage(ex.getMessage()));
         }

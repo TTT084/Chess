@@ -1,8 +1,7 @@
 package ui;
 
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
+import com.google.gson.Gson;
 import record.GameData;
 import webSocketMessages.serverMessages.*;
 import webSocketMessages.serverMessages.Error;
@@ -379,7 +378,9 @@ public class UserInterface implements ServerMessageObserver {
                     out.println("Invalid move. Please try again");
                     break;
                 }
-
+                else{
+                    DrawBoard.drawGameBoard(myGame, null,null,team);
+                }
                 break;
             case "4": //resign
                 out.println("Are you sure you want to resign?");
@@ -407,16 +408,23 @@ public class UserInterface implements ServerMessageObserver {
         gameplay(out,scanner);
     }
     public void highlight(PrintStream out, String[] words, String color){
-        DrawBoard.highlightMoves(myGame,letter2Number(words, 0),color);
+        DrawBoard.highlightMoves(myGame,letter2Number(words, 1),color);
     }
     public boolean makeMove(String[] words){
-        ChessPosition start = letter2Number(words,0);
-        ChessPosition end = letter2Number(words,1);
+        ChessPosition start = letter2Number(words,1);
+        ChessPosition end = letter2Number(words,2);
+        ChessPiece.PieceType prom = promotion(words);
         Collection <ChessMove> moves = myGame.validMoves(start);
         for (ChessMove move : moves) {
             ChessPosition destination = move.getEndPosition();
             if (destination.equals(end)) {
-                facade.MakeMove(authToken,gameID,new ChessMove(start,end,null));
+                facade.MakeMove(authToken,gameID,new ChessMove(start,end,prom));
+                try {
+                    myGame.makeMove(new ChessMove(start, end, prom));
+                }
+                catch(InvalidMoveException e){
+                    return false;
+                }
                 return true;
             }
         }
@@ -426,7 +434,8 @@ public class UserInterface implements ServerMessageObserver {
         char[] letters = words[a].toCharArray();
         int row = Character.getNumericValue(letters[1]);
         int col = Character.getNumericValue(letters[0]);
-        switch (letters[0]){
+        char first = Character.toLowerCase(letters[0]);
+        switch (first){
             case 'a':
                 col = 1;
                 break;
@@ -454,62 +463,122 @@ public class UserInterface implements ServerMessageObserver {
         }
         return new ChessPosition(row,col);
     }
+    private ChessPiece.PieceType promotion(String[] prom){
+        if(prom.length<4){
+            return null;
+        }
+        if(prom[3]==null){
+            return null;
+        }
+        String input = prom[3].toLowerCase();
+        if(input=="rook"||input=="r"){
+            return ChessPiece.PieceType.ROOK;
+        }
+        if(input=="queen"||input=="q"){
+            return ChessPiece.PieceType.QUEEN;
+        }
+        if(input=="knight"||input=="k"){
+            return ChessPiece.PieceType.KNIGHT;
+        }
+        if(input=="bishop"||input=="b"){
+            return ChessPiece.PieceType.BISHOP;
+        }
+        return null;
+    }
 
     @Override
-    public void notify(ServerMessage message) {
+    public void notify(String input){
+        Gson gson = new Gson();
+        ServerMessage message = gson.fromJson(input, ServerMessage.class);
         switch (message.getServerMessageType()) {
-            case NOTIFICATION:
-                if (message instanceof Notification) {
-                    displayNotification(((Notification) message).message);
-                } else {
-                    // Handle error or unexpected case when message is not a Notification
-                }
-                break;
-            case ERROR:
-                if (message instanceof Error) {
-                    displayError(((Error) message).message);
-                } else {
-                    // Handle error or unexpected case when message is not an Error
-                }
-                break;
-            case LOAD_GAME:
-                if (message instanceof LoadGame) {
-                    loadGame(((LoadGame) message).game);
-                } else {
-                    // Handle error or unexpected case when message is not a LoadGame
-                }
-                break;
-            default:
-                // Handle default case
-                break;
+            case NOTIFICATION -> displayNotification(input);
+            case ERROR -> displayError(input);
+            case LOAD_GAME -> loadGame(input);
         }
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.println("I got a message!");
     }
+//    public void notify(ServerMessage message) {
+//        switch (message.getServerMessageType()) {
+//            case NOTIFICATION:
+//                if (message instanceof Notification) {
+//                    displayNotification(((Notification) message).message);
+//                } else {
+//                    // Handle error or unexpected case when message is not a Notification
+//                }
+//                break;
+//            case ERROR:
+//                if (message instanceof Error) {
+//                    displayError(((Error) message).message);
+//                } else {
+//                    // Handle error or unexpected case when message is not an Error
+//                }
+//                break;
+//            case LOAD_GAME:
+//                if (message instanceof LoadGame) {
+//                    loadGame(((LoadGame) message).game);
+//                } else {
+//                    // Handle error or unexpected case when message is not a LoadGame
+//                }
+//                break;
+//            default:
+//                // Handle default case
+//                break;
+//        }
+//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//        out.println("I got a message!");
+//    }
     //class webSocketMessages.serverMessages.ServerMessage cannot be cast to
     // class webSocketMessages.serverMessages.Notification (webSocketMessages.serverMessages.ServerMessage
     // and webSocketMessages.serverMessages.Notification are in unnamed module of loader 'app')
 
-//    public void notify(ServerMessage message) {
+    //public void notify(ServerMessage message) {
 //        switch (message.getServerMessageType()) {
 //            case NOTIFICATION -> displayNotification(((Notification) message).message);
 //            case ERROR -> displayError(((Error) message).message);
 //            case LOAD_GAME -> loadGame(((LoadGame) message).game);
 //        }
-//    }
+    //}
+
     private void displayNotification(String message){
+        Gson gson = new Gson();
+        Notification notify = gson.fromJson(message, Notification.class);
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.println(message);
+        out.println(notify.message);
     }
     private void displayError(String message){
+        Gson gson = new Gson();
+        Error err = gson.fromJson(message, Error.class);
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(SET_TEXT_COLOR_RED);
-        out.println(message);
+        out.println(err.message);
         out.print(RESET_TEXT_COLOR);
     }
-    private void loadGame(ChessGame game){
-        myGame = game;
+    private void loadGame(String message){
+        Gson gson = new Gson();
+        LoadGame lGame = gson.fromJson(message, LoadGame.class);
+        myGame = lGame.game;
+        check();
         //var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        DrawBoard.drawGameBoard(game, null,null,team);
+        DrawBoard.drawGameBoard(myGame, null,null,team);
+    }
+    private void check(ChessGame game){
+        ChessGame.TeamColor colorTeam;
+        if(team=="White"){
+            colorTeam= ChessGame.TeamColor.WHITE;
+        }
+        else {
+            colorTeam= ChessGame.TeamColor.BLACK;
+        }
+        if(game.isInCheck(colorTeam)){
+            if(game.isInCheckmate(colorTeam)){
+
+            } else if (game.isInStalemate(colorTeam)) {
+
+            }else{
+
+            }
+        }
+    }
+    public void setMyGame(ChessGame chess){
+        myGame=chess;
     }
 }

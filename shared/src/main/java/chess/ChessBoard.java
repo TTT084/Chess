@@ -18,7 +18,7 @@ public class ChessBoard {
 
     public ChessBoard() {
         playBoard = new ChessPiece[9][9];
-        //resetBoard();
+        resetBoard();
     }
 
     /**
