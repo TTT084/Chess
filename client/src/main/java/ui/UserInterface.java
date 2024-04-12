@@ -21,7 +21,7 @@ public class UserInterface implements ServerMessageObserver {
     private static ChessGame myGame = null;
     private static String gameID = "";
     private ServerFacade facade;
-    private String team;
+    private static String team=null;
 
 
     public void main(String[] args) {
@@ -254,6 +254,7 @@ public class UserInterface implements ServerMessageObserver {
                     ChessGame game = new ChessGame();
                     game.getBoard().resetBoard();
                     DrawBoard.drawGameBoard(game, null,null,team);
+                    gameplay(out,new Scanner(System.in));
                 }
                 else {
                     out.println("Observe Game failed. Please try again");
@@ -300,12 +301,12 @@ public class UserInterface implements ServerMessageObserver {
         }
         boolean join = facade.JoinGame(input,insert,authToken);
         if(join){
+            team = input;
             out.println("Joined game");
             ChessGame game = new ChessGame();
             game.getBoard().resetBoard();
             DrawBoard.drawGameBoard(game, null,null,input);
             gameplay(out,new Scanner(System.in));
-            team = input;
         }
         else {
             out.println("Join Game failed. Please try again");
@@ -388,7 +389,7 @@ public class UserInterface implements ServerMessageObserver {
                 String reInput = scanner.nextLine();
                 reInput = reInput.toLowerCase();
                 if(reInput.equals("y") || reInput.equals("yes")){
-
+                    facade.resign(authToken,gameID);
                     team=null;
                     return;
                 }
@@ -411,8 +412,13 @@ public class UserInterface implements ServerMessageObserver {
         DrawBoard.highlightMoves(myGame,letter2Number(words, 1),color);
     }
     public boolean makeMove(String[] words){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         ChessPosition start = letter2Number(words,1);
         ChessPosition end = letter2Number(words,2);
+        if(start==null||end==null){
+            //out.println("Bad request try again");
+            return false;
+        }
         ChessPiece.PieceType prom = promotion(words);
         Collection <ChessMove> moves = myGame.validMoves(start);
         for (ChessMove move : moves) {
@@ -432,6 +438,9 @@ public class UserInterface implements ServerMessageObserver {
     }
     public ChessPosition letter2Number(String[] words, int a){
         char[] letters = words[a].toCharArray();
+        if(letters.length<2){
+            return null;
+        }
         int row = Character.getNumericValue(letters[1]);
         int col = Character.getNumericValue(letters[0]);
         char first = Character.toLowerCase(letters[0]);
@@ -549,18 +558,19 @@ public class UserInterface implements ServerMessageObserver {
         Error err = gson.fromJson(message, Error.class);
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(SET_TEXT_COLOR_RED);
-        out.println(err.message);
+        out.println(err.errorMessage);
         out.print(RESET_TEXT_COLOR);
     }
     private void loadGame(String message){
         Gson gson = new Gson();
         LoadGame lGame = gson.fromJson(message, LoadGame.class);
         myGame = lGame.game;
-        check();
+        check(myGame);
         //var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         DrawBoard.drawGameBoard(myGame, null,null,team);
     }
     private void check(ChessGame game){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         ChessGame.TeamColor colorTeam;
         if(team=="White"){
             colorTeam= ChessGame.TeamColor.WHITE;
@@ -570,11 +580,11 @@ public class UserInterface implements ServerMessageObserver {
         }
         if(game.isInCheck(colorTeam)){
             if(game.isInCheckmate(colorTeam)){
-
+                out.println("Checkmate");
             } else if (game.isInStalemate(colorTeam)) {
-
+                out.println("Stalemate");
             }else{
-
+                out.println("Check");
             }
         }
     }

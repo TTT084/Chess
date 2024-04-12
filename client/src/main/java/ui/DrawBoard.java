@@ -21,9 +21,12 @@ public class DrawBoard {
         ChessBoard board = game.getBoard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         if(color==null){
-            drawBlackHeader(out);
-            drawBlackRows(out, board, moves,start);
-            drawBlackHeader(out);
+            drawWhiteHeader(out);
+            drawWhiteRows(out, board, moves, start);
+            drawWhiteHeader(out);
+//            drawBlackHeader(out);
+//            drawBlackRows(out, board, moves,start);
+//            drawBlackHeader(out);
         } else if (color=="White") {
             drawBlackHeader(out);
             drawBlackRows(out, board, moves,start);

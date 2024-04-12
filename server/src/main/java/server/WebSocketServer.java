@@ -20,7 +20,6 @@ import org.eclipse.jetty.websocket.api.*;
 import org.eclipse.jetty.websocket.api.annotations.*;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -82,8 +81,8 @@ public class WebSocketServer {
             color = "Black";
         }
         String output = username + " has joined as the " + color + " player";
-        if(gameMap.containsKey(command.gameId)){
-            HashSet<String> players = gameMap.get(command.gameId);
+        if(gameMap.containsKey(command.gameID)){
+            HashSet<String> players = gameMap.get(command.gameID);
             command.getAuthString();
             if(!players.isEmpty()) {
                 for (String user : players) {
@@ -99,11 +98,11 @@ public class WebSocketServer {
         else{
             HashSet<String> hashy = new HashSet<>();
             hashy.add(command.getAuthString());
-            gameMap.put(command.gameId, hashy);
+            gameMap.put(command.gameID, hashy);
         }
         LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
         GameDAO gamy = new SQLGameDAO();
-        GameData thisData = gamy.getGame(command.gameId);
+        GameData thisData = gamy.getGame(command.gameID);
         if(thisData!=null){
             game.game=thisData.getGame();
         }
@@ -130,8 +129,8 @@ public class WebSocketServer {
         String username = data.getUsername();
 
         String output = username + " is observing";
-        if(gameMap.containsKey(command.gameId)){
-            HashSet<String> players = gameMap.get(command.gameId);
+        if(gameMap.containsKey(command.gameID)){
+            HashSet<String> players = gameMap.get(command.gameID);
             command.getAuthString();
             if(!players.isEmpty()) {
                 for (String user : players) {
@@ -152,11 +151,11 @@ public class WebSocketServer {
         else{
             HashSet<String> hashy = new HashSet<>();
             hashy.add(command.getAuthString());
-            gameMap.put(command.gameId, hashy);
+            gameMap.put(command.gameID, hashy);
         }
         LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
         GameDAO gamy = new SQLGameDAO();
-        GameData thisData = gamy.getGame(command.gameId);
+        GameData thisData = gamy.getGame(command.gameID);
         game.game=thisData.getGame();
         sending = json.toJson(game);
         try {
@@ -184,6 +183,14 @@ public class WebSocketServer {
         myData.setGame(myChess);
         gamy.makeMove(command.gameID,myData);
         loadGame(myChess, command.gameID);
+        AuthData user = authy.getAuth(command.getAuthString());
+        String startRow =Integer.toString(command.move.getStartPosition().getRow());
+        String startCol = Integer.toString(command.move.getStartPosition().getColumn());
+        String endRow = Integer.toString(command.move.getEndPosition().getRow());
+        String endCol = Integer.toString(command.move.getEndPosition().getColumn());
+        String end = command.move.getEndPosition().toString();
+        String output = user.getUsername() + ": R:" + startRow + " C:" + startCol + "to R:" + endRow + " C:" + endCol;
+        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
     }
     private void resign(String msg, Session session){
         GameDAO gamy = new SQLGameDAO();
@@ -206,6 +213,9 @@ public class WebSocketServer {
         if(!players.isEmpty()) {
             for (String user : players) {
                 Session userSession = sessionMap.get(user);
+                if(userSession==null){
+                    continue;
+                }
                 if(!userSession.isOpen()){
                     sessionMap.remove(user);
                     continue;
@@ -229,6 +239,9 @@ public class WebSocketServer {
         if(!players.isEmpty()) {
             for (String user : players) {
                 Session userSession = sessionMap.get(user);
+                if(userSession==null){
+                    continue;
+                }
                 if(!userSession.isOpen()){
                     sessionMap.remove(user);
                     continue;

@@ -31,7 +31,7 @@ public class WebsocketCommunicator extends Endpoint {
                     myObserver.notify(input);
                 } catch(Exception ex) {
                     Error error = new Error(ServerMessage.ServerMessageType.ERROR);
-                    error.message= ex.getMessage();
+                    error.errorMessage = ex.getMessage();
                     myObserver.notify(new Gson().toJson(error));
                 }
             }
@@ -52,7 +52,7 @@ public class WebsocketCommunicator extends Endpoint {
     public void joinGame(String auth, ChessGame.TeamColor color, String id){
         JoinPlayer action = new JoinPlayer(auth);
         action.playerColor=color;
-        action.gameId=id;
+        action.gameID =id;
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         }
@@ -63,6 +63,9 @@ public class WebsocketCommunicator extends Endpoint {
     public void leave(String auth, String gameID){
         Leave action = new Leave(auth);
         action.gameID=gameID;
+        if(!session.isOpen()){
+            return;
+        }
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         }

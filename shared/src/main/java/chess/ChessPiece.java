@@ -172,7 +172,7 @@ public class ChessPiece {
             moves.add(new ChessMove(startPosition,newPos,null));
         }
         //Castling
-        if(!hasMoved){
+        if(!hasMoved && false){
             newPos = new ChessPosition(mainRow,mainCol-2);
             moves.add(new ChessMove(startPosition,newPos,null));
             newPos = new ChessPosition(mainRow,mainCol+2);

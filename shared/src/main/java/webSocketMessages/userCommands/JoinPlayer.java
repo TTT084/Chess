@@ -7,6 +7,6 @@ public class JoinPlayer extends UserGameCommand{
         super(authToken);
         commandType=CommandType.JOIN_PLAYER;
     }
-    public String gameId;
+    public String gameID;
     public ChessGame.TeamColor playerColor;
 }

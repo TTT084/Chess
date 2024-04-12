@@ -8,4 +8,7 @@ public class ClientMain {
         UserInterface usy = new UserInterface();
         usy.UI();
     }
+    //observer no leaving
+    //resign notif
+    //game completion
 }

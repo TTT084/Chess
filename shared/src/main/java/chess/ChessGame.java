@@ -342,7 +342,6 @@ public class ChessGame {
             else{
                 return false;
             }
-
         }
         return false;
     }

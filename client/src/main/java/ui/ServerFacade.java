@@ -135,12 +135,20 @@ public class ServerFacade {
         return true;
     }
     public static boolean OvserveGame(String ID, String auth){
-        boolean output = JoinGame(null,ID,auth);
-        if(output){
+        String path = "/game";
+        String url = host + path;
+        ClientCommunicator communicator = new ClientCommunicator();
+        JGRequest reg = new JGRequest(null,ID);
+        try{
+            communicator.doPut(url,reg,auth);
             ws.observeGame(auth,ID);
             return true;
         }
-        return false;
+        catch (IOException e){
+            System.out.println("Observe game error" + e);
+            return false;
+        }
+        //return false;
     }
     public static void Logout(String auth){
         String path = "/session";
@@ -161,5 +169,8 @@ public class ServerFacade {
     }
     public static void MakeMove(String auth, String ID, ChessMove move){
         ws.makeMove(auth,ID,move);
+    }
+    public static void resign(String auth, String gameID){
+        ws.resign(auth, gameID);
     }
 }
