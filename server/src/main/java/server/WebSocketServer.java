@@ -37,7 +37,6 @@ public class WebSocketServer {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws Exception {
-        //UserGameCommand command = readJson(msg, UserGameCommand.class);
         UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
         sessionMap.put(command.getAuthString(), session);
         var conn = getConnection(command.getAuthString(), session);
