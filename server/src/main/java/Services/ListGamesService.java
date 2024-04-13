@@ -1,8 +1,6 @@
 package Services;
 
 import Responses.ListGameResponse;
-import Responses.LoginResponse;
-import Responses.Response;
 import dataAccess.*;
 import record.AuthData;
 import record.GameData;

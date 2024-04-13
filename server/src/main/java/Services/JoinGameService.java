@@ -7,7 +7,6 @@ import dataAccess.*;
 import record.AuthData;
 import record.GameData;
 
-import java.util.HashSet;
 import java.util.Objects;
 
 public class JoinGameService {

@@ -1,7 +1,6 @@
 package handlers;
 
 import Services.ClearService;
-import Services.LoginService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;

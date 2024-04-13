@@ -1,7 +1,5 @@
 package clientTests;
 
-import Requests.RegisterRequest;
-import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
 import record.GameData;
 import server.Server;
@@ -9,12 +7,10 @@ import ui.ClientCommunicator;
 import ui.ServerFacade;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.UUID;
 
 
 public class ServerFacadeTests {

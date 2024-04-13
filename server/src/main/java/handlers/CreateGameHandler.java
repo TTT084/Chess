@@ -2,7 +2,6 @@ package handlers;
 
 import Requests.CGRequest;
 import Responses.CreateGameResponse;
-import Responses.ListGameResponse;
 import Services.CreateGameService;
 import com.google.gson.Gson;
 import spark.Request;

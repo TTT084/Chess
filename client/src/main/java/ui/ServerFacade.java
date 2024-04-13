@@ -5,10 +5,9 @@ import java.util.HashSet;
 
 
 import Requests.*;
-import Responses.CreateGameResponse;
-import Responses.ListGameResponse;
-import Responses.LoginResponse;
-import Responses.RegisterResponse;
+
+import Responses.*;
+
 import chess.ChessGame;
 import chess.ChessMove;
 import record.GameData;

@@ -3,12 +3,10 @@ package handlers;
 import Requests.LogoutRequest;
 import Responses.ListGameResponse;
 import Services.ListGamesService;
-import Services.LogoutService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
-import record.*;
-import java.util.HashSet;
+
 import java.util.Objects;
 
 public class ListGamesHandler {
