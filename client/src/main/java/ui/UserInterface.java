@@ -251,6 +251,7 @@ public class UserInterface implements ServerMessageObserver {
                 boolean observe = facade.OvserveGame(insert,authToken);
                 if(observe){
                     out.println("Observing game");
+                    gameID=insert;
                     ChessGame game = new ChessGame();
                     game.getBoard().resetBoard();
                     DrawBoard.drawGameBoard(game, null,null,team);
@@ -421,6 +422,9 @@ public class UserInterface implements ServerMessageObserver {
         }
         ChessPiece.PieceType prom = promotion(words);
         Collection <ChessMove> moves = myGame.validMoves(start);
+        if(moves==null){
+            return false;
+        }
         for (ChessMove move : moves) {
             ChessPosition destination = move.getEndPosition();
             if (destination.equals(end)) {

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 
 @WebSocket
 public class WebSocketServer {
@@ -72,8 +73,35 @@ public class WebSocketServer {
         sessionMap.put(command.getAuthString(),session);
         AuthDAO authy = new SQLAuthDAO();
         AuthData data = authy.getAuth(command.getAuthString());
+        if(data==null){
+            String out = "Error wrong AuthToken";
+            sendError(command.gameID,out,session);
+            return;
+        }
         String username = data.getUsername();
         String color;
+        LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
+        GameDAO gamy = new SQLGameDAO();
+        GameData thisData = gamy.getGame(command.gameID);
+        if(thisData!=null){
+            game.game=thisData.getGame();
+        }
+        else{
+            String out = "Error wrong GameID";
+            sendError(command.gameID,out,session);
+            return;
+        }
+        if(!Objects.equals(thisData.getBlackUsername(), data.getUsername())){
+            if(!Objects.equals(thisData.getWhiteUsername(), data.getUsername())) {
+                String out = "Error can't join full game";
+                sendError(command.gameID, out, session);
+                return;
+            }
+        }
+        sending = json.toJson(game);
+        session.getRemote().sendString(sending);
+
+
         if(command.playerColor== ChessGame.TeamColor.WHITE){
             color = "White";
         }
@@ -100,22 +128,27 @@ public class WebSocketServer {
             hashy.add(command.getAuthString());
             gameMap.put(command.gameID, hashy);
         }
-        LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
-        GameDAO gamy = new SQLGameDAO();
-        GameData thisData = gamy.getGame(command.gameID);
-        if(thisData!=null){
-            game.game=thisData.getGame();
-        }
-        sending = json.toJson(game);
-        session.getRemote().sendString(sending);
+
     }
     private void leave(String msg){
         GameDAO gamy = new SQLGameDAO();
         AuthDAO authy = new SQLAuthDAO();
         Gson json = new Gson();
         Leave command = new Gson().fromJson(msg, Leave.class);
+        if(command.gameID==null){
+            return;
+        }
+        if(command.getAuthString()==null){
+            return;
+        }
         AuthData user = authy.getAuth(command.getAuthString());
-        gamy.leaveGame(command.gameID,user.getUsername());
+        GameData data = gamy.getGame(command.gameID);
+        if(Objects.equals(user.getUsername(), data.getBlackUsername())|| Objects.equals(user.getUsername(), data.getWhiteUsername())){
+            gamy.leaveGame(command.gameID,user.getUsername());
+        }
+        HashSet<String> players = gameMap.get(command.gameID);
+        players.remove(command.getAuthString());
+        gameMap.put(command.gameID, players);
         String output = user.getUsername() + " has left the game";
         sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
     }
@@ -126,7 +159,19 @@ public class WebSocketServer {
         sessionMap.put(command.getAuthString(),session);
         AuthDAO authy = new SQLAuthDAO();
         AuthData data = authy.getAuth(command.getAuthString());
+        if(data==null){
+            String out = "Error wrong AuthToken";
+            sendError(command.gameID,out,session);
+            return;
+        }
         String username = data.getUsername();
+        GameDAO gamy = new SQLGameDAO();
+        GameData thisData = gamy.getGame(command.gameID);
+        if(thisData==null){
+            String out = "Error wrong GameID";
+            sendError(command.gameID,out,session);
+            return;
+        }
 
         String output = username + " is observing";
         if(gameMap.containsKey(command.gameID)){
@@ -147,6 +192,7 @@ public class WebSocketServer {
                 }
             }
             players.add(command.getAuthString());
+            gameMap.put(command.gameID, players);
         }
         else{
             HashSet<String> hashy = new HashSet<>();
@@ -154,8 +200,6 @@ public class WebSocketServer {
             gameMap.put(command.gameID, hashy);
         }
         LoadGame game = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
-        GameDAO gamy = new SQLGameDAO();
-        GameData thisData = gamy.getGame(command.gameID);
         game.game=thisData.getGame();
         sending = json.toJson(game);
         try {
@@ -206,6 +250,7 @@ public class WebSocketServer {
         gamy.makeMove(command.gameID,myData);
         String output = user.getUsername() + " has resigned";
         sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
+        loadGame(myChess, command.gameID);
     }
     private void sendMessage(ServerMessage.ServerMessageType type, String gameId, String auth, String output, String sending){
         Gson json = new Gson();
@@ -259,5 +304,15 @@ public class WebSocketServer {
             }
         }
     }
-
+    private void sendError(String gameId, String output, Session session) {
+        Gson json = new Gson();
+        webSocketMessages.serverMessages.Error error = new webSocketMessages.serverMessages.Error(ServerMessage.ServerMessageType.ERROR);
+        error.errorMessage = output;
+        String sending = json.toJson(error);
+        try {
+            session.getRemote().sendString(sending);
+        } catch (IOException e) {
+            //throw new RuntimeException(e);
+        }
+    }
 }
