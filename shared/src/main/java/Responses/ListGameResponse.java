@@ -15,7 +15,5 @@ public class ListGameResponse extends Response{
         return games;
     }
 
-    public void setGames(HashSet<GameData> games) {
-        this.games = games;
-    }
+    //public void setGames(HashSet<GameData> games) {this.games = games;}
 }

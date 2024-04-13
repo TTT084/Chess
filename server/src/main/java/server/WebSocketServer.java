@@ -46,12 +46,7 @@ public class WebSocketServer {
         notif.message="this works";
         Gson json = new Gson();
         String sending = json.toJson(notif);
-//        try {
-//            session.getRemote().sendString(sending);
-//        }
-//        catch (IOException e){
-//
-//        }
+
         if(command.getCommandType()==null){
             return;
         }
@@ -114,10 +109,18 @@ public class WebSocketServer {
             command.getAuthString();
             if(!players.isEmpty()) {
                 for (String user : players) {
+
                     Session userSession = sessionMap.get(user);
+                    if(userSession==null){
+                        continue;
+                    }
                     Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
                     notif.message=output;
                     sending = json.toJson(notif);
+                    if(!userSession.isOpen()){
+                        sessionMap.remove(user);
+                        continue;
+                    }
                     userSession.getRemote().sendString(sending);
                 }
             }
@@ -234,7 +237,7 @@ public class WebSocketServer {
         String endCol = Integer.toString(command.move.getEndPosition().getColumn());
         String end = command.move.getEndPosition().toString();
         String output = user.getUsername() + ": R:" + startRow + " C:" + startCol + "to R:" + endRow + " C:" + endCol;
-        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
+        //sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
     }
     private void resign(String msg, Session session){
         GameDAO gamy = new SQLGameDAO();

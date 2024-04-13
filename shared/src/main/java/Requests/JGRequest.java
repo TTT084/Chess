@@ -13,15 +13,11 @@ public class JGRequest {
         return playerColor;
     }
 
-    public void setPlayerColor(String playerColor) {
-        this.playerColor = playerColor;
-    }
+    //public void setPlayerColor(String playerColor) {this.playerColor = playerColor;}
 
     public String getGameID() {
         return gameID;
     }
 
-    public void setGameID(String gameID) {
-        this.gameID = gameID;
-    }
+    //public void setGameID(String gameID) {this.gameID = gameID;}
 }

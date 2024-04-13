@@ -5,7 +5,7 @@ import dataAccess.*;
 import record.AuthData;
 
 public class LogoutService {
-    public Response Logout(String auth){
+    public Response logout(String auth){
         AuthDAO authAccess = new SQLAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){

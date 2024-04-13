@@ -24,9 +24,6 @@ public class DrawBoard {
             drawWhiteHeader(out);
             drawWhiteRows(out, board, moves, start);
             drawWhiteHeader(out);
-//            drawBlackHeader(out);
-//            drawBlackRows(out, board, moves,start);
-//            drawBlackHeader(out);
         } else if (color=="White") {
             drawBlackHeader(out);
             drawBlackRows(out, board, moves,start);

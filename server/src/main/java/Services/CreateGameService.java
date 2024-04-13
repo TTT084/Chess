@@ -8,7 +8,7 @@ import record.GameData;
 import java.util.Random;
 
 public class CreateGameService {
-    public CreateGameResponse CreateGame(String auth, String gameName){
+    public CreateGameResponse createGame(String auth, String gameName){
         AuthDAO authAccess = new SQLAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){

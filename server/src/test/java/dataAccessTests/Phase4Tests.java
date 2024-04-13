@@ -21,7 +21,7 @@ public class Phase4Tests {
     @BeforeEach
     public void setUp(){
         ClearService survy = new ClearService();
-        survy.Clear();
+        survy.clear();
         user = "myUsername";
         pass = "sillyPass";
         email = "myEmail";
@@ -29,7 +29,7 @@ public class Phase4Tests {
     @AfterEach
     public void cleanup(){
         ClearService survy = new ClearService();
-        survy.Clear();
+        survy.clear();
     }
     @Test
     public void InsertAuth(){

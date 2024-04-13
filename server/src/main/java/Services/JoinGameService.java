@@ -10,7 +10,7 @@ import record.GameData;
 import java.util.Objects;
 
 public class JoinGameService {
-    public Response JoinGame(String auth, String gameID, String color){
+    public Response joinGame(String auth, String gameID, String color){
         AuthDAO authAccess = new SQLAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){

@@ -9,7 +9,7 @@ public class ClearHandler {
     public Object handleRequest(Request req, Response res) {
         ClearService clearServ = new ClearService();
         Responses.Response response = new Responses.Response();
-        clearServ.Clear();
+        clearServ.clear();
         Gson json = new Gson();
     return json.toJson(response);
     }

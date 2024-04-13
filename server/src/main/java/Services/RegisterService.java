@@ -6,7 +6,7 @@ import record.UserData;
 
 public class RegisterService {
 
-    public RegisterResponse Register(String username, String pass, String email){
+    public RegisterResponse register(String username, String pass, String email){
         if(username==null|| username.isEmpty() ||pass==null||pass.isEmpty()||email==null||email.isBlank()){
             RegisterResponse response = new RegisterResponse(null,null);
             response.setMessage("Error: bad request");
@@ -15,11 +15,8 @@ public class RegisterService {
         UserDAO user = new SQLUserDAO();
         UserData data;
         //try{
-            data = user.getUser(username);
+        data = user.getUser(username);
         //}
-//        catch (DataAccessException e){
-//            int dosomething = 1;
-//        }
         if(data!=null){
             RegisterResponse response = new RegisterResponse(null,null);
             response.setMessage("Error: already taken");

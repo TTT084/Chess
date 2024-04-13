@@ -26,7 +26,7 @@ public class ServerFacade {
             System.out.println("Websocket error "+e);
         }
     }
-    public void MessageObserver(ServerMessageObserver observer){
+    public void messageObserver(ServerMessageObserver observer){
         try{
             ws = new WebsocketCommunicator(observer);
         }
@@ -34,7 +34,7 @@ public class ServerFacade {
             System.out.println("Websocket error"+e);
         }
     }
-    public static String Register(String username, String password, String email){
+    public static String register(String username, String password, String email){
         String path = "/user";
         //String host = "http://localhost:8080";
         String url = host + path;
@@ -53,7 +53,7 @@ public class ServerFacade {
         }
         return null;
     }
-    public static String Login(String username,String password){
+    public static String login(String username, String password){
         String path = "/session";
         //String host = "http://localhost:8080";
         String url = host + path;
@@ -71,10 +71,10 @@ public class ServerFacade {
         }
         return null;
     }
-    public static void Quit(){
+    public static void quit(){
 
     }
-    public static String CreateGame(String auth, String name){
+    public static String createGame(String auth, String name){
         String path = "/game";
         //String host = "http://localhost:8080";
         String url = host + path;
@@ -92,7 +92,7 @@ public class ServerFacade {
         }
         return path;
     }
-    public static HashSet<GameData> ListGames(String auth){
+    public static HashSet<GameData> listGames(String auth){
         String path = "/game";
         //String host = "http://localhost:8080";
         String url = host + path;
@@ -110,7 +110,7 @@ public class ServerFacade {
         }
         return null;
     }
-    public static boolean JoinGame(String color, String ID, String auth){
+    public static boolean joinGame(String color, String ID, String auth){
         ChessGame.TeamColor team;
         if(color == "White"){
             team = ChessGame.TeamColor.WHITE;
@@ -133,14 +133,14 @@ public class ServerFacade {
         }
         return true;
     }
-    public static boolean OvserveGame(String ID, String auth){
+    public static boolean observeGame(String iD, String auth){
         String path = "/game";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
-        JGRequest reg = new JGRequest(null,ID);
+        JGRequest reg = new JGRequest(null,iD);
         try{
             communicator.doPut(url,reg,auth);
-            ws.observeGame(auth,ID);
+            ws.observeGame(auth,iD);
             return true;
         }
         catch (IOException e){
@@ -149,7 +149,7 @@ public class ServerFacade {
         }
         //return false;
     }
-    public static void Logout(String auth){
+    public static void logout(String auth){
         String path = "/session";
         //String host = "http://localhost:8080";
         String url = host + path;
@@ -163,11 +163,11 @@ public class ServerFacade {
         }
         return;
     }
-    public static void Leave(String auth, String ID){
-        ws.leave(auth, ID);
+    public static void leave(String auth, String iD){
+        ws.leave(auth, iD);
     }
-    public static void MakeMove(String auth, String ID, ChessMove move){
-        ws.makeMove(auth,ID,move);
+    public static void makeMove(String auth, String iD, ChessMove move){
+        ws.makeMove(auth,iD,move);
     }
     public static void resign(String auth, String gameID){
         ws.resign(auth, gameID);

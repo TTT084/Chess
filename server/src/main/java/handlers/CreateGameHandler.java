@@ -14,11 +14,11 @@ public class CreateGameHandler {
         Gson json = new Gson();
         CGRequest cgRequest = json.fromJson(req.body(), CGRequest.class);
 
-        CreateGameService GCServ = new CreateGameService();
+        CreateGameService gCServ = new CreateGameService();
         //String auth= cgRequest.getAuthToken();
         String auth = req.headers("authorization");
         String gameName = cgRequest.getGameName();
-        CreateGameResponse response = GCServ.CreateGame(auth,gameName);
+        CreateGameResponse response = gCServ.createGame(auth,gameName);
         if (Objects.equals(response.getMessage(), "Error: unauthorized")) {
             res.status(401);
             return json.toJson(response);

@@ -13,9 +13,9 @@ public class LogoutHandler {
         Gson json = new Gson();
         LogoutRequest logoutRequest = json.fromJson(req.body(), LogoutRequest.class);
 
-        LogoutService LogServ = new LogoutService();
+        LogoutService logServ = new LogoutService();
         String auth= req.headers("authorization");
-        Responses.Response response = LogServ.Logout(auth);
+        Responses.Response response = logServ.logout(auth);
         String message = response.getMessage();;
         if(auth==null|| Objects.equals(message, "Error: unauthorized")){
             //response = new Responses.Response();

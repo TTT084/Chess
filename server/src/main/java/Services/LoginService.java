@@ -5,7 +5,7 @@ import dataAccess.*;
 import record.UserData;
 
 public class LoginService {
-    public LoginResponse Login(String name, String password){
+    public LoginResponse login(String name, String password){
         UserDAO userAccess = new SQLUserDAO();
         UserData user = userAccess.getUser(name);
         if(user==null){

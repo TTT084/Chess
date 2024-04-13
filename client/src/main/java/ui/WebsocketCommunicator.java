@@ -37,15 +37,6 @@ public class WebsocketCommunicator extends Endpoint {
             }
         });
     }
-    public void onMessage(String input) {
-        Gson gson = new Gson();
-        try {
-            ServerMessage message = gson.fromJson(input, ServerMessage.class);
-            myObserver.notify(input);
-        } catch(Exception ex) {
-            //myObserver.notify(new ErrorMessage(ex.getMessage()));
-        }
-    }
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
@@ -83,9 +74,9 @@ public class WebsocketCommunicator extends Endpoint {
             System.out.println("Observe game WS error " + e.getMessage());
         }
     }
-    public void makeMove(String auth, String ID, ChessMove move){
+    public void makeMove(String auth, String iD, ChessMove move){
         MakeMove action = new MakeMove(auth);
-        action.gameID = ID;
+        action.gameID = iD;
         action.move=move;
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(action));

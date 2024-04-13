@@ -15,17 +15,8 @@ public class RegisterHandler {
         RegisterRequest registerRequest = json.fromJson(req.body(), RegisterRequest.class);
 
         RegisterService regServ = new RegisterService();
-        RegisterResponse response = regServ.Register(registerRequest.username,registerRequest.password,registerRequest.email);
-//        GsonBuilder builder = new GsonBuilder();
-//        builder.registerTypeAdapter(req);
-//        Gson gson = builder.create();
+        RegisterResponse response = regServ.register(registerRequest.username,registerRequest.password,registerRequest.email);
 
-        //Gson gson = new Gson();
-
-//        Request request = gson.fromJson(req, LoginRequest.class);
-//
-//        RegisterService service = new RegisterService();
-//        LoginResult result = service.login(request);
         if(Objects.equals(response.getMessage(), "Error: bad request")){
             res.status(400);
         }

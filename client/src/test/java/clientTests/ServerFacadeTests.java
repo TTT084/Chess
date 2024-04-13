@@ -69,88 +69,88 @@ public class ServerFacadeTests {
     @Test
     public void RegisterSuccess(){
         //String user = UUID.randomUUID().toString();
-        String auth = facade.Register("user","hehe","silly@email");
+        String auth = facade.register("user","hehe","silly@email");
         Assertions.assertNotNull(auth);
     }
     @Test
     public void RegisterFail(){
         //String user = UUID.randomUUID().toString();
-        ServerFacade.Register("user","hehe","silly@email");
-        String auth = ServerFacade.Register("user","hehe","silly@email");
+        ServerFacade.register("user","hehe","silly@email");
+        String auth = ServerFacade.register("user","hehe","silly@email");
         Assertions.assertNull(auth);
     }
     @Test
     public void Login(){
-        ServerFacade.Register("user","hehe","silly@email");
-        String auth = ServerFacade.Login("user","hehe");
+        ServerFacade.register("user","hehe","silly@email");
+        String auth = ServerFacade.login("user","hehe");
         Assertions.assertNotNull(auth);
     }
     @Test
     public void LoginFail(){
-        String auth = ServerFacade.Login("user","hehe");
+        String auth = ServerFacade.login("user","hehe");
         Assertions.assertNull(auth);
     }
     @Test
     public void CreateGame(){
-        String auth = ServerFacade.Register("user","hehe","silly@email");
-        String name = ServerFacade.CreateGame(auth,"myGame");
+        String auth = ServerFacade.register("user","hehe","silly@email");
+        String name = ServerFacade.createGame(auth,"myGame");
         Assertions.assertNotNull(name);
     }
     @Test
     public void CreateGameFail(){
-        String auth = ServerFacade.Register("user","hehe","silly@email");
-        String name = ServerFacade.CreateGame(null,"myGame");
+        String auth = ServerFacade.register("user","hehe","silly@email");
+        String name = ServerFacade.createGame(null,"myGame");
         Assertions.assertNull(name);
     }
     @Test
     public void ListGames(){
-        String auth = ServerFacade.Register("user","hehe","silly@email");
-        String name = ServerFacade.CreateGame(auth,"myGame");
-        ServerFacade.CreateGame(auth,"myGame2");
-        HashSet<GameData> games= ServerFacade.ListGames(auth);
+        String auth = ServerFacade.register("user","hehe","silly@email");
+        String name = ServerFacade.createGame(auth,"myGame");
+        ServerFacade.createGame(auth,"myGame2");
+        HashSet<GameData> games= ServerFacade.listGames(auth);
         Assertions.assertNotNull(games);
     }
     @Test
     public void ListGamesFail(){
-        HashSet<GameData> games=ServerFacade.ListGames("");
+        HashSet<GameData> games=ServerFacade.listGames("");
         Assertions.assertNull(games);
     }
     @Test
     public void JoinGame(){
-        String auth = ServerFacade.Register("user","hehe","silly@email");
-        String name = ServerFacade.CreateGame(auth,"myGame");
-        ServerFacade.JoinGame("WHITE",name,auth);
+        String auth = ServerFacade.register("user","hehe","silly@email");
+        String name = ServerFacade.createGame(auth,"myGame");
+        ServerFacade.joinGame("WHITE",name,auth);
         Assertions.assertNotNull(name);
     }
     @Test
     public void JoinGameFail(){
-        ServerFacade.JoinGame("WHITE","","");
+        ServerFacade.joinGame("WHITE","","");
         Assertions.assertNotNull("");
     }
     @Test
     public void ObserveGame(){
-        String auth = ServerFacade.Register("user","hehe","silly@email");
-        String name = ServerFacade.CreateGame(auth,"myGame");
-        ServerFacade.JoinGame(null,name,auth);
+        String auth = ServerFacade.register("user","hehe","silly@email");
+        String name = ServerFacade.createGame(auth,"myGame");
+        ServerFacade.joinGame(null,name,auth);
         Assertions.assertNotNull(name);
     }
     @Test
     public void ObserveGameFail(){
-        ServerFacade.JoinGame(null,"","");
+        ServerFacade.joinGame(null,"","");
         Assertions.assertNotNull("");
     }
     @Test
     public void Logout(){
-        ServerFacade.Register("user","hehe","silly@email");
-        String auth = ServerFacade.Login("user","hehe");
-        ServerFacade.Logout(auth);
+        ServerFacade.register("user","hehe","silly@email");
+        String auth = ServerFacade.login("user","hehe");
+        ServerFacade.logout(auth);
         Assertions.assertNotNull(auth);
     }
     @Test
     public void LogoutFail(){
-        ServerFacade.Register("user","hehe","silly@email");
-        String auth = ServerFacade.Login("user","hehe");
-        ServerFacade.Logout("");
+        ServerFacade.register("user","hehe","silly@email");
+        String auth = ServerFacade.login("user","hehe");
+        ServerFacade.logout("");
         Assertions.assertNotNull(auth);
     }
     @Test

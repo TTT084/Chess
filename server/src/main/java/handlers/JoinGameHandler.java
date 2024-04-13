@@ -13,11 +13,11 @@ public class JoinGameHandler {
         Gson json = new Gson();
         JGRequest jgRequest = json.fromJson(req.body(), JGRequest.class);
 
-        JoinGameService JGServ = new JoinGameService();
+        JoinGameService jGServ = new JoinGameService();
         String auth= req.headers("authorization");
         String gameName = jgRequest.getGameID();
         String color =jgRequest.getPlayerColor();
-        Responses.Response response = JGServ.JoinGame(auth,gameName, color);
+        Responses.Response response = jGServ.joinGame(auth,gameName, color);
         if (Objects.equals(response.getMessage(), "Error: unauthorized")) {
             res.status(401);
             return json.toJson(response);

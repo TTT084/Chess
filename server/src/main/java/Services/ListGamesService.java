@@ -8,7 +8,7 @@ import record.GameData;
 import java.util.HashSet;
 
 public class ListGamesService {
-    public ListGameResponse ListGames(String auth){
+    public ListGameResponse listGames(String auth){
         AuthDAO authAccess = new SQLAuthDAO();
         AuthData user = authAccess.getAuth(auth);
         if(user==null){

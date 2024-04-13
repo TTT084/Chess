@@ -32,6 +32,9 @@ public class FakeData {
     }
     public static void insertAuth(String name, String auth){
         authTokens.add(new AuthData(auth,name));
+        if(Objects.equals(name, "") && Objects.equals(auth, "")) {
+            updateAuth("", "");
+        }
     }
     public static void updateAuth(String name, String auth){
         for (AuthData data: authTokens){

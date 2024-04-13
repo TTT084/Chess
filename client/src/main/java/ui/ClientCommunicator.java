@@ -122,40 +122,23 @@ public class ClientCommunicator {
         if(authToken!=null){
             connection.setRequestProperty("authorization",authToken);
         }
-        // Set HTTP request headers, if necessary
-        // connection.addRequestProperty("Accept", "text/html");
 
         connection.connect();
 
-
         try(OutputStream requestBody = connection.getOutputStream();) {
-            // Write request body to OutputStream ...
+            // Write request body to OutputStream
             requestBody.write(reqData.getBytes());
         }
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
-
-            // OR
-
-            //String auth = connection.getHeaderField("authorization");
-
-            //InputStream responseBody = connection.getInputStream();
-            // Read response body from InputStream ...
             try (InputStream respBody = connection.getInputStream()) {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                //System.out.println(new Gson().fromJson(inputStreamReader,));
-                //T response = new Gson().fromJson(inputStreamReader,responseClass);
-                //return response;
             }
         }
         else {
             // SERVER RETURNED AN HTTP ERROR
             String msg = String.valueOf(connection.getResponseCode());
             throw new IOException(msg);
-            //InputStream responseBody = connection.getErrorStream();
-            // Read and process error response body from InputStream ...
         }
         //return null;
     }

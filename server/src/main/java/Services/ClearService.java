@@ -3,7 +3,7 @@ package Services;
 import dataAccess.*;
 
 public class ClearService {
-    public void Clear(){
+    public void clear(){
         UserDAO userAccess = new SQLUserDAO();
         AuthDAO authAccess = new SQLAuthDAO();
         GameDAO gameAccess = new SQLGameDAO();

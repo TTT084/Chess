@@ -14,9 +14,9 @@ public class ListGamesHandler {
         Gson json = new Gson();
         LogoutRequest lgRequest = json.fromJson(req.body(), LogoutRequest.class);
 
-        ListGamesService LGServ = new ListGamesService();
+        ListGamesService lGServ = new ListGamesService();
         String auth= req.headers("authorization");
-        ListGameResponse response = LGServ.ListGames(auth);
+        ListGameResponse response = lGServ.listGames(auth);
         res.status(200);
         if (Objects.equals(response.getMessage(), "Error: unauthorized")) {
             res.status(401);

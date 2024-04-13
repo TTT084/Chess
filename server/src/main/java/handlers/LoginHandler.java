@@ -14,10 +14,10 @@ public class LoginHandler {
         Gson json = new Gson();
         LoginRequest loginRequest = json.fromJson(req.body(), LoginRequest.class);
 
-        LoginService LogServ = new LoginService();
+        LoginService logServ = new LoginService();
         String pass= loginRequest.getPassword();
         String name = loginRequest.getUsername();
-        LoginResponse response = LogServ.Login(name,pass);
+        LoginResponse response = logServ.login(name,pass);
         if (Objects.equals(response.getMessage(), "Error: unauthorized")) {
             res.status(401);
         }

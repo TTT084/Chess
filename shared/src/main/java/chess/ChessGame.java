@@ -88,11 +88,10 @@ public class ChessGame {
         TeamColor color = piece.getTeamColor();
         for(ChessMove element: moves){
             if(piece.getPieceType()==KING){
-                //if(castling(startPosition,element)){
-                //    validMoves.add(element);
-                int yuh=0;
-                    //continue;
-                //}
+                if(castling(startPosition,element)&&startPosition==null){
+                    validMoves.add(element);
+                    continue;
+                }
             }
             if(!fakeMove(element)){
                 continue;
@@ -168,9 +167,7 @@ public class ChessGame {
         }
         return false;
     }
-    private boolean kingGlide(ChessPosition pos,ChessMove move){
-        return true;
-    }
+    //private boolean kingGlide(ChessPosition pos,ChessMove move){return true;}
     /**
      * Makes a move in a chess game
      *

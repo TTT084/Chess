@@ -6,9 +6,6 @@ public class ClientMain {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
         UserInterface usy = new UserInterface();
-        usy.UI();
+        usy.uI();
     }
-    //observer no leaving
-    //resign notif
-    //game completion
 }

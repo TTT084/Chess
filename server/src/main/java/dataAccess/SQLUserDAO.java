@@ -26,12 +26,6 @@ public class SQLUserDAO implements UserDAO{
             return;
         }
     }
-
-    private void makeSQLCalls() throws SQLException, DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            // Execute SQL statements on the connection here
-        }
-    }
     @Override
     public UserData getUser(String user) {
         UserData userMan = null;
@@ -92,12 +86,6 @@ public class SQLUserDAO implements UserDAO{
         String pass = encodePassword(password);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.matches(password, hashedPassword);
-//        if(hashedPassword.equals(pass)){
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
     }
 
     private String encodePassword(String password) {
