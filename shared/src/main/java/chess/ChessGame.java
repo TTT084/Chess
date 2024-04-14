@@ -184,6 +184,9 @@ public class ChessGame {
         if(color!=myTeam){
             throw new InvalidMoveException("Invalid move");
         }
+        if(validMoves==null){
+            throw new InvalidMoveException("Invalid move");
+        }
         if(validMoves.contains(move)){
         //if(checkMove(move)){
             if(promotion!=null){
@@ -402,5 +405,8 @@ public class ChessGame {
     }
     public void resign(){
         checkingMate=true;
+    }
+    public boolean getCheckingMate(){
+        return checkingMate;
     }
 }

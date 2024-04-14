@@ -110,7 +110,7 @@ public class ServerFacade {
         }
         return null;
     }
-    public static boolean joinGame(String color, String ID, String auth){
+    public static boolean joinGame(String color, String iD, String auth){
         ChessGame.TeamColor team;
         if(color == "White"){
             team = ChessGame.TeamColor.WHITE;
@@ -122,10 +122,10 @@ public class ServerFacade {
         //String host = "http://localhost:8080";
         String url = host + path;
         ClientCommunicator communicator = new ClientCommunicator();
-        JGRequest reg = new JGRequest(color,ID);
+        JGRequest reg = new JGRequest(color,iD);
         try{
             communicator.doPut(url,reg,auth);
-            ws.joinGame(auth,team,ID);
+            ws.joinGame(auth,team,iD);
         }
         catch (IOException e){
             System.out.println("Join game error" + e);

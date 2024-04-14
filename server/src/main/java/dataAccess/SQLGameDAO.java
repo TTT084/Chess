@@ -34,11 +34,6 @@ public class SQLGameDAO implements GameDAO{
         return DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "monkeypie");
     }
 
-    void makeSQLCalls() throws SQLException {
-        try (var conn = getConnection()) {
-            // Execute SQL statements on the connection here
-        }
-    }
     @Override
     public void clear() {
         try(Connection conn = DatabaseManager.getConnection()){
@@ -90,12 +85,12 @@ public class SQLGameDAO implements GameDAO{
                 preparedStatement.executeUpdate();
 
                 var resultSet = preparedStatement.getGeneratedKeys();
-                var ID = 0;
+                var iD = 0;
                 if (resultSet.next()) {
-                    ID = resultSet.getInt(1);
+                    iD = resultSet.getInt(1);
                 }
 
-                return ID;
+                return iD;
             }
         }
         catch (DataAccessException | SQLException e){

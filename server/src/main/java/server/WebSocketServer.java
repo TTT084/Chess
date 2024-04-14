@@ -85,8 +85,23 @@ public class WebSocketServer {
             sendError(command.gameID,out,session);
             return;
         }
+        //check for username
         if(!Objects.equals(thisData.getBlackUsername(), data.getUsername())){
             if(!Objects.equals(thisData.getWhiteUsername(), data.getUsername())) {
+                String out = "Error can't join full game";
+                sendError(command.gameID, out, session);
+                return;
+            }
+        }
+        if(command.playerColor== ChessGame.TeamColor.WHITE){
+            if(!Objects.equals(thisData.getWhiteUsername(),data.getUsername())){
+                String out = "Error can't join full game";
+                sendError(command.gameID, out, session);
+                return;
+            }
+        }
+        if(command.playerColor== ChessGame.TeamColor.BLACK){
+            if(!Objects.equals(thisData.getBlackUsername(),data.getUsername())){
                 String out = "Error can't join full game";
                 sendError(command.gameID, out, session);
                 return;
@@ -152,7 +167,7 @@ public class WebSocketServer {
         players.remove(command.getAuthString());
         gameMap.put(command.gameID, players);
         String output = user.getUsername() + " has left the game";
-        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
+        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"",null);
     }
     private void observe(String msg, Session session){
         Gson json = new Gson();
@@ -221,10 +236,24 @@ public class WebSocketServer {
         GameDAO gamy = new SQLGameDAO();
         GameData myData = gamy.getGame(command.gameID);
         ChessGame myChess = myData.getGame();
+        if(myChess.getTeamTurn()== ChessGame.TeamColor.WHITE){
+            if(!Objects.equals(username, myData.getWhiteUsername())){
+                sendError(command.gameID,"Make move error" ,session);
+                return;
+            }
+        }
+        if(myChess.getTeamTurn()== ChessGame.TeamColor.BLACK){
+            if(!Objects.equals(username, myData.getBlackUsername())){
+                sendError(command.gameID,"Make move error" ,session);
+                return;
+            }
+        }
         try {
             myChess.makeMove(command.move);
         }catch (InvalidMoveException e){
             System.out.println("Make move WS server error " + e.getMessage());
+            sendError(command.gameID,"Make move error" ,session);
+            return;
         }
         myData.setGame(myChess);
         gamy.makeMove(command.gameID,myData);
@@ -236,7 +265,7 @@ public class WebSocketServer {
         String endCol = Integer.toString(command.move.getEndPosition().getColumn());
         String end = command.move.getEndPosition().toString();
         String output = user.getUsername() + ": R:" + startRow + " C:" + startCol + "to R:" + endRow + " C:" + endCol;
-        //sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
+        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"",session);
     }
     private void resign(String msg, Session session){
         GameDAO gamy = new SQLGameDAO();
@@ -244,17 +273,28 @@ public class WebSocketServer {
         Gson json = new Gson();
         Resign command = new Gson().fromJson(msg, Resign.class);
         AuthData user = authy.getAuth(command.getAuthString());
+        GameData firstData = gamy.getGame(command.gameID);
+        if(!Objects.equals(user.getUsername(), firstData.getBlackUsername())){
+            if(!Objects.equals(user.getUsername(), firstData.getWhiteUsername())){
+                sendError(command.gameID,"Resign error" ,session);
+                return;
+            }
+        }
         gamy.leaveGame(command.gameID,user.getUsername());
         GameData myData = gamy.getGame(command.gameID);
         ChessGame myChess = myData.getGame();
+        if(myChess.getCheckingMate()){
+            sendError(command.gameID,"Resign error" ,session);
+            return;
+        }
         myChess.resign();
         myData.setGame(myChess);
         gamy.makeMove(command.gameID,myData);
         String output = user.getUsername() + " has resigned";
-        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"");
-        loadGame(myChess, command.gameID);
+        sendMessage(ServerMessage.ServerMessageType.NOTIFICATION, command.gameID, command.getAuthString(),output,"",null);
+        //loadGame(myChess, command.gameID);
     }
-    private void sendMessage(ServerMessage.ServerMessageType type, String gameId, String auth, String output, String sending){
+    private void sendMessage(ServerMessage.ServerMessageType type, String gameId, String auth, String output, String sending,Session session){
         Gson json = new Gson();
         HashSet<String> players = gameMap.get(gameId);
         if(!players.isEmpty()) {
@@ -265,6 +305,9 @@ public class WebSocketServer {
                 }
                 if(!userSession.isOpen()){
                     sessionMap.remove(user);
+                    continue;
+                }
+                if(Objects.equals(userSession,session)){
                     continue;
                 }
                 Notification notif = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);

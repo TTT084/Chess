@@ -21,9 +21,7 @@ public class GameData {
         return gameID;
     }
 
-    public void setGameID(String gameID) {
-        this.gameID = gameID;
-    }
+    //public void setGameID(String gameID) {this.gameID = gameID;}
 
     public String getWhiteUsername() {
         return whiteUsername;
