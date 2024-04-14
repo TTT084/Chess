@@ -7,11 +7,7 @@ public class LogoutRequest {
         this.authToken = authToken;
     }
 
-    public String getAuthToken() {
-        return authToken;
-    }
+    //public String getAuthToken() {return authToken;}
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
-    }
+    //public void setAuthToken(String authToken) {this.authToken = authToken;}
 }
