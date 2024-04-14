@@ -3,7 +3,6 @@ package dataAccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import record.GameData;
-import record.UserData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -124,7 +123,7 @@ public class SQLGameDAO implements GameDAO{
         String update = "UPDATE games SET whiteUsername=?, blackUsername=? WHERE id=?";
         String black = game.getBlackUsername();
         String white = game.getWhiteUsername();
-        WhiteBlack(gameID, update, black, white);
+        whiteBlack(gameID, update, black, white);
     }
     public GameData getGame(String gameID){
         if(gameID==null){
@@ -174,10 +173,10 @@ public class SQLGameDAO implements GameDAO{
         } else if (Objects.equals(white, username)) {
             white = null;
         }
-        WhiteBlack(gameID, update, black, white);
+        whiteBlack(gameID, update, black, white);
     }
 
-    private void WhiteBlack(String gameID, String update, String black, String white) {
+    private void whiteBlack(String gameID, String update, String black, String white) {
         int number = Integer.parseInt(gameID);
         try(Connection conn = DatabaseManager.getConnection()){
             try (var preparedStatement = conn.prepareStatement(update)) {
