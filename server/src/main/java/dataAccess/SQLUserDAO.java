@@ -17,13 +17,19 @@ public class SQLUserDAO implements UserDAO{
         catch (DataAccessException e){
             System.out.println("Creating database error");
         }
+        int tryThis=0;
+        for(int i = 0; i<10; i++){
+            tryThis++;
+        }
         try(Connection conn = DatabaseManager.getConnection()){
-            //checkDatabase(conn);
             DatabaseManager.createTables(conn);
         }
         catch (DataAccessException | SQLException e){
             System.out.println("Creating tables error");
             return;
+        }
+        if(tryThis==10){
+            System.out.println("10");
         }
     }
     @Override
