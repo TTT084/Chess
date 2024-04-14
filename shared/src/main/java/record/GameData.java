@@ -43,15 +43,11 @@ public class GameData {
         return gameName;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
+    //public void setGameName(String gameName) {this.gameName = gameName;}
 
     public ChessGame getGame() {
         return game;
     }
 
-    public void setGame(ChessGame game) {
-        this.game = game;
-    }
+    public void setGame(ChessGame game) {this.game = game;}
 }

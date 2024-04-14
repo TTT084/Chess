@@ -41,17 +41,11 @@ public class ClientCommunicator {
             // Write request body to OutputStream ...
             requestBody.write(reqData.getBytes());
         }
-
+        return response(connection,responseClass);
+    }
+    private <T> T response(HttpURLConnection connection,Class<T> responseClass) throws IOException {
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
 
-            // OR
-
-            //String auth = connection.getHeaderField("authorization");
-
-            //InputStream responseBody = connection.getInputStream();
-            // Read response body from InputStream ...
             try (InputStream respBody = connection.getInputStream()) {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                 //System.out.println(new Gson().fromJson(inputStreamReader,));
@@ -60,10 +54,7 @@ public class ClientCommunicator {
             }
         }
         else {
-            // SERVER RETURNED AN HTTP ERROR
-
-            //InputStream responseBody = connection.getErrorStream();
-            // Read and process error response body from InputStream ...
+            InputStream responseBody = connection.getErrorStream();
         }
         return null;
     }
@@ -75,36 +66,13 @@ public class ClientCommunicator {
         connection.setReadTimeout(5000);
         connection.setRequestMethod("GET");
 
-        // Set HTTP request headers, if necessary
-        // connection.addRequestProperty("Accept", "text/html");
-        // connection.addRequestProperty("Authorization", "fjaklc8sdfjklakl");
         if(authToken!=null){
             connection.setRequestProperty("authorization",authToken);
         }
 
         connection.connect();
 
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
-
-            // OR
-
-            //connection.getHeaderField("Content-Length");
-
-            try (InputStream respBody = connection.getInputStream()) {
-                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                //System.out.println(new Gson().fromJson(inputStreamReader,));
-                T response = new Gson().fromJson(inputStreamReader,responseClass);
-                return response;
-            }
-        } else {
-            // SERVER RETURNED AN HTTP ERROR
-
-            InputStream responseBody = connection.getErrorStream();
-            // Read and process error response body from InputStream ...
-        }
-        return null;
+        return response(connection,responseClass);
     }
     public void doPut(String urlString, Object request /*,Class<T> */,String authToken) throws IOException {
         URL url = new URL(urlString);
